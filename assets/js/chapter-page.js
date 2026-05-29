@@ -20,7 +20,7 @@ const chapterData = {
       "把一段遞迴程式改成堆疊模擬，說明系統堆疊扮演的角色。",
       "替一個 List ADT 寫出操作規格，而不是先寫結構欄位。",
     ],
-    labLabel: "回首頁看課程地圖",
+    labLabel: "回課程地圖",
     labHref: "../index.html#map",
     prev: null,
     next: ["02-arrays-structures.html", "Arrays and Structures"],
@@ -46,7 +46,7 @@ const chapterData = {
       "比較 dense matrix 與 sparse matrix 在乘法上的成本。",
       "設計 polynomial add 的測試資料，涵蓋同次方、缺項與零係數。",
     ],
-    labLabel: "回首頁看課程地圖",
+    labLabel: "回課程地圖",
     labHref: "../index.html#map",
     prev: ["01-basic-concepts.html", "Basic Concepts"],
     next: ["03-stacks-queues.html", "Stacks and Queues"],
@@ -98,7 +98,7 @@ const chapterData = {
       "用 circular list 設計 Josephus 問題。",
       "比較以 array 與 linked list 儲存 polynomial 的加法流程。",
     ],
-    labLabel: "回首頁看課程地圖",
+    labLabel: "回課程地圖",
     labHref: "../index.html#map",
     prev: ["03-stacks-queues.html", "Stacks and Queues"],
     next: ["05-trees.html", "Trees"],
@@ -202,7 +202,7 @@ const chapterData = {
       "比較相同鍵值集合在不同 table size 下的碰撞狀況。",
       "說明 Bloom filter 為什麼可能誤判存在，但不會誤判不存在。",
     ],
-    labLabel: "回首頁看課程地圖",
+    labLabel: "回課程地圖",
     labHref: "../index.html#map",
     prev: ["07-sorting.html", "Sorting"],
     next: ["09-priority-queues.html", "Priority Queues"],
@@ -280,7 +280,7 @@ const chapterData = {
       "比較在記憶體與磁碟上搜尋樹設計的不同目標。",
       "說明 B+ tree 為什麼適合範圍查詢。",
     ],
-    labLabel: "回首頁看課程地圖",
+    labLabel: "回課程地圖",
     labHref: "../index.html#map",
     prev: ["10-efficient-bsts.html", "Efficient BSTs"],
     next: ["12-digital-search-structures.html", "Digital Search Structures"],
@@ -306,7 +306,7 @@ const chapterData = {
       "比較 trie 與 hash table 在前綴查詢上的能力。",
       "說明 compressed trie 如何降低空間浪費。",
     ],
-    labLabel: "回首頁看課程地圖",
+    labLabel: "回課程地圖",
     labHref: "../index.html#map",
     prev: ["11-multiway-search-trees.html", "Multiway Search Trees"],
     next: null,
@@ -1484,7 +1484,7 @@ const treeTerms = [
   ["Leaf / Terminal Node", "degree 為 0 的節點，也就是沒有任何 child 的節點。"],
   ["Internal Node", "不是 leaf 的節點；通常負責連接下一層子樹。"],
   ["Ancestor / Descendant", "沿 parent 方向可抵達的節點是 ancestor；沿 child 方向可抵達的是 descendant。"],
-  ["Level / Depth", "從 root 往下數的層級；本網站以 root 位於第 1 層。"],
+  ["Level / Depth", "從 root 往下數的層級；課堂圖例以 root 位於第 1 層。"],
   ["Height", "從節點到最深 leaf 的層數；互動實驗室也用層數表示高度。"],
   ["Subtree", "由某個節點與其所有 descendant 形成的樹。"],
   ["Forest", "多棵互不相交的樹集合；刪除 root 後，剩下的子樹形成 forest。"],
@@ -1512,7 +1512,7 @@ function treeMaterialsTemplate() {
       <div class="section-heading">
         <p class="eyebrow">Tree Basics</p>
         <h2 id="tree-definition-title">樹的定義</h2>
-        <p>本單元依《Fundamentals of Data Structures in C》的 Trees 章節脈絡整理：先建立樹與二元樹的術語，再進入表示法、走訪、Binary Search Tree、線索樹與堆積。</p>
+        <p>樹的學習順序可先建立樹與二元樹的術語，再進入表示法、走訪、Binary Search Tree、線索樹與堆積。</p>
       </div>
       <div class="definition-panel">
         <div class="definition-formula">T = { root } ∪ T1 ∪ T2 ∪ ... ∪ Tk</div>
@@ -1551,9 +1551,9 @@ function treeMaterialsTemplate() {
 
     <section class="section" aria-labelledby="tree-book-map-title">
       <div class="section-heading">
-        <p class="eyebrow">Textbook Map</p>
-        <h2 id="tree-book-map-title">本章教材對照</h2>
-        <p>依《Fundamentals of Data Structures in C》的 Trees 章節安排，本頁把樹的基本定義一路延伸到 heap、selection tree、forest、disjoint set 與 counting binary trees。每一段都以課堂講義方式重寫，方便搭配互動實驗室使用。</p>
+        <p class="eyebrow">Topic Map</p>
+        <h2 id="tree-book-map-title">樹主題地圖</h2>
+        <p>樹的基本定義會一路延伸到 heap、selection tree、forest、disjoint set 與 counting binary trees。這些主題共同回答兩件事：階層資料如何表示，以及高度如何影響操作成本。</p>
       </div>
       <div class="teaching-grid">
         <article class="algorithm-card">
@@ -1890,7 +1890,7 @@ void inorder_iterative(TreeNode *root) {
       <div class="section-heading">
         <p class="eyebrow">Additional Operations</p>
         <h2 id="tree-extra-ops-title">額外二元樹操作</h2>
-        <p>教科書在基本走訪後，接著討論 copy、testing equality 與 satisfiability problem。這些例子提醒我們：樹的遞迴結構不只用於輸出序列，也能用來建立、比較與評估整棵子樹。</p>
+        <p>基本走訪之後，可進一步練習 copy、testing equality 與 satisfiability problem。這些例子提醒我們：樹的遞迴結構不只用於輸出序列，也能用來建立、比較與評估整棵子樹。</p>
       </div>
       <div class="tree-material-grid">
         <div class="lesson-column">
@@ -2141,7 +2141,7 @@ int heap_delete_max(int heap[], int *size, int *out) {
       <div class="section-heading">
         <p class="eyebrow">Selection Trees and Forests</p>
         <h2 id="tree-extension-title">Selection Tree 與 Forest</h2>
-        <p>教科書在 heap 與 BST 之後，進一步介紹 selection tree 與 forest。這些主題把「樹」從單一階層資料結構推廣到多路選擇、競賽淘汰與多棵樹的集合。</p>
+        <p>Heap 與 BST 之後，可以進一步比較 selection tree 與 forest。這些主題把「樹」從單一階層資料結構推廣到多路選擇、競賽淘汰與多棵樹的集合。</p>
       </div>
       <div class="tree-diagram-grid">
         <article class="tree-diagram-card">
@@ -2459,7 +2459,7 @@ function graphMaterialsTemplate() {
       <div class="section-heading">
         <p class="eyebrow">Graph Basics</p>
         <h2 id="graph-definition-title">圖的定義</h2>
-        <p>圖用來描述「物件」與「物件之間的關係」。本單元依《Fundamentals of Data Structures in C》的 Graph 章節脈絡整理，從 Graph ADT、表示法、走訪、最短路徑與生成樹逐步展開。</p>
+        <p>圖用來描述「物件」與「物件之間的關係」。學習時可從 Graph ADT、表示法、走訪、最短路徑與生成樹逐步展開。</p>
       </div>
       <div class="definition-panel">
         <div class="definition-formula">G = (V, E)</div>

@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="資料結構（Data Structure）課程網站：以 C 語言資料結構脈絡整理課程地圖，並提供排序、樹、圖的互動視覺化比較。">
+    <meta name="description" content="資料結構（Data Structure）：以 C 語言為核心，整理抽象資料型態、表示法、演算法成本與常見資料結構。">
     <title>資料結構（Data Structure）</title>
-    <link rel="stylesheet" href="assets/css/styles.css?v=20260529-full-curriculum">
+    <link rel="stylesheet" href="assets/css/styles.css?v=20260529-course-materials">
     <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <script defer src="assets/js/app.js?v=20260529-full-curriculum"></script>
+    <script defer src="assets/js/app.js?v=20260529-course-materials"></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到主要內容</a>
 
     <header class="topbar">
-      <a class="brand" href="#map" aria-label="資料結構首頁">
+      <a class="brand" href="#map" aria-label="資料結構課程地圖">
         <span class="brand-mark">DS</span>
         <span class="brand-copy">
           <strong>資料結構</strong>
@@ -43,7 +43,7 @@
         </div>
         <div class="rail-note">
           <span class="status-dot" aria-hidden="true"></span>
-          靜態網站，可直接部署到 GitHub Pages。
+          課堂主線：表示法、操作、成本。
         </div>
       </aside>
 
@@ -56,7 +56,7 @@
               <span class="title-en">Data Structure</span>
             </h1>
             <p>
-              內容依《Fundamentals of Data Structures in C, 2/e》的章節脈絡重新整理，聚焦大學課堂會反覆使用的概念：抽象資料型態、陣列與鏈結表示、堆疊與佇列、樹、圖、排序、雜湊與進階搜尋結構。首頁保留課程說明與章節索引，排序、樹、圖的互動實驗室放在對應章節頁面。
+              以 C 語言為核心，建立資料結構課程中反覆使用的觀念：抽象資料型態、陣列與鏈結表示、堆疊與佇列、樹、圖、排序、雜湊與進階搜尋結構。學習時可同時追蹤資料如何儲存、操作如何改變狀態，以及成本如何隨資料規模成長。
             </p>
           </div>
           <div class="quick-panel" aria-label="課程摘要">
@@ -79,22 +79,14 @@
           <div class="section-heading">
             <p class="eyebrow">Roadmap</p>
             <h2 id="chapters-title">課程地圖</h2>
-            <p>每個單元都以「資料如何被表示」、「操作成本如何估算」、「程式碼會遇到什麼邊界條件」三個角度安排；點開卡片即可進入該章獨立頁面。</p>
+            <p>每個單元都以「資料如何被表示」、「操作成本如何估算」、「程式碼會遇到什麼邊界條件」三個角度安排。</p>
           </div>
           <div id="chapter-grid" class="chapter-grid" aria-live="polite"></div>
         </section>
 
 
         <footer class="site-footer">
-          <p>
-            章節脈絡參考：Horowitz, Sahni, Anderson-Freed, <cite>Fundamentals of Data Structures in C, 2/e</cite>。本站為課堂補充教材，內容以原創摘要與互動示意呈現。
-          </p>
-          <p>
-            參考查核來源：
-            <a href="https://openlibrary.org/books/OL17873506M/Fundamentals_of_data_structures_in_C">Open Library</a>
-            <span aria-hidden="true">·</span>
-            <a href="https://library.isical.ac.in/cgi-bin/koha/opac-detail.pl?biblionumber=436578">ISI Library catalog</a>
-          </p>
+          <p>讀每一章時，先確認 ADT 行為，再比較表示法與操作成本，最後用 C 程式追蹤邊界條件。</p>
         </footer>
       </main>
     </div>

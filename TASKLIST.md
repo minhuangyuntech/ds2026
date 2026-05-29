@@ -176,6 +176,7 @@
 
 ## 更新紀錄
 
+- 2026-05-29：清理首頁與章節教材中的網站功能、部署、來源查核與自述性文字，改為直接呈現課程學習主線、資料表示、操作成本與 C 實作提醒。
 - 2026-05-29：補 Unit 01 Basic Concepts 教材內容，新增 ADT/representation/algorithm 架構、演算法規格、Big-O 成長率表、遞迴與迭代 factorial、C 動態配置範例；同步更新 HTML cache 版本參數。
 - 2026-05-29：補 Unit 02 Arrays and Structures 教材內容，新增 row-major 位址計算、稀疏矩陣三元組、多項式 dense/sparse 表示法、動態陣列與 SparseMatrix C 範例；同步更新 HTML cache 版本參數。
 - 2026-05-29：補齊 tasklist 全部剩餘教材項目；新增 Unit 03/04/08/09/10/11/12 完整教材段落與 C 範例，補強 Unit 01/02/06/07 待辦內容，並保留 Unit 05/06/07 既有互動實驗室。
