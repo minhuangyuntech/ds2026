@@ -1549,6 +1549,46 @@ function treeMaterialsTemplate() {
       <div class="term-grid">${treeTermsTemplate()}</div>
     </section>
 
+    <section class="section" aria-labelledby="tree-book-map-title">
+      <div class="section-heading">
+        <p class="eyebrow">Textbook Map</p>
+        <h2 id="tree-book-map-title">本章教材對照</h2>
+        <p>依《Fundamentals of Data Structures in C》的 Trees 章節安排，本頁把樹的基本定義一路延伸到 heap、selection tree、forest、disjoint set 與 counting binary trees。每一段都以課堂講義方式重寫，方便搭配互動實驗室使用。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>5.1 Introduction</h3>
+          <p>建立 terminology，並說明一般樹可以用 parent array、children list 或 left-child right-sibling 表示。</p>
+          <div class="chapter-tags"><span>Terminology</span><span>Representation</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>5.2 Binary Trees</h3>
+          <p>把一般樹收斂成最多兩個 child 的結構，定義 ADT、重要性質與陣列/鏈結表示法。</p>
+          <div class="chapter-tags"><span>ADT</span><span>Properties</span><span>Linked Nodes</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>5.3 Traversals</h3>
+          <p>比較 inorder、preorder、postorder、iterative inorder、level-order，以及不使用 stack 的走訪想法。</p>
+          <div class="chapter-tags"><span>Recursion</span><span>Stack</span><span>Queue</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>5.4 Additional Operations</h3>
+          <p>二元樹不只拿來走訪，也常用在 copy、equality testing 與布林表示式求值。</p>
+          <div class="chapter-tags"><span>Copy</span><span>Equality</span><span>Expression Tree</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>5.5-5.7 Specialized Trees</h3>
+          <p>Threaded binary tree、heap 與 BST 都是在二元樹基礎上加入額外不變量，換取走訪、優先權或搜尋效率。</p>
+          <div class="chapter-tags"><span>Thread</span><span>Heap</span><span>BST</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>5.8-5.11 Extensions</h3>
+          <p>Selection tree 支援競賽式選取，forest 可轉成 binary tree，disjoint set 用樹表示等價類，Catalan recurrence 可計算不同二元樹數量。</p>
+          <div class="chapter-tags"><span>Winner Tree</span><span>Forest</span><span>Union-Find</span><span>Catalan</span></div>
+        </article>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="binary-tree-title">
       <div class="section-heading">
         <p class="eyebrow">Binary Tree</p>
@@ -1724,6 +1764,107 @@ void destroy_tree(TreeNode *root) {
       </div>
     </section>
 
+    <section class="section" aria-labelledby="tree-iterative-title">
+      <div class="section-heading">
+        <p class="eyebrow">Iterative Traversal</p>
+        <h2 id="tree-iterative-title">迭代走訪與不使用堆疊的走訪</h2>
+        <p>遞迴走訪其實是把待處理節點暫存在系統呼叫堆疊中。若要控制記憶體使用或避免遞迴深度過深，可以改用明確 stack；若使用 threaded tree，則可以把原本的 NULL link 改成走訪線索。</p>
+      </div>
+      <div class="tree-material-grid">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>Iterative inorder 的核心想法</h4>
+            <ol>
+              <li>沿著 left child 一路把節點推入 stack。</li>
+              <li>沒有 left child 時，pop 出節點並處理它。</li>
+              <li>改往該節點的 right child，重複同樣流程。</li>
+            </ol>
+          </article>
+          <article class="lesson-block">
+            <h4>Level-order traversal</h4>
+            <p>層序走訪使用 queue：先把 root 入佇列，每次取出 front 節點並拜訪，再依序放入 left child 與 right child。這個流程和 Graph BFS 的精神相同。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Traversal without a stack</h4>
+            <p>Threaded binary tree 會把空的 child link 轉成 inorder predecessor 或 successor 的線索，使 inorder traversal 能沿線索前進，而不必再額外使用 stack。</p>
+          </article>
+        </div>
+        <article class="tree-code-panel">
+          <h3>標準 C：以 stack 執行 inorder traversal</h3>
+          <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define MAX_STACK 128
+
+void inorder_iterative(TreeNode *root) {
+    TreeNode *stack[MAX_STACK];
+    int top = -1;
+    TreeNode *current = root;
+
+    while (current != NULL || top &gt;= 0) {
+        while (current != NULL) {
+            if (top == MAX_STACK - 1) return;
+            stack[++top] = current;
+            current = current-&gt;left;
+        }
+
+        current = stack[top--];
+        printf("%d ", current-&gt;key);
+        current = current-&gt;right;
+    }
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="tree-extra-ops-title">
+      <div class="section-heading">
+        <p class="eyebrow">Additional Operations</p>
+        <h2 id="tree-extra-ops-title">額外二元樹操作</h2>
+        <p>教科書在基本走訪後，接著討論 copy、testing equality 與 satisfiability problem。這些例子提醒我們：樹的遞迴結構不只用於輸出序列，也能用來建立、比較與評估整棵子樹。</p>
+      </div>
+      <div class="tree-material-grid">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>Copying Binary Trees</h4>
+            <p>複製一棵樹時，不能只複製 root 指標；必須為每個節點配置新記憶體，再遞迴複製左右子樹。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Testing Equality</h4>
+            <p>兩棵樹相等必須同時滿足：根節點資料相同、左子樹相等、右子樹相等。形狀不同即使節點集合相同，也不是同一棵樹。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Satisfiability Problem</h4>
+            <p>布林表示式可以表示成 expression tree：internal nodes 是 AND、OR、NOT，leaves 是變數或常數。評估時使用 postorder，先算子樹再算運算子。</p>
+          </article>
+        </div>
+        <article class="tree-code-panel">
+          <h3>標準 C：複製與比較二元樹</h3>
+          <pre><code class="language-c">TreeNode *copy_tree(const TreeNode *root) {
+    TreeNode *node;
+
+    if (root == NULL) return NULL;
+
+    node = make_node(root-&gt;key);
+    if (node == NULL) return NULL;
+
+    node-&gt;left = copy_tree(root-&gt;left);
+    node-&gt;right = copy_tree(root-&gt;right);
+    return node;
+}
+
+int equal_tree(const TreeNode *a, const TreeNode *b) {
+    if (a == NULL || b == NULL) {
+        return a == b;
+    }
+
+    return a-&gt;key == b-&gt;key
+        &amp;&amp; equal_tree(a-&gt;left, b-&gt;left)
+        &amp;&amp; equal_tree(a-&gt;right, b-&gt;right);
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="bst-title">
       <div class="section-heading">
         <p class="eyebrow">Binary Search Tree</p>
@@ -1754,16 +1895,29 @@ void destroy_tree(TreeNode *root) {
       </div>
     </section>
 
-    <section class="section" aria-labelledby="tree-advanced-title">
+    <section class="section" aria-labelledby="threaded-tree-title">
       <div class="section-heading">
-        <p class="eyebrow">Beyond Basic Trees</p>
-        <h2 id="tree-advanced-title">線索樹、堆積與延伸主題</h2>
-        <p>Trees 章節是後續 Efficient BST、B-tree、Trie 與排序中 Heap Sort 的基礎。這裡先建立概念地圖，後面章節再深入平衡策略與外部儲存索引。</p>
+        <p class="eyebrow">Threaded Binary Trees</p>
+        <h2 id="threaded-tree-title">線索二元樹</h2>
+        <p>一般鏈結二元樹中，leaf 與部分 internal node 會留下許多 NULL child link。Threaded binary tree 把這些空 link 改成 inorder predecessor 或 successor，並用 tag 記錄這條指標是 child link 還是 thread。</p>
       </div>
-      <div class="chapter-layout">
-        <article class="chapter-panel">
-          <h3>Threaded Binary Tree</h3>
-          <p>使用 tag 區分指標是真正 child link，還是指向 inorder predecessor/successor 的 thread。這能節省走訪時的 stack，但插入刪除時要維護 thread。</p>
+      <div class="tree-material-grid">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>為什麼需要 thread</h4>
+            <p>Recursive inorder 需要系統 stack；iterative inorder 需要明確 stack。若每個節點能知道自己的 inorder successor，就可以沿著 thread 走完整棵樹。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Header node</h4>
+            <p>實作 threaded tree 時常加上一個 header node，讓 traversal 的起點與終點都能用同一套 successor 規則處理，減少特殊情況。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>插入提醒</h4>
+            <p>插入新節點不只接上 child link，也要更新 predecessor/successor threads；否則下一次 inorder traversal 會跳錯位置。</p>
+          </article>
+        </div>
+        <article class="tree-code-panel">
+          <h3>標準 C：Threaded Tree 節點與 inorder successor</h3>
           <pre><code class="language-c">typedef enum { LINK, THREAD } PointerTag;
 
 typedef struct ThreadNode {
@@ -1772,17 +1926,233 @@ typedef struct ThreadNode {
     struct ThreadNode *right;
     PointerTag left_tag;
     PointerTag right_tag;
-} ThreadNode;</code></pre>
+} ThreadNode;
+
+ThreadNode *inorder_successor(ThreadNode *node) {
+    ThreadNode *current;
+
+    if (node-&gt;right_tag == THREAD) {
+        return node-&gt;right;
+    }
+
+    current = node-&gt;right;
+    while (current-&gt;left_tag == LINK) {
+        current = current-&gt;left;
+    }
+    return current;
+}
+
+void threaded_inorder(ThreadNode *head) {
+    ThreadNode *current = head;
+
+    while (1) {
+        current = inorder_successor(current);
+        if (current == head) break;
+        printf("%d ", current-&gt;key);
+    }
+}</code></pre>
         </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="heap-priority-title">
+      <div class="section-heading">
+        <p class="eyebrow">Heaps</p>
+        <h2 id="heap-priority-title">Heap 與 Priority Queue</h2>
+        <p>Heap 是 complete binary tree，通常用陣列表示。Max heap 要求每個 parent 都大於等於 children；Min heap 則相反。這個結構可支援 priority queue 的 insert 與 delete max/min。</p>
+      </div>
+      <div class="tree-material-grid">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>Array index 對應</h4>
+            <ul>
+              <li>Parent index：<code>(i - 1) / 2</code></li>
+              <li>Left child：<code>2 * i + 1</code></li>
+              <li>Right child：<code>2 * i + 2</code></li>
+            </ul>
+          </article>
+          <article class="lesson-block">
+            <h4>Insertion</h4>
+            <p>把新鍵值暫放在陣列尾端，然後和 parent 比較。若比 parent 大，就把 parent 往下移，直到找到正確位置，稱為 up-heap 或 percolate up。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Deletion</h4>
+            <p>刪除 max heap 的 root 後，取最後一個元素補到 root，再與較大的 child 比較並往下移，稱為 down-heap 或 percolate down。</p>
+          </article>
+        </div>
+        <article class="tree-code-panel">
+          <h3>標準 C：Max Heap 插入與刪除最大值</h3>
+          <pre><code class="language-c">void heap_insert(int heap[], int *size, int key) {
+    int i = *size;
+    int parent;
+
+    (*size)++;
+    while (i &gt; 0) {
+        parent = (i - 1) / 2;
+        if (key &lt;= heap[parent]) break;
+        heap[i] = heap[parent];
+        i = parent;
+    }
+    heap[i] = key;
+}
+
+int heap_delete_max(int heap[], int *size, int *out) {
+    int last;
+    int i = 0;
+    int child = 1;
+
+    if (*size &lt;= 0) return 0;
+
+    *out = heap[0];
+    last = heap[--(*size)];
+    if (*size == 0) return 1;
+
+    while (child &lt; *size) {
+        if (child + 1 &lt; *size &amp;&amp; heap[child + 1] &gt; heap[child]) {
+            child++;
+        }
+        if (last &gt;= heap[child]) break;
+
+        heap[i] = heap[child];
+        i = child;
+        child = 2 * i + 1;
+    }
+
+    heap[i] = last;
+    return 1;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="tree-extension-title">
+      <div class="section-heading">
+        <p class="eyebrow">Selection Trees and Forests</p>
+        <h2 id="tree-extension-title">Selection Tree 與 Forest</h2>
+        <p>教科書在 heap 與 BST 之後，進一步介紹 selection tree 與 forest。這些主題把「樹」從單一階層資料結構推廣到多路選擇、競賽淘汰與多棵樹的集合。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Winner Tree</h3>
+          <p>把候選元素放在 leaves，internal node 保存勝出的元素。更新某個 leaf 後，只需沿著到 root 的路徑重新比賽。</p>
+          <div class="chapter-tags"><span>Selection</span><span>O(log k)</span><span>k-way Merge</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Loser Tree</h3>
+          <p>internal node 保存失敗者，root 保存整體勝者。多路合併時，loser tree 可減少重複比較並快速找下一個最小值。</p>
+          <div class="chapter-tags"><span>Tournament</span><span>External Sort</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Forest</h3>
+          <p>Forest 是多棵互不相交的樹。刪除一棵樹的 root 後，它的每個 subtree 會形成一個 forest。</p>
+          <div class="chapter-tags"><span>Tree Set</span><span>Subtrees</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Left-Child Right-Sibling</h3>
+          <p>一般樹可轉成二元樹：left 指向第一個 child，right 指向下一個 sibling。這讓一般樹也能用二元樹結構處理。</p>
+          <div class="chapter-tags"><span>General Tree</span><span>Binary Transform</span></div>
+        </article>
+      </div>
+      <div class="tree-code-panel standalone-code-panel">
+        <h3>標準 C：一般樹的 left-child right-sibling 表示法</h3>
+        <pre><code class="language-c">typedef struct ForestNode {
+    int key;
+    struct ForestNode *first_child;
+    struct ForestNode *next_sibling;
+} ForestNode;</code></pre>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="disjoint-set-title">
+      <div class="section-heading">
+        <p class="eyebrow">Disjoint Sets</p>
+        <h2 id="disjoint-set-title">不相交集合與 Union-Find</h2>
+        <p>Disjoint set 使用多棵樹表示互不重疊的集合。每棵樹的 root 代表該集合；find 找 root，union 合併兩棵樹。這個結構後續會在 equivalence classes 與 Kruskal MST 中反覆出現。</p>
+      </div>
+      <div class="tree-material-grid">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>Find</h4>
+            <p>沿 parent link 往上找到 root。若加入 path compression，查詢過程會順便把路徑上的節點直接接到 root，降低後續成本。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Union</h4>
+            <p>把兩個 root 接在一起。若使用 union by size 或 union by height，會把較小或較矮的樹接到較大的 root 底下，避免高度失控。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>Equivalence Classes</h4>
+            <p>若關係具有 reflexive、symmetric、transitive，便可用 union-find 把元素分組成等價類。</p>
+          </article>
+        </div>
+        <article class="tree-code-panel">
+          <h3>標準 C：Union by Size 與 Path Compression</h3>
+          <pre><code class="language-c">void make_sets(int parent[], int size[], int n) {
+    int i;
+
+    for (i = 0; i &lt; n; i++) {
+        parent[i] = i;
+        size[i] = 1;
+    }
+}
+
+int find_root(int parent[], int x) {
+    if (parent[x] != x) {
+        parent[x] = find_root(parent, parent[x]);
+    }
+    return parent[x];
+}
+
+void union_sets(int parent[], int size[], int a, int b) {
+    int root_a = find_root(parent, a);
+    int root_b = find_root(parent, b);
+    int temp;
+
+    if (root_a == root_b) return;
+
+    if (size[root_a] &lt; size[root_b]) {
+        temp = root_a;
+        root_a = root_b;
+        root_b = temp;
+    }
+
+    parent[root_b] = root_a;
+    size[root_a] += size[root_b];
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="counting-trees-title">
+      <div class="section-heading">
+        <p class="eyebrow">Counting Binary Trees</p>
+        <h2 id="counting-trees-title">二元樹計數</h2>
+        <p>章末的 counting binary trees 把資料結構連回組合數學。不同二元樹數量、stack permutations 與矩陣乘法括號化，都會出現同一類 Catalan recurrence。</p>
+      </div>
+      <div class="chapter-layout">
         <article class="chapter-panel">
-          <h3>Heap 與 Priority Queue</h3>
-          <p>Heap 是 complete binary tree，通常用陣列表示。Max heap 要求每個 parent 都大於等於 children；Min heap 則相反。因為形狀固定，插入與刪除根節點可透過上濾或下濾維持 O(log n)。</p>
-          <ul>
-            <li>Parent index：<code>(i - 1) / 2</code></li>
-            <li>Left child：<code>2 * i + 1</code></li>
-            <li>Right child：<code>2 * i + 2</code></li>
-            <li>Heap Sort 會在 Unit 07 的排序教材中進一步展示。</li>
-          </ul>
+          <h3>Catalan recurrence</h3>
+          <p>令 C(n) 表示 n 個節點可形成的不同二元樹數量。若 root 左邊有 i 個節點，右邊就有 n - 1 - i 個節點，因此：</p>
+          <div class="definition-formula">C(n) = Σ C(i)C(n - 1 - i), C(0) = 1</div>
+          <p>封閉形式為 C(n) = (1 / (n + 1)) · binomial(2n, n)。</p>
+        </article>
+        <article class="tree-code-panel">
+          <h3>標準 C：動態規劃計算 C(n)</h3>
+          <pre><code class="language-c">unsigned long long count_binary_trees(int n) {
+    unsigned long long dp[32];
+    int nodes;
+    int left;
+
+    if (n &lt; 0 || n &gt;= 32) return 0;
+
+    dp[0] = 1;
+    for (nodes = 1; nodes &lt;= n; nodes++) {
+        dp[nodes] = 0;
+        for (left = 0; left &lt; nodes; left++) {
+            dp[nodes] += dp[left] * dp[nodes - 1 - left];
+        }
+    }
+    return dp[n];
+}</code></pre>
         </article>
       </div>
     </section>
