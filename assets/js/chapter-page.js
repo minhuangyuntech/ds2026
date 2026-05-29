@@ -1,4 +1,32 @@
 const chapterData = {
+  "00": {
+    unit: "Unit 00",
+    title: "Standard C Syntax",
+    subtitle: "C 程式骨架、型別、控制流程、函式、指標與結構",
+    focus: "資料結構課程中的程式範例大量使用標準 C。先熟悉編譯流程、基本型別、控制流程、函式、指標、陣列與 structure，後續閱讀 stack、list、tree、graph 程式會順很多。",
+    objectives: [
+      "寫出可編譯的最小 C 程式，理解 include、main、return 的角色。",
+      "辨認 int、double、char、array、pointer、struct 的基本用法。",
+      "使用 if、switch、for、while 表達條件與重複流程。",
+      "用函式切分程式，理解 pass by value 與透過 pointer 修改呼叫端資料。",
+      "建立編譯、執行、追蹤警告訊息的基本習慣。",
+    ],
+    implementation: [
+      "編譯時開啟警告，例如 gcc -std=c11 -Wall -Wextra。",
+      "陣列傳入函式時會退化成指標，因此要另外傳入長度。",
+      "使用 scanf 時要傳入變數位址，且檢查回傳值是否讀取成功。",
+      "指標使用前要初始化；釋放記憶體後不要再解參照。",
+    ],
+    questions: [
+      "說明 printf 與 scanf 的格式字串如何對應變數型別。",
+      "把一段重複程式改成函式，並設計參數與回傳值。",
+      "追蹤指標變數、陣列名稱與取址運算子的差異。",
+    ],
+    labLabel: "進入 Basic Concepts",
+    labHref: "01-basic-concepts.html",
+    prev: null,
+    next: ["01-basic-concepts.html", "Basic Concepts"],
+  },
   "01": {
     unit: "Unit 01",
     title: "Basic Concepts",
@@ -22,7 +50,7 @@ const chapterData = {
     ],
     labLabel: "回課程地圖",
     labHref: "../index.html#map",
-    prev: null,
+    prev: ["00-standard-c-syntax.html", "Standard C Syntax"],
     next: ["02-arrays-structures.html", "Arrays and Structures"],
   },
   "02": {
@@ -3810,7 +3838,201 @@ int index_of(char c) { return c - 'a'; }</code></pre></article>
   `;
 }
 
+function standardCSyntaxMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="c-program-title">
+      <div class="section-heading">
+        <p class="eyebrow">Program Shape</p>
+        <h2 id="c-program-title">最小 C 程式與編譯流程</h2>
+        <p>C 程式通常由前置處理器指令、函式定義與敘述組成。資料結構課程的範例可先用單一檔案練習，再逐步拆成 header 與 implementation。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Hello C</h3>
+          <pre><code>#include &lt;stdio.h&gt;
+
+int main(void) {
+    printf("Data Structures in C\\n");
+    return 0;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Compile and run</h3>
+          <pre><code>gcc -std=c11 -Wall -Wextra hello.c -o hello
+./hello</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="c-types-title">
+      <div class="section-heading">
+        <p class="eyebrow">Types And Operators</p>
+        <h2 id="c-types-title">基本型別、運算子與格式化輸出</h2>
+        <p>型別決定資料佔用空間、可做的運算與格式化輸出方式。讀資料結構程式時，要同時看變數型別與操作意圖。</p>
+      </div>
+      <div class="analysis-panel">
+        <table class="comparison-table">
+          <thead><tr><th>型別</th><th>常見用途</th><th>printf 格式</th></tr></thead>
+          <tbody>
+            <tr><td><code>int</code></td><td>索引、計數、鍵值</td><td><code>%d</code></td></tr>
+            <tr><td><code>double</code></td><td>浮點數、權重、平均值</td><td><code>%f</code></td></tr>
+            <tr><td><code>char</code></td><td>字元、字串元素</td><td><code>%c</code></td></tr>
+            <tr><td><code>char[]</code></td><td>以 <code>\\0</code> 結尾的字串</td><td><code>%s</code></td></tr>
+            <tr><td><code>size_t</code></td><td>大小、長度、配置容量</td><td><code>%zu</code></td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box">整數除法會捨去小數，例如 <code>5 / 2 == 2</code>；若需要浮點結果，至少一個運算元要是浮點型別，例如 <code>5.0 / 2</code>。</div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="c-control-title">
+      <div class="section-heading">
+        <p class="eyebrow">Control Flow</p>
+        <h2 id="c-control-title">條件、迴圈與陣列走訪</h2>
+        <p>資料結構操作多半是在「找到位置前持續走訪」或「符合條件時更新狀態」。先掌握 if、for、while，才能穩定追蹤後續章節的演算法。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Condition and loop</h3>
+          <pre><code>int max_value(const int a[], int n) {
+    int max = a[0];
+    for (int i = 1; i &lt; n; ++i) {
+        if (a[i] &gt; max) {
+            max = a[i];
+        }
+    }
+    return max;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>while search</h3>
+          <pre><code>int linear_search(const int a[], int n, int key) {
+    int i = 0;
+    while (i &lt; n && a[i] != key) {
+        ++i;
+    }
+    return i == n ? -1 : i;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="c-functions-title">
+      <div class="section-heading">
+        <p class="eyebrow">Functions</p>
+        <h2 id="c-functions-title">函式、參數與回傳值</h2>
+        <p>C 的函式參數預設是 pass by value。若函式需要修改呼叫端變數，必須傳入該變數的位址，並在函式內透過指標修改。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Pass by value</h3>
+          <pre><code>void try_swap(int a, int b) {
+    int temp = a;
+    a = b;
+    b = temp;
+    /* caller variables are unchanged */
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Pass address</h3>
+          <pre><code>void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="c-pointer-title">
+      <div class="section-heading">
+        <p class="eyebrow">Pointers And Arrays</p>
+        <h2 id="c-pointer-title">指標、陣列與字串</h2>
+        <p>指標保存位址，解參照後才能讀寫該位址上的資料。陣列傳入函式時會退化成第一個元素的位址，因此函式通常還需要長度參數。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>常見運算子</h4>
+          <ul>
+            <li><code>&amp;x</code> 取得 x 的位址。</li>
+            <li><code>*p</code> 存取 p 指向的資料。</li>
+            <li><code>a[i]</code> 等價於 <code>*(a + i)</code>。</li>
+            <li><code>s[i] == '\\0'</code> 表示 C 字串結尾。</li>
+          </ul>
+        </article>
+        <article class="code-panel">
+          <h3>Array parameter</h3>
+          <pre><code>int sum_array(const int a[], int n) {
+    int sum = 0;
+    for (int i = 0; i &lt; n; ++i) {
+        sum += a[i];
+    }
+    return sum;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="c-struct-title">
+      <div class="section-heading">
+        <p class="eyebrow">Struct And typedef</p>
+        <h2 id="c-struct-title">結構與自訂型別</h2>
+        <p>資料結構通常會把多個欄位包成一個 structure。節點、動態陣列、圖的邊、多項式項目都會用到這個技巧。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Point record</h3>
+          <pre><code>typedef struct {
+    int x;
+    int y;
+} Point;
+
+Point move_right(Point p) {
+    p.x += 1;
+    return p;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Node shape</h3>
+          <pre><code>typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="c-io-title">
+      <div class="section-heading">
+        <p class="eyebrow">Input And Debugging</p>
+        <h2 id="c-io-title">輸入、錯誤檢查與練習方式</h2>
+        <p>初學 C 時，很多錯誤不是演算法，而是格式字串、未初始化變數、越界或未檢查輸入。每次練習都應該讓 compiler warnings 保持乾淨。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Checked scanf</h3>
+          <pre><code>int value;
+if (scanf("%d", &amp;value) != 1) {
+    printf("invalid input\\n");
+    return 1;
+}</code></pre>
+        </article>
+        <article class="lesson-block">
+          <h4>練習清單</h4>
+          <ol>
+            <li>寫一個讀入 n 個整數並輸出最大值的程式。</li>
+            <li>把最大值搜尋改成函式。</li>
+            <li>用 struct 保存學生姓名與分數。</li>
+            <li>用指標版本的 swap 交換兩個整數。</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
 function chapterLabTemplate(unit) {
+  if (unit === "00") return standardCSyntaxMaterialsTemplate();
   if (unit === "01") return `${basicConceptsMaterialsTemplate()}${basicConceptsSupplementTemplate()}`;
   if (unit === "02") return `${arraysStructuresMaterialsTemplate()}${arraysStructuresSupplementTemplate()}`;
   if (unit === "03") return stacksQueuesMaterialsTemplate();

@@ -28,6 +28,7 @@
 
 | Unit | 網頁章節 | 目前狀態 | 教科書重點對照 | 已完成內容 | 下一步 |
 | --- | --- | --- | --- | --- | --- |
+| 00 | Standard C Syntax | ✅ 已完整整理 | C 程式骨架、型別、運算子、控制流程、函式、指標、陣列、structure、標準輸入輸出 | 完成最小 C 程式、編譯流程、基本型別與 printf 格式、if/for/while、函式參數、pointer/array/string、struct/typedef、scanf 檢查與練習題 | 可依學生程度增加 makefile 或多檔案編譯練習 |
 | 01 | Basic Concepts | ✅ 已完整整理 | ADT、演算法規格、遞迴、時間與空間複雜度、C 指標與動態配置 | 完成資料結構三層語言、ADT 規格與表示法、Big-O 成長率表與視覺追蹤、遞迴/迭代 factorial C 範例、malloc/free 動態配置範例、ADT 邊界測試案例 | 可依授課節奏增加更多小測驗 |
 | 02 | Arrays and Structures | ✅ 已完整整理 | Array、structure、string、sparse matrix、polynomial representation | 完成陣列/結構/字串/稀疏資料概念地圖、row-major 位址計算、稀疏矩陣三元組圖表、動態陣列 C 範例、字串容量範例、SparseMatrix triple/transpose/add 策略、多項式 dense/sparse 與 add C 程式 | 可補更多矩陣乘法練習 |
 | 03 | Stacks and Queues | ✅ 已完整整理 | Stack ADT、Queue ADT、circular queue、expression evaluation、maze/BFS 概念 | 完成 stack/queue 操作圖像、circular queue 說明、infix/postfix 與 maze BFS 教材、array stack C 程式、circular queue C 程式 | 可依課程需求加入互動表示式追蹤 |
@@ -42,6 +43,19 @@
 | 12 | Digital Search Structures | ✅ 已完整整理 | Digital search tree、Trie、Patricia、compressed trie、suffix tree | 完成 Trie、digital search tree、Patricia、compressed trie、suffix tree 教材、Trie node/search C 範例、prefix query 練習 | 可補 compressed trie edge-label 程式 |
 
 ## 教科書重點對照檢核表
+
+### Unit 00 Standard C Syntax
+
+- [x] Minimal C program with include, main, printf, return
+- [x] gcc C11 compile command with warnings
+- [x] Basic types and printf format specifiers
+- [x] if, for, while control flow examples
+- [x] Function parameters, return values, pass by value
+- [x] Pointer-based swap and address/dereference operators
+- [x] Array parameter and string terminator notes
+- [x] struct, typedef, and linked-node shape
+- [x] scanf return-value checking
+- [x] Practice exercises for syntax fluency
 
 ### Unit 01 Basic Concepts
 
@@ -176,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-05-29：新增 Unit 00 Standard C Syntax 章節，補標準 C 語言簡易語法介紹，涵蓋程式骨架、編譯、型別、控制流程、函式、指標、陣列、structure 與標準輸入輸出；首頁章節索引同步加入 C 語法入口。
 - 2026-05-29：清理首頁與章節教材中的網站功能、部署、來源查核與自述性文字，改為直接呈現課程學習主線、資料表示、操作成本與 C 實作提醒。
 - 2026-05-29：補 Unit 01 Basic Concepts 教材內容，新增 ADT/representation/algorithm 架構、演算法規格、Big-O 成長率表、遞迴與迭代 factorial、C 動態配置範例；同步更新 HTML cache 版本參數。
 - 2026-05-29：補 Unit 02 Arrays and Structures 教材內容，新增 row-major 位址計算、稀疏矩陣三元組、多項式 dense/sparse 表示法、動態陣列與 SparseMatrix C 範例；同步更新 HTML cache 版本參數。

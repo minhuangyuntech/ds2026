@@ -4,7 +4,8 @@
 
 ## 內容範圍
 
-- 首頁：課程說明與 12 章章節索引。
+- 首頁：課程說明與 13 個單元章節索引。
+- 第 0 章標準 C 語法：程式骨架、編譯、型別、控制流程、函式、指標、陣列、結構與標準輸入輸出。
 - 各章頁面：每一章都有獨立頁面，包含學習目標、C 實作提醒、常見練習題與前後章導覽。
 - 第 5 章樹實驗室：二元搜尋樹建立、走訪結果、高度、葉節點與偏斜/平衡形狀比較。
 - 第 6 章圖實驗室：加權無向圖、相鄰串列/矩陣、BFS、DFS、Dijkstra、Prim MST。
@@ -52,6 +53,7 @@ ds2026/
   TASKLIST.md
   .nojekyll
   chapters/
+    00-standard-c-syntax.html
     01-basic-concepts.html
     ...
     12-digital-search-structures.html

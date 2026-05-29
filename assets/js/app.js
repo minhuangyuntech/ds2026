@@ -39,72 +39,91 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const chapters = [
   {
+    unit: "Unit 00",
+    title: "Standard C Syntax",
+    href: "chapters/00-standard-c-syntax.html",
+    focus: "C 程式骨架、型別、控制流程、函式、指標、陣列、結構與標準輸入輸出。",
+    tags: ["C", "Syntax", "Pointer"],
+  },
+  {
+    unit: "Unit 01",
     title: "Basic Concepts",
     href: "chapters/01-basic-concepts.html",
     focus: "抽象資料型態、遞迴、時間與空間成本、C 語言資料表示。",
     tags: ["ADT", "Complexity", "Recursion"],
   },
   {
+    unit: "Unit 02",
     title: "Arrays and Structures",
     href: "chapters/02-arrays-structures.html",
     focus: "陣列、結構、稀疏矩陣、多項式與位址計算。",
     tags: ["Array", "Struct", "Sparse"],
   },
   {
+    unit: "Unit 03",
     title: "Stacks and Queues",
     href: "chapters/03-stacks-queues.html",
     focus: "堆疊、佇列、循環佇列、表示式轉換與系統堆疊。",
     tags: ["Stack", "Queue", "Expression"],
   },
   {
+    unit: "Unit 04",
     title: "Linked Lists",
     href: "chapters/04-linked-lists.html",
     focus: "單向、雙向、循環串列與動態記憶體管理。",
     tags: ["Pointer", "List", "Memory"],
   },
   {
+    unit: "Unit 05",
     title: "Trees",
     href: "chapters/05-trees.html",
     focus: "二元樹、走訪、二元搜尋樹、堆積與樹形成本。",
     tags: ["BST", "Traversal", "Heap"],
   },
   {
+    unit: "Unit 06",
     title: "Graphs",
     href: "chapters/06-graphs.html",
     focus: "相鄰矩陣、相鄰串列、BFS、DFS、最短路徑與生成樹。",
     tags: ["BFS", "DFS", "MST"],
   },
   {
+    unit: "Unit 07",
     title: "Sorting",
     href: "chapters/07-sorting.html",
     focus: "內部排序、分治、堆積排序、穩定性與資料分布。",
     tags: ["Stable", "Divide", "Heap"],
   },
   {
+    unit: "Unit 08",
     title: "Hashing",
     href: "chapters/08-hashing.html",
     focus: "雜湊函數、碰撞處理、開放定址與鏈結法。",
     tags: ["Hash", "Collision", "Load"],
   },
   {
+    unit: "Unit 09",
     title: "Priority Queues",
     href: "chapters/09-priority-queues.html",
     focus: "優先佇列 ADT、二元堆積、合併與刪除最小值。",
     tags: ["Priority", "Heap", "Merge"],
   },
   {
+    unit: "Unit 10",
     title: "Efficient Binary Search Trees",
     href: "chapters/10-efficient-bsts.html",
     focus: "AVL、伸展樹、紅黑樹等平衡策略與旋轉概念。",
     tags: ["AVL", "Rotation", "Balance"],
   },
   {
+    unit: "Unit 11",
     title: "Multiway Search Trees",
     href: "chapters/11-multiway-search-trees.html",
     focus: "B-tree、B+ tree 與外部儲存索引。",
     tags: ["B-tree", "Index", "Disk"],
   },
   {
+    unit: "Unit 12",
     title: "Digital Search Structures",
     href: "chapters/12-digital-search-structures.html",
     focus: "Trie、radix tree、字串鍵值與前綴查詢。",
@@ -119,7 +138,7 @@ function renderChapters() {
       const tags = chapter.tags.map((tag) => `<span>${tag}</span>`).join("");
       return `
         <a class="chapter-card" href="${chapter.href}">
-          <span class="chapter-index">Unit ${String(index + 1).padStart(2, "0")}</span>
+          <span class="chapter-index">${chapter.unit || `Unit ${String(index + 1).padStart(2, "0")}`}</span>
           <h3>${chapter.title}</h3>
           <p>${chapter.focus}</p>
           <div class="chapter-tags">${tags}</div>
