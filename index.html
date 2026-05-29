@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="資料結構（Data Structure）課程網站：以 C 語言資料結構脈絡整理課程地圖，並提供排序、樹、圖的互動視覺化比較。">
+    <title>資料結構（Data Structure）</title>
+    <link rel="stylesheet" href="assets/css/styles.css?v=20260529-graphs-materials">
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script defer src="assets/js/app.js?v=20260529-graphs-materials"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+
+    <header class="topbar">
+      <a class="brand" href="#map" aria-label="資料結構首頁">
+        <span class="brand-mark">DS</span>
+        <span class="brand-copy">
+          <strong>資料結構</strong>
+          <span>Data Structure</span>
+        </span>
+      </a>
+      <nav class="topnav" aria-label="主要導覽">
+        <a href="#map">課程說明</a>
+        <a href="#chapters-title">章節索引</a>
+        <a href="chapters/07-sorting.html#sorting">排序</a>
+        <a href="chapters/05-trees.html#trees">樹</a>
+        <a href="chapters/06-graphs.html#graphs">圖</a>
+      </nav>
+    </header>
+
+    <div class="page-shell">
+      <aside class="rail" aria-label="課程主軸">
+        <div class="rail-block">
+          <p class="eyebrow">Course Spine</p>
+          <ol class="rail-list">
+            <li><a href="#map">抽象資料型態與 C 表示法</a></li>
+            <li><a href="chapters/07-sorting.html#sorting">排序與演算法成本</a></li>
+            <li><a href="chapters/05-trees.html#trees">樹、搜尋樹與堆積</a></li>
+            <li><a href="chapters/06-graphs.html#graphs">圖表示法與走訪</a></li>
+            <li><a href="#chapters-title">完整章節索引</a></li>
+          </ol>
+        </div>
+        <div class="rail-note">
+          <span class="status-dot" aria-hidden="true"></span>
+          靜態網站，可直接部署到 GitHub Pages。
+        </div>
+      </aside>
+
+      <main id="main">
+        <section id="map" class="section intro-grid" aria-labelledby="map-title">
+          <div class="intro-copy">
+            <p class="eyebrow">Data Structures in C</p>
+            <h1 id="map-title">
+              <span class="title-zh">資料結構</span>
+              <span class="title-en">Data Structure</span>
+            </h1>
+            <p>
+              內容依《Fundamentals of Data Structures in C, 2/e》的章節脈絡重新整理，聚焦大學課堂會反覆使用的概念：抽象資料型態、陣列與鏈結表示、堆疊與佇列、樹、圖、排序、雜湊與進階搜尋結構。首頁保留課程說明與章節索引，排序、樹、圖的互動實驗室放在對應章節頁面。
+            </p>
+          </div>
+          <div class="quick-panel" aria-label="課程摘要">
+            <div>
+              <span class="metric-number">12</span>
+              <span class="metric-label">主題單元</span>
+            </div>
+            <div>
+              <span class="metric-number">3</span>
+              <span class="metric-label">互動實驗室</span>
+            </div>
+            <div>
+              <span class="metric-number">C</span>
+              <span class="metric-label">實作導向</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="chapters-title">
+          <div class="section-heading">
+            <p class="eyebrow">Roadmap</p>
+            <h2 id="chapters-title">課程地圖</h2>
+            <p>每個單元都以「資料如何被表示」、「操作成本如何估算」、「程式碼會遇到什麼邊界條件」三個角度安排；點開卡片即可進入該章獨立頁面。</p>
+          </div>
+          <div id="chapter-grid" class="chapter-grid" aria-live="polite"></div>
+        </section>
+
+
+        <footer class="site-footer">
+          <p>
+            章節脈絡參考：Horowitz, Sahni, Anderson-Freed, <cite>Fundamentals of Data Structures in C, 2/e</cite>。本站為課堂補充教材，內容以原創摘要與互動示意呈現。
+          </p>
+          <p>
+            參考查核來源：
+            <a href="https://openlibrary.org/books/OL17873506M/Fundamentals_of_data_structures_in_C">Open Library</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://library.isical.ac.in/cgi-bin/koha/opac-detail.pl?biblionumber=436578">ISI Library catalog</a>
+          </p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

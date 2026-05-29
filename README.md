@@ -1,0 +1,61 @@
+# 資料結構（Data Structure）
+
+這是一個可直接部署到 GitHub Pages 的純靜態課程網站，內容用於大學資料結構課程展示與課堂互動。
+
+## 內容範圍
+
+- 首頁：課程說明與 12 章章節索引。
+- 各章頁面：每一章都有獨立頁面，包含學習目標、C 實作提醒、常見練習題與前後章導覽。
+- 第 5 章樹實驗室：二元搜尋樹建立、走訪結果、高度、葉節點與偏斜/平衡形狀比較。
+- 第 6 章圖實驗室：加權無向圖、相鄰串列/矩陣、BFS、DFS、Dijkstra、Prim MST。
+- 第 7 章排序教材與實驗室：每一種排序法各自成節，包含詳細說明、圖例、演算法步驟、標準 C 程式與程式碼說明；章末提供逐步長條圖比較。
+
+## 本地預覽
+
+直接開啟 `index.html` 即可使用。若要用本地伺服器預覽：
+
+```powershell
+cd D:\projects\minhuangyuntech\ds2026
+python -m http.server 8080
+```
+
+然後開啟：
+
+```text
+http://localhost:8080
+```
+
+## GitHub Pages 部署方向
+
+1. 建立 GitHub repository，例如 `ds2026`。
+2. 將此資料夾內容推到 `main` 分支。
+3. 在 repository 的 Settings -> Pages 選擇 `Deploy from a branch`。
+4. Source 選擇 `main` / root。
+5. 等待 GitHub Pages 建置完成。
+
+## 檔案結構
+
+```text
+ds2026/
+  index.html
+  README.md
+  .nojekyll
+  chapters/
+    01-basic-concepts.html
+    ...
+    12-digital-search-structures.html
+  assets/
+    css/
+      styles.css
+    js/
+      app.js
+      chapter-page.js
+```
+
+## 參考
+
+- Horowitz, Sahni, Anderson-Freed, *Fundamentals of Data Structures in C, 2/e*.
+- Open Library: https://openlibrary.org/books/OL17873506M/Fundamentals_of_data_structures_in_C
+- ISI Library catalog: https://library.isical.ac.in/cgi-bin/koha/opac-detail.pl?biblionumber=436578
+
+本站內容為課堂補充教材，以原創摘要與互動示意呈現；不重製教科書原文。
