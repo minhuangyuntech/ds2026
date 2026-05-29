@@ -1474,6 +1474,321 @@ function sortingLabTemplate() {
   `;
 }
 
+const treeTerms = [
+  ["Node", "樹中的一個資料項目；通常包含 key/data 與指向子節點的連結。"],
+  ["Root", "整棵樹唯一沒有 parent 的節點，是所有路徑的起點。"],
+  ["Edge / Branch", "連接 parent 與 child 的線；有 n 個節點的非空樹一定有 n - 1 條邊。"],
+  ["Parent / Child", "若節點 x 連到 y，x 是 y 的 parent，y 是 x 的 child。"],
+  ["Siblings", "擁有同一個 parent 的節點。"],
+  ["Degree", "某節點的子節點數；整棵樹的 degree 是所有節點 degree 的最大值。"],
+  ["Leaf / Terminal Node", "degree 為 0 的節點，也就是沒有任何 child 的節點。"],
+  ["Internal Node", "不是 leaf 的節點；通常負責連接下一層子樹。"],
+  ["Ancestor / Descendant", "沿 parent 方向可抵達的節點是 ancestor；沿 child 方向可抵達的是 descendant。"],
+  ["Level / Depth", "從 root 往下數的層級；本網站以 root 位於第 1 層。"],
+  ["Height", "從節點到最深 leaf 的層數；互動實驗室也用層數表示高度。"],
+  ["Subtree", "由某個節點與其所有 descendant 形成的樹。"],
+  ["Forest", "多棵互不相交的樹集合；刪除 root 後，剩下的子樹形成 forest。"],
+  ["Binary Tree", "每個節點最多有 left child 與 right child 兩個子節點的樹。"],
+  ["Complete Binary Tree", "除了最後一層外皆填滿，最後一層由左至右填入。"],
+  ["Binary Search Tree", "左子樹鍵值小於 root，右子樹鍵值大於 root，且每棵子樹也符合此規則。"],
+];
+
+function treeTermsTemplate() {
+  return treeTerms
+    .map(
+      ([term, description]) => `
+        <article class="term-card">
+          <h3>${escapeHtml(term)}</h3>
+          <p>${escapeHtml(description)}</p>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function treeMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="tree-definition-title">
+      <div class="section-heading">
+        <p class="eyebrow">Tree Basics</p>
+        <h2 id="tree-definition-title">樹的定義</h2>
+        <p>本單元依《Fundamentals of Data Structures in C》的 Trees 章節脈絡整理：先建立樹與二元樹的術語，再進入表示法、走訪、Binary Search Tree、線索樹與堆積。</p>
+      </div>
+      <div class="definition-panel">
+        <div class="definition-formula">T = { root } ∪ T1 ∪ T2 ∪ ... ∪ Tk</div>
+        <p>樹是由有限個節點組成的階層式資料結構。若樹非空，會有一個特殊節點稱為 <strong>root</strong>；其餘節點可分成 k 個互不相交的子集合，每個子集合本身也是一棵樹，稱為 root 的 <strong>subtree</strong>。若 k = 0，root 同時也是 leaf。</p>
+        <svg class="tree-mini-svg" viewBox="0 0 720 330" role="img" aria-label="Tree definition example">
+          <line class="tree-mini-edge" x1="360" y1="72" x2="210" y2="150"></line>
+          <line class="tree-mini-edge" x1="360" y1="72" x2="360" y2="150"></line>
+          <line class="tree-mini-edge" x1="360" y1="72" x2="510" y2="150"></line>
+          <line class="tree-mini-edge" x1="210" y1="150" x2="135" y2="235"></line>
+          <line class="tree-mini-edge" x1="210" y1="150" x2="285" y2="235"></line>
+          <line class="tree-mini-edge" x1="510" y1="150" x2="455" y2="235"></line>
+          <line class="tree-mini-edge" x1="510" y1="150" x2="585" y2="235"></line>
+          <circle class="tree-mini-node root" cx="360" cy="72" r="27"></circle><text class="tree-mini-label" x="360" y="78">A</text>
+          <circle class="tree-mini-node internal" cx="210" cy="150" r="25"></circle><text class="tree-mini-label" x="210" y="156">B</text>
+          <circle class="tree-mini-node" cx="360" cy="150" r="25"></circle><text class="tree-mini-label" x="360" y="156">C</text>
+          <circle class="tree-mini-node internal" cx="510" cy="150" r="25"></circle><text class="tree-mini-label" x="510" y="156">D</text>
+          <circle class="tree-mini-node leaf" cx="135" cy="235" r="23"></circle><text class="tree-mini-label" x="135" y="241">E</text>
+          <circle class="tree-mini-node leaf" cx="285" cy="235" r="23"></circle><text class="tree-mini-label" x="285" y="241">F</text>
+          <circle class="tree-mini-node leaf" cx="455" cy="235" r="23"></circle><text class="tree-mini-label" x="455" y="241">G</text>
+          <circle class="tree-mini-node leaf" cx="585" cy="235" r="23"></circle><text class="tree-mini-label" x="585" y="241">H</text>
+          <text class="tree-mini-caption" x="360" y="25">Root</text>
+          <text class="tree-mini-caption" x="64" y="241">Leaves</text>
+          <text class="tree-mini-caption" x="612" y="157">Subtree</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="tree-terms-title">
+      <div class="section-heading">
+        <p class="eyebrow">Terminology</p>
+        <h2 id="tree-terms-title">Tree 名詞整理</h2>
+        <p>Tree 的題目常把「形狀」轉成「成本」。名詞若先釐清，後面分析 height、走訪順序與搜尋路徑會清楚很多。</p>
+      </div>
+      <div class="term-grid">${treeTermsTemplate()}</div>
+    </section>
+
+    <section class="section" aria-labelledby="binary-tree-title">
+      <div class="section-heading">
+        <p class="eyebrow">Binary Tree</p>
+        <h2 id="binary-tree-title">二元樹與重要性質</h2>
+        <p>二元樹限制每個節點最多兩個 child，因此天然適合用遞迴定義：一棵二元樹不是空樹，就是由 root、left subtree、right subtree 組成。</p>
+      </div>
+      <div class="chapter-layout">
+        <article class="chapter-panel">
+          <h3>常見型態</h3>
+          <ul>
+            <li><strong>Full binary tree</strong>：每個 internal node 都剛好有兩個 child。</li>
+            <li><strong>Complete binary tree</strong>：最後一層以外都填滿，最後一層由左至右填入。</li>
+            <li><strong>Skewed tree</strong>：每個節點幾乎只有一個 child，操作成本會退化成線性。</li>
+            <li><strong>Balanced tree</strong>：左右子樹高度差受控制，搜尋成本接近 O(log n)。</li>
+          </ul>
+        </article>
+        <article class="chapter-panel">
+          <h3>性質與公式</h3>
+          <ul>
+            <li>非空樹若有 n 個節點，邊數為 n - 1。</li>
+            <li>第 i 層最多有 2<sup>i-1</sup> 個節點。</li>
+            <li>高度為 h 的二元樹最多有 2<sup>h</sup> - 1 個節點。</li>
+            <li>若 full binary tree 中 n0 是 leaf 數、n2 是 degree 2 的節點數，則 n0 = n2 + 1。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="tree-representations-title">
+      <div class="section-heading">
+        <p class="eyebrow">Representations in C</p>
+        <h2 id="tree-representations-title">樹的 C 語言表示法</h2>
+        <p>教材中最常比較兩種表示法：用陣列保存接近 complete tree 的結構，或用 linked nodes 保存一般二元樹。BST、Expression Tree 與 Threaded Tree 通常都建立在 linked representation 上。</p>
+      </div>
+      <div class="tree-material-grid">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>陣列表示法</h4>
+            <p>若節點存在陣列位置 i，則 parent 與 children 可由索引計算。</p>
+            <ul>
+              <li>0-based：parent = (i - 1) / 2，left = 2i + 1，right = 2i + 2。</li>
+              <li>適合 complete binary tree 與 heap。</li>
+              <li>一般稀疏形狀會浪費大量空格。</li>
+            </ul>
+          </article>
+          <article class="lesson-block">
+            <h4>鏈結表示法</h4>
+            <p>每個節點保存資料與左右子指標；空子樹以 NULL 表示。</p>
+            <ul>
+              <li>適合一般二元樹、BST、AVL、expression tree。</li>
+              <li>插入與刪除會改變指標連結，需要小心保存子樹。</li>
+              <li>若需要 parent，可在節點中額外保存 parent pointer。</li>
+            </ul>
+          </article>
+          <article class="lesson-block">
+            <h4>線索樹 Threaded Tree</h4>
+            <p>二元樹中很多 NULL 指標可改成 inorder predecessor 或 successor 的線索，讓 inorder traversal 不必使用 stack 或 recursion。</p>
+          </article>
+        </div>
+        <article class="tree-code-panel">
+          <h3>標準 C：二元搜尋樹節點、插入、搜尋與走訪</h3>
+          <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct TreeNode {
+    int key;
+    struct TreeNode *left;
+    struct TreeNode *right;
+} TreeNode;
+
+TreeNode *make_node(int key) {
+    TreeNode *node = malloc(sizeof(TreeNode));
+    if (node == NULL) return NULL;
+
+    node-&gt;key = key;
+    node-&gt;left = NULL;
+    node-&gt;right = NULL;
+    return node;
+}
+
+TreeNode *bst_insert(TreeNode *root, int key) {
+    if (root == NULL) {
+        return make_node(key);
+    }
+
+    if (key &lt; root-&gt;key) {
+        root-&gt;left = bst_insert(root-&gt;left, key);
+    } else if (key &gt; root-&gt;key) {
+        root-&gt;right = bst_insert(root-&gt;right, key);
+    }
+    return root;
+}
+
+TreeNode *bst_search(TreeNode *root, int key) {
+    while (root != NULL) {
+        if (key == root-&gt;key) return root;
+        if (key &lt; root-&gt;key) root = root-&gt;left;
+        else root = root-&gt;right;
+    }
+    return NULL;
+}
+
+void inorder(TreeNode *root) {
+    if (root == NULL) return;
+    inorder(root-&gt;left);
+    printf("%d ", root-&gt;key);
+    inorder(root-&gt;right);
+}
+
+void preorder(TreeNode *root) {
+    if (root == NULL) return;
+    printf("%d ", root-&gt;key);
+    preorder(root-&gt;left);
+    preorder(root-&gt;right);
+}
+
+void postorder(TreeNode *root) {
+    if (root == NULL) return;
+    postorder(root-&gt;left);
+    postorder(root-&gt;right);
+    printf("%d ", root-&gt;key);
+}
+
+void destroy_tree(TreeNode *root) {
+    if (root == NULL) return;
+    destroy_tree(root-&gt;left);
+    destroy_tree(root-&gt;right);
+    free(root);
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="tree-traversal-title">
+      <div class="section-heading">
+        <p class="eyebrow">Traversal</p>
+        <h2 id="tree-traversal-title">走訪順序與圖例</h2>
+        <p>走訪是把樹的階層結構轉成線性序列。前序、中序、後序都可用遞迴描述；層序走訪則使用 queue。</p>
+      </div>
+      <div class="tree-material-grid">
+        <div class="definition-panel">
+          <svg class="tree-mini-svg" viewBox="0 0 620 310" role="img" aria-label="Binary tree traversal example">
+            <line class="tree-mini-edge" x1="310" y1="65" x2="190" y2="138"></line>
+            <line class="tree-mini-edge" x1="310" y1="65" x2="430" y2="138"></line>
+            <line class="tree-mini-edge" x1="190" y1="138" x2="125" y2="220"></line>
+            <line class="tree-mini-edge" x1="190" y1="138" x2="255" y2="220"></line>
+            <line class="tree-mini-edge" x1="430" y1="138" x2="365" y2="220"></line>
+            <line class="tree-mini-edge" x1="430" y1="138" x2="495" y2="220"></line>
+            <circle class="tree-mini-node root" cx="310" cy="65" r="25"></circle><text class="tree-mini-label" x="310" y="71">A</text>
+            <circle class="tree-mini-node internal" cx="190" cy="138" r="24"></circle><text class="tree-mini-label" x="190" y="144">B</text>
+            <circle class="tree-mini-node internal" cx="430" cy="138" r="24"></circle><text class="tree-mini-label" x="430" y="144">C</text>
+            <circle class="tree-mini-node leaf" cx="125" cy="220" r="22"></circle><text class="tree-mini-label" x="125" y="226">D</text>
+            <circle class="tree-mini-node leaf" cx="255" cy="220" r="22"></circle><text class="tree-mini-label" x="255" y="226">E</text>
+            <circle class="tree-mini-node leaf" cx="365" cy="220" r="22"></circle><text class="tree-mini-label" x="365" y="226">F</text>
+            <circle class="tree-mini-node leaf" cx="495" cy="220" r="22"></circle><text class="tree-mini-label" x="495" y="226">G</text>
+          </svg>
+        </div>
+        <div class="traversal-strip">
+          <div class="traversal-row"><strong>Preorder</strong><span>A, B, D, E, C, F, G</span></div>
+          <div class="traversal-row"><strong>Inorder</strong><span>D, B, E, A, F, C, G</span></div>
+          <div class="traversal-row"><strong>Postorder</strong><span>D, E, B, F, G, C, A</span></div>
+          <div class="traversal-row"><strong>Level-order</strong><span>A, B, C, D, E, F, G</span></div>
+          <article class="lesson-block">
+            <h4>如何記憶</h4>
+            <ul>
+              <li>Preorder：先處理 root，再 left、right。</li>
+              <li>Inorder：先 left，再 root，再 right；套用於 BST 時會得到遞增序列。</li>
+              <li>Postorder：先 left、right，最後 root；適合釋放樹或計算 expression tree。</li>
+              <li>Level-order：一層一層拜訪，需要 queue。</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="bst-title">
+      <div class="section-heading">
+        <p class="eyebrow">Binary Search Tree</p>
+        <h2 id="bst-title">二元搜尋樹 BST</h2>
+        <p>BST 把排序關係放進樹的形狀中：每次比較可排除一整棵子樹。若樹接近平衡，搜尋、插入、刪除的平均成本約為 O(log n)；若退化成 skewed tree，最壞會變成 O(n)。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>搜尋 Search</h3>
+          <p>從 root 開始，key 較小往 left，key 較大往 right；每一步都縮小候選範圍。</p>
+          <div class="chapter-tags"><span>Average O(log n)</span><span>Worst O(n)</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>插入 Insert</h3>
+          <p>先用搜尋路徑找到 NULL 位置，再把新節點接上。重複鍵值要事先規範：忽略、計數或放到固定一側。</p>
+          <div class="chapter-tags"><span>Pointer Update</span><span>Duplicate Policy</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>刪除 Delete</h3>
+          <p>刪除 leaf 最簡單；刪除單一 child 節點時讓 child 取代它；刪除兩個 child 的節點時，常用 inorder successor 或 predecessor 替換。</p>
+          <div class="chapter-tags"><span>3 Cases</span><span>Successor</span><span>Predecessor</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>中序特性</h3>
+          <p>BST 的 inorder traversal 會依鍵值遞增輸出，因此可以用來檢查樹是否仍符合搜尋樹性質。</p>
+          <div class="chapter-tags"><span>Sorted Order</span><span>Invariant</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="tree-advanced-title">
+      <div class="section-heading">
+        <p class="eyebrow">Beyond Basic Trees</p>
+        <h2 id="tree-advanced-title">線索樹、堆積與延伸主題</h2>
+        <p>Trees 章節是後續 Efficient BST、B-tree、Trie 與排序中 Heap Sort 的基礎。這裡先建立概念地圖，後面章節再深入平衡策略與外部儲存索引。</p>
+      </div>
+      <div class="chapter-layout">
+        <article class="chapter-panel">
+          <h3>Threaded Binary Tree</h3>
+          <p>使用 tag 區分指標是真正 child link，還是指向 inorder predecessor/successor 的 thread。這能節省走訪時的 stack，但插入刪除時要維護 thread。</p>
+          <pre><code class="language-c">typedef enum { LINK, THREAD } PointerTag;
+
+typedef struct ThreadNode {
+    int key;
+    struct ThreadNode *left;
+    struct ThreadNode *right;
+    PointerTag left_tag;
+    PointerTag right_tag;
+} ThreadNode;</code></pre>
+        </article>
+        <article class="chapter-panel">
+          <h3>Heap 與 Priority Queue</h3>
+          <p>Heap 是 complete binary tree，通常用陣列表示。Max heap 要求每個 parent 都大於等於 children；Min heap 則相反。因為形狀固定，插入與刪除根節點可透過上濾或下濾維持 O(log n)。</p>
+          <ul>
+            <li>Parent index：<code>(i - 1) / 2</code></li>
+            <li>Left child：<code>2 * i + 1</code></li>
+            <li>Right child：<code>2 * i + 2</code></li>
+            <li>Heap Sort 會在 Unit 07 的排序教材中進一步展示。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
 function treeLabTemplate() {
   return `
     <section id="trees" class="section lab-section" aria-labelledby="trees-title">
@@ -1828,7 +2143,7 @@ function graphLabTemplate() {
 }
 
 function chapterLabTemplate(unit) {
-  if (unit === "05") return treeLabTemplate();
+  if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}`;
   if (unit === "06") return `${graphMaterialsTemplate()}${graphLabTemplate()}`;
   if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingLabTemplate()}`;
   return "";

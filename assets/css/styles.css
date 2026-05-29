@@ -389,6 +389,19 @@ main {
   margin-top: 0.45rem;
 }
 
+.chapter-panel pre {
+  background: #f5f7fb;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  padding: 0.7rem;
+}
+
+.chapter-panel pre code {
+  background: transparent;
+  padding: 0;
+}
+
 .chapter-actions {
   align-items: center;
   display: flex;
@@ -470,6 +483,7 @@ main {
   margin: 0;
 }
 
+.tree-mini-svg,
 .graph-mini-svg {
   background: #fff;
   border: 1px solid var(--line);
@@ -479,6 +493,7 @@ main {
   width: 100%;
 }
 
+.tree-mini-edge,
 .graph-mini-edge {
   stroke: #8792a1;
   stroke-linecap: round;
@@ -489,20 +504,29 @@ main {
   marker-end: url(#graph-mini-arrow);
 }
 
+.tree-mini-node,
 .graph-mini-node {
   fill: var(--violet);
   stroke: #fff;
   stroke-width: 3;
 }
 
+.tree-mini-node.root,
 .graph-mini-node.start {
   fill: var(--teal);
 }
 
+.tree-mini-node.leaf,
 .graph-mini-node.target {
   fill: var(--coral);
 }
 
+.tree-mini-node.internal {
+  fill: var(--amber);
+}
+
+.tree-mini-label,
+.tree-mini-caption,
 .graph-mini-label,
 .graph-mini-weight {
   fill: #fff;
@@ -510,21 +534,25 @@ main {
   text-anchor: middle;
 }
 
+.tree-mini-label,
 .graph-mini-label {
   font-size: 16px;
 }
 
+.tree-mini-caption,
 .graph-mini-weight {
   fill: var(--muted);
   font-size: 13px;
 }
 
+.tree-material-grid,
 .graph-material-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
 }
 
+.tree-code-panel,
 .graph-code-panel {
   background: #101827;
   border: 1px solid #202b3f;
@@ -532,6 +560,7 @@ main {
   overflow: hidden;
 }
 
+.tree-code-panel h3,
 .graph-code-panel h3 {
   background: #172133;
   color: #fff;
@@ -539,17 +568,46 @@ main {
   padding: 0.7rem 0.85rem;
 }
 
+.tree-code-panel pre,
 .graph-code-panel pre {
   margin: 0;
   overflow-x: auto;
   padding: 0.9rem;
 }
 
+.tree-code-panel code,
 .graph-code-panel code {
   background: transparent;
   color: #e7edf8;
   font-size: 0.85rem;
   padding: 0;
+}
+
+.traversal-strip {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.traversal-row {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: 110px minmax(0, 1fr);
+  padding: 0.55rem;
+}
+
+.traversal-row strong {
+  color: var(--ink);
+}
+
+.traversal-row span {
+  color: var(--muted);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .teaching-grid {
@@ -1567,6 +1625,7 @@ code {
   .sorting-grid,
   .tree-grid,
   .graph-grid,
+  .tree-material-grid,
   .graph-material-grid,
   .chapter-layout,
   .teaching-grid,
@@ -1603,6 +1662,7 @@ code {
   .practice-grid,
   .term-grid,
   .tree-compare,
+  .traversal-row,
   .metric-row,
   .heap-demo-metrics {
     grid-template-columns: 1fr;
