@@ -28,8 +28,8 @@
 
 | Unit | 網頁章節 | 目前狀態 | 教科書重點對照 | 已完成內容 | 下一步 |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Basic Concepts | ⬜ 待整理 | ADT、演算法規格、遞迴、時間與空間複雜度、C 指標與動態配置 | 章節頁骨架、學習目標、C 實作提醒、練習題方向 | 補教材段落、Big-O 圖例、遞迴/迭代 C 範例 |
-| 02 | Arrays and Structures | ⬜ 待整理 | Array、structure、string、sparse matrix、polynomial representation | 章節頁骨架、目標與練習方向 | 補 row-major 位址計算、稀疏矩陣三元組、多項式 C 表示法 |
+| 01 | Basic Concepts | 🟡 部分完成 | ADT、演算法規格、遞迴、時間與空間複雜度、C 指標與動態配置 | 完成資料結構三層語言、ADT 規格與表示法、Big-O 成長率表、遞迴/迭代 factorial C 範例、malloc/free 動態配置範例；保留學習目標、C 實作提醒與練習題 | 補 Big-O 視覺曲線、更多迴圈成本追蹤題、ADT 測試案例 |
+| 02 | Arrays and Structures | 🟡 部分完成 | Array、structure、string、sparse matrix、polynomial representation | 完成陣列/結構/字串/稀疏資料概念地圖、row-major 位址計算、稀疏矩陣三元組圖表、動態陣列 C 範例、SparseMatrix triple C 範例、多項式 dense/sparse 表示法比較 | 補字串處理 C 範例、稀疏矩陣 transpose/add、polynomial add 完整 C 程式 |
 | 03 | Stacks and Queues | ⬜ 待整理 | Stack ADT、Queue ADT、circular queue、expression evaluation、maze/BFS 概念 | 章節頁骨架、目標與練習方向 | 補 stack/queue 圖例、infix/postfix 範例、循環佇列 C 程式 |
 | 04 | Linked Lists | ⬜ 待整理 | Singly linked list、circular list、doubly linked list、header node、polynomial/list applications | 章節頁骨架、目標與練習方向 | 補節點圖、插入刪除指標追蹤、標準 C 範例 |
 | 05 | Trees | ✅ 已完整整理 | Terminology、tree representation、binary tree ADT/properties/representations、traversals、additional binary tree operations、threaded binary trees、heaps、BST、selection trees、forests、disjoint sets、counting binary trees | 完成定義、名詞、教科書章節對照、二元樹性質、表示法、遞迴與迭代走訪、copy/equality、Threaded Tree、Heap、BST、Selection Tree、Forest、Union-Find、Catalan recurrence；加入 Binary/Full/Complete/Skewed、Max Heap、Min Heap、Winner/Loser Tree、Forest、Left-child/right-sibling 圖例；保留 Trees Lab | 日後可補 deletion BST 動態步驟、threaded tree 插入圖、更多練習題 |
@@ -42,6 +42,28 @@
 | 12 | Digital Search Structures | ⬜ 待整理 | Digital search tree、Trie、Patricia、compressed trie、suffix tree | 章節頁骨架、目標與練習方向 | 補 Trie/Patricia 圖例、字串插入搜尋 C 範例、prefix query 練習 |
 
 ## 教科書重點對照檢核表
+
+### Unit 01 Basic Concepts
+
+- [x] ADT, representation, algorithm 三層架構
+- [x] 演算法規格、前置條件、後置條件與不變量
+- [x] Big-O 成長率比較表
+- [x] 遞迴與迭代 C 範例
+- [x] C 指標、malloc/free 與配置失敗處理範例
+- [ ] Big-O 視覺曲線與更多成本追蹤練習
+- [ ] ADT 測試案例與錯誤情境練習
+
+### Unit 02 Arrays and Structures
+
+- [x] Array、structure、string、sparse data 概念地圖
+- [x] Row-major address calculation
+- [x] Sparse matrix triple representation
+- [x] Dynamic array C structure and append example
+- [x] SparseMatrix triple C structure and insertion example
+- [x] Dense and sparse polynomial representation comparison
+- [ ] String processing C example with capacity and terminator handling
+- [ ] Sparse matrix transpose/add implementation
+- [ ] Polynomial add full C implementation
 
 ### Unit 05 Trees
 
@@ -89,5 +111,7 @@
 
 ## 更新紀錄
 
+- 2026-05-29：補 Unit 01 Basic Concepts 教材內容，新增 ADT/representation/algorithm 架構、演算法規格、Big-O 成長率表、遞迴與迭代 factorial、C 動態配置範例；同步更新 HTML cache 版本參數。
+- 2026-05-29：補 Unit 02 Arrays and Structures 教材內容，新增 row-major 位址計算、稀疏矩陣三元組、多項式 dense/sparse 表示法、動態陣列與 SparseMatrix C 範例；同步更新 HTML cache 版本參數。
 - 2026-05-29：新增 `MAINTENANCE.md` 與 `AGENTS.md`，記錄跨電腦維護流程、先 pull 再更新、驗證、commit/push 與 Codex 維護原則。
 - 2026-05-29：建立本 tasklist；記錄 Unit 01-12 初始狀態、Unit 05/06/07 已完成內容與後續待辦。

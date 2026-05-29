@@ -2711,7 +2711,365 @@ function graphLabTemplate() {
   `;
 }
 
+function basicConceptsMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="basic-map-title">
+      <div class="section-heading">
+        <p class="eyebrow">Foundation Map</p>
+        <h2 id="basic-map-title">資料結構的三層語言</h2>
+        <p>Basic Concepts 不是背名詞，而是建立之後每一章都會用到的判斷框架：先說清楚抽象行為，再選擇表示法，最後用演算法成本與 C 語言邊界條件檢查設計是否可靠。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Abstract Data Type</h3>
+          <p>ADT 描述資料集合與可用操作，例如 List 的 insert、delete、retrieve。它刻意不承諾內部用陣列、串列或其他表示法。</p>
+          <div class="chapter-tags"><span>Interface</span><span>Behavior</span><span>Contract</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Representation</h3>
+          <p>表示法把 ADT 落在記憶體上。相同 List ADT 可用 contiguous array 或 linked nodes，兩者的搜尋、插入、空間彈性都不同。</p>
+          <div class="chapter-tags"><span>Array</span><span>Pointer</span><span>Struct</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Algorithm</h3>
+          <p>演算法是操作的步驟。好的教材描述會同時寫出輸入、輸出、前置條件、後置條件與在迴圈中維持的不變量。</p>
+          <div class="chapter-tags"><span>Precondition</span><span>Invariant</span><span>Postcondition</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Complexity</h3>
+          <p>成本分析忽略常數與機器細節，關注資料規模放大後的成長率。它協助我們比較可伸縮性，而不是只看小資料的秒數。</p>
+          <div class="chapter-tags"><span>Time</span><span>Space</span><span>Growth</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="adt-title">
+      <div class="section-heading">
+        <p class="eyebrow">ADT Contract</p>
+        <h2 id="adt-title">從規格到實作</h2>
+        <p>課程中的每一個容器都可以用同一種讀法拆開：外部看得到的操作、內部保存資料的方式，以及測試時必須覆蓋的邊界條件。</p>
+      </div>
+      <div class="lesson-layout">
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>規格範例：List ADT</h4>
+            <ol>
+              <li><code>create()</code> 建立空 list。</li>
+              <li><code>insert(pos, item)</code> 在合法位置插入資料。</li>
+              <li><code>delete(pos)</code> 移除指定位置並回傳資料。</li>
+              <li><code>retrieve(pos)</code> 查詢資料但不改變 list。</li>
+            </ol>
+          </article>
+          <article class="lesson-block">
+            <h4>規格應該說清楚什麼</h4>
+            <ul>
+              <li>合法輸入範圍，例如 <code>0 <= pos <= length</code>。</li>
+              <li>操作成功後資料結構應滿足的狀態。</li>
+              <li>錯誤情境的回傳方式，例如容量不足或位置越界。</li>
+            </ul>
+          </article>
+        </div>
+        <div class="lesson-column">
+          <article class="lesson-block">
+            <h4>表示法選擇</h4>
+            <p>Array list 用索引快速讀取，但中間插入要搬移元素；linked list 中間插入只調整指標，但必須先走訪到目標節點。</p>
+          </article>
+          <article class="lesson-block">
+            <h4>不變量</h4>
+            <p>不變量是操作前後都應保持為真的規則，例如 <code>0 <= length <= capacity</code>、head 指向第一個節點、tail 的 next 為 NULL。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="complexity-title">
+      <div class="section-heading">
+        <p class="eyebrow">Cost Model</p>
+        <h2 id="complexity-title">成長率與 Big-O</h2>
+        <p>Big-O 描述上界成長率。分析時先找出基本操作，再觀察它執行次數如何隨 n 變化；常數、低階項與硬體差異先放到第二層討論。</p>
+      </div>
+      <div class="analysis-panel">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>成長率</th>
+              <th>常見來源</th>
+              <th>n = 1,000 時的直覺</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>O(1)</code></td>
+              <td>陣列索引、stack top</td>
+              <td>資料變大，步數仍大致固定。</td>
+            </tr>
+            <tr>
+              <td><code>O(log n)</code></td>
+              <td>每次折半，例如 binary search</td>
+              <td>約 10 次比較可縮到單一位置。</td>
+            </tr>
+            <tr>
+              <td><code>O(n)</code></td>
+              <td>掃描陣列或串列</td>
+              <td>最多看 1,000 個元素。</td>
+            </tr>
+            <tr>
+              <td><code>O(n log n)</code></td>
+              <td>merge sort、heap sort</td>
+              <td>約一萬級別的比較，通常可接受。</td>
+            </tr>
+            <tr>
+              <td><code>O(n²)</code></td>
+              <td>兩層巢狀迴圈、簡單排序</td>
+              <td>約一百萬次，n 再放大會很快變慢。</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="insight-box">分析遞迴時可先寫 recurrence：binary search 是 T(n) = T(n/2) + O(1)，merge sort 是 T(n) = 2T(n/2) + O(n)。</div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="recursion-title">
+      <div class="section-heading">
+        <p class="eyebrow">Recursion And Iteration</p>
+        <h2 id="recursion-title">遞迴、迭代與系統堆疊</h2>
+        <p>遞迴讓程式貼近問題定義，但每一次呼叫都會使用 call stack 保存區域變數與返回位置。能否改成迭代，取決於狀態是否能用變數或明確的 stack 保存。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Recursive factorial</h3>
+          <pre><code>int factorial_recursive(int n) {
+    if (n < 0) return -1;
+    if (n == 0) return 1;
+    return n * factorial_recursive(n - 1);
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Iterative factorial</h3>
+          <pre><code>int factorial_iterative(int n) {
+    if (n < 0) return -1;
+
+    int result = 1;
+    for (int i = 2; i <= n; ++i) {
+        result *= i;
+    }
+    return result;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="memory-title">
+      <div class="section-heading">
+        <p class="eyebrow">C Memory Discipline</p>
+        <h2 id="memory-title">指標與動態配置的基本紀律</h2>
+        <p>資料結構在 C 裡通常會碰到 pointer ownership。只要有 <code>malloc</code>，就要決定誰負責檢查配置失敗、誰負責釋放，以及釋放後指標是否還會被使用。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Safe dynamic array</h3>
+          <pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int *create_scores(int count) {
+    if (count <= 0) return NULL;
+
+    int *scores = malloc(sizeof(int) * count);
+    if (scores == NULL) {
+        return NULL;
+    }
+
+    for (int i = 0; i < count; ++i) {
+        scores[i] = 0;
+    }
+    return scores;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Use and release</h3>
+          <pre><code>int main(void) {
+    int n = 5;
+    int *scores = create_scores(n);
+    if (scores == NULL) {
+        fprintf(stderr, "allocation failed\\n");
+        return 1;
+    }
+
+    scores[0] = 95;
+    free(scores);
+    scores = NULL;
+    return 0;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function arraysStructuresMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="array-map-title">
+      <div class="section-heading">
+        <p class="eyebrow">Contiguous Memory</p>
+        <h2 id="array-map-title">陣列與結構的核心問題</h2>
+        <p>Arrays and Structures 章節把資料放進連續記憶體與固定欄位紀錄中。重點不只是語法，而是位址如何計算、資料如何壓縮，以及何時需要用 structure 表示更複雜的關係。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Array</h3>
+          <p>陣列把同型別元素連續排列，索引可直接轉成位址，因此讀寫 <code>a[i]</code> 是 O(1)。代價是容量固定或需要重新配置。</p>
+          <div class="chapter-tags"><span>Index</span><span>O(1)</span><span>Capacity</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Structure</h3>
+          <p>Structure 把不同欄位打包成一筆紀錄，例如多項式項次的 coefficient 與 exponent。資料結構常用它建立節點與表格列。</p>
+          <div class="chapter-tags"><span>Record</span><span>Field</span><span>Node</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>String</h3>
+          <p>C 字串是以 <code>\\0</code> 結尾的 char array。處理字串時必須同時保存容量、長度與終止字元空間。</p>
+          <div class="chapter-tags"><span>char[]</span><span>Length</span><span>Terminator</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Sparse Data</h3>
+          <p>稀疏矩陣與多項式都適合只保存非零或存在的項目，避免用大量 0 浪費空間。</p>
+          <div class="chapter-tags"><span>Tuple</span><span>Polynomial</span><span>Compression</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="row-major-title">
+      <div class="section-heading">
+        <p class="eyebrow">Address Calculation</p>
+        <h2 id="row-major-title">Row-major 位址計算</h2>
+        <p>C 的二維陣列採 row-major order：同一列的元素連續擺放。若 <code>A</code> 是 <code>rows x cols</code> 的 int array，<code>A[i][j]</code> 的位移是 <code>i * cols + j</code> 個元素。</p>
+      </div>
+      <div class="analysis-panel">
+        <div class="mini-array">
+          <span class="cell sorted">A[0][0]</span><span class="cell sorted">A[0][1]</span><span class="cell sorted">A[0][2]</span>
+          <span class="cell active">A[1][0]</span><span class="cell active">A[1][1]</span><span class="cell active">A[1][2]</span>
+          <span class="cell compare">A[2][0]</span><span class="cell compare">A[2][1]</span><span class="cell compare">A[2][2]</span>
+        </div>
+        <div class="insight-box">若 base address 是 B、每個元素大小是 w，則 <code>address(A[i][j]) = B + ((i * cols) + j) * w</code>。這也是為什麼依列掃描通常比依欄掃描更符合 cache locality。</div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="sparse-title">
+      <div class="section-heading">
+        <p class="eyebrow">Sparse Matrix</p>
+        <h2 id="sparse-title">稀疏矩陣三元組表示法</h2>
+        <p>當矩陣多數元素是 0，使用完整二維陣列會浪費空間。三元組只保存 row、column、value，通常再加上第一列描述矩陣大小與非零項數。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>原矩陣</h4>
+          <table class="comparison-table">
+            <tbody>
+              <tr><td>0</td><td>0</td><td>15</td><td>0</td></tr>
+              <tr><td>0</td><td>22</td><td>0</td><td>0</td></tr>
+              <tr><td>-3</td><td>0</td><td>0</td><td>7</td></tr>
+            </tbody>
+          </table>
+        </article>
+        <article class="lesson-block">
+          <h4>Triples</h4>
+          <table class="comparison-table">
+            <thead><tr><th>row</th><th>col</th><th>value</th></tr></thead>
+            <tbody>
+              <tr><td>3</td><td>4</td><td>4</td></tr>
+              <tr><td>0</td><td>2</td><td>15</td></tr>
+              <tr><td>1</td><td>1</td><td>22</td></tr>
+              <tr><td>2</td><td>0</td><td>-3</td></tr>
+              <tr><td>2</td><td>3</td><td>7</td></tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="array-code-title">
+      <div class="section-heading">
+        <p class="eyebrow">Standard C</p>
+        <h2 id="array-code-title">動態陣列與稀疏矩陣 C 範例</h2>
+        <p>實作時要把容量、長度與資料指標包在同一個 structure 裡，讓操作函式能檢查邊界並維持不變量。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Dynamic integer array</h3>
+          <pre><code>#include &lt;stdlib.h&gt;
+
+typedef struct {
+    int *data;
+    int length;
+    int capacity;
+} IntArray;
+
+int init_array(IntArray *a, int capacity) {
+    if (capacity <= 0) return 0;
+    a-&gt;data = malloc(sizeof(int) * capacity);
+    if (a-&gt;data == NULL) return 0;
+    a-&gt;length = 0;
+    a-&gt;capacity = capacity;
+    return 1;
+}
+
+int append(IntArray *a, int value) {
+    if (a-&gt;length == a-&gt;capacity) return 0;
+    a-&gt;data[a-&gt;length++] = value;
+    return 1;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Sparse matrix triple</h3>
+          <pre><code>typedef struct {
+    int row;
+    int col;
+    int value;
+} Term;
+
+typedef struct {
+    int rows;
+    int cols;
+    int terms;
+    Term data[100];
+} SparseMatrix;
+
+void add_term(SparseMatrix *m, int r, int c, int v) {
+    if (v == 0 || m-&gt;terms >= 100) return;
+    m-&gt;data[m-&gt;terms].row = r;
+    m-&gt;data[m-&gt;terms].col = c;
+    m-&gt;data[m-&gt;terms].value = v;
+    ++m-&gt;terms;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="polynomial-title">
+      <div class="section-heading">
+        <p class="eyebrow">Polynomial Representation</p>
+        <h2 id="polynomial-title">多項式表示法</h2>
+        <p>多項式若用完整陣列保存每一個次方，適合最高次方不大且項目密集的資料；若缺項很多，用 term array 只保存非零係數更省空間。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Dense representation</h3>
+          <p><code>coef[i]</code> 保存 x 的 i 次方係數。加法容易，直接逐格相加；但最高次方很大且多數係數為 0 時浪費空間。</p>
+          <div class="chapter-tags"><span>Fast Access</span><span>Simple Add</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Sparse representation</h3>
+          <p>每個 term 保存 coefficient 與 exponent，依 exponent 排序。加法像 merge：同次方合併，不同次方複製到結果。</p>
+          <div class="chapter-tags"><span>Term Array</span><span>Merge</span></div>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
 function chapterLabTemplate(unit) {
+  if (unit === "01") return basicConceptsMaterialsTemplate();
+  if (unit === "02") return arraysStructuresMaterialsTemplate();
   if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}`;
   if (unit === "06") return `${graphMaterialsTemplate()}${graphLabTemplate()}`;
   if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingLabTemplate()}`;
