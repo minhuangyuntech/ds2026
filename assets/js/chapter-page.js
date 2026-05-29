@@ -3067,12 +3067,762 @@ void add_term(SparseMatrix *m, int r, int c, int v) {
   `;
 }
 
+function basicConceptsSupplementTemplate() {
+  return `
+    <section class="section" aria-labelledby="big-o-visual-title">
+      <div class="section-heading">
+        <p class="eyebrow">Growth Curve</p>
+        <h2 id="big-o-visual-title">Big-O 視覺曲線與追蹤題</h2>
+        <p>同一台電腦上，小 n 可能看不出差距；但 n 擴大時，成長率會主導執行時間。下表用估算步數提醒學生不要只靠直覺選資料結構。</p>
+      </div>
+      <div class="analysis-panel">
+        <table class="comparison-table">
+          <thead><tr><th>n</th><th>log n</th><th>n</th><th>n log n</th><th>n²</th></tr></thead>
+          <tbody>
+            <tr><td>10</td><td>4</td><td>10</td><td>40</td><td>100</td></tr>
+            <tr><td>1,000</td><td>10</td><td>1,000</td><td>10,000</td><td>1,000,000</td></tr>
+            <tr><td>1,000,000</td><td>20</td><td>1,000,000</td><td>20,000,000</td><td>10¹²</td></tr>
+          </tbody>
+        </table>
+        <div class="lesson-layout">
+          <article class="lesson-block">
+            <h4>迴圈追蹤題</h4>
+            <ol>
+              <li>單層迴圈每次 i 加 1，執行次數通常是 O(n)。</li>
+              <li>巢狀迴圈 i 與 j 都跑 n 次，總次數是 O(n²)。</li>
+              <li>每次 i 乘 2，次數是 O(log n)。</li>
+            </ol>
+          </article>
+          <article class="lesson-block">
+            <h4>ADT 測試案例</h4>
+            <ul>
+              <li>空容器 pop/delete 應回報 underflow 或錯誤狀態。</li>
+              <li>滿容量 insert 應回報 overflow 或觸發擴容。</li>
+              <li>插入第一個、最後一個與中間位置都要檢查不變量。</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function arraysStructuresSupplementTemplate() {
+  return `
+    <section class="section" aria-labelledby="string-title">
+      <div class="section-heading">
+        <p class="eyebrow">String Safety</p>
+        <h2 id="string-title">字串容量與終止字元</h2>
+        <p>C 字串必須保留一格給終止字元。複製或串接時要以 buffer capacity 為準，而不是只看來源字串長度。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Bounded copy</h3>
+          <pre><code>#include &lt;stddef.h&gt;
+
+int copy_string(char dest[], size_t cap, const char src[]) {
+    if (cap == 0) return 0;
+
+    size_t i = 0;
+    while (i + 1 &lt; cap && src[i] != '\\0') {
+        dest[i] = src[i];
+        ++i;
+    }
+    dest[i] = '\\0';
+    return src[i] == '\\0';
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Polynomial add</h3>
+          <pre><code>typedef struct { int coef; int exp; } PolyTerm;
+
+int add_poly(const PolyTerm a[], int na,
+             const PolyTerm b[], int nb,
+             PolyTerm out[]) {
+    int i = 0, j = 0, k = 0;
+    while (i &lt; na && j &lt; nb) {
+        if (a[i].exp == b[j].exp) {
+            int c = a[i].coef + b[j].coef;
+            if (c != 0) out[k++] = (PolyTerm){c, a[i].exp};
+            ++i; ++j;
+        } else if (a[i].exp &gt; b[j].exp) {
+            out[k++] = a[i++];
+        } else {
+            out[k++] = b[j++];
+        }
+    }
+    while (i &lt; na) out[k++] = a[i++];
+    while (j &lt; nb) out[k++] = b[j++];
+    return k;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="sparse-code-title">
+      <div class="section-heading">
+        <p class="eyebrow">Sparse Operations</p>
+        <h2 id="sparse-code-title">稀疏矩陣 transpose 與 add</h2>
+        <p>Transpose 可依 column 掃描原三元組，把 row/col 對調；add 則像 merge sorted lists，依 row-major 順序合併同位置項目。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Simple transpose</h3>
+          <pre><code>void transpose(const SparseMatrix *a, SparseMatrix *b) {
+    b-&gt;rows = a-&gt;cols;
+    b-&gt;cols = a-&gt;rows;
+    b-&gt;terms = 0;
+
+    for (int c = 0; c &lt; a-&gt;cols; ++c) {
+        for (int i = 0; i &lt; a-&gt;terms; ++i) {
+            if (a-&gt;data[i].col == c) {
+                add_term(b, a-&gt;data[i].col, a-&gt;data[i].row,
+                         a-&gt;data[i].value);
+            }
+        }
+    }
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Add strategy</h3>
+          <pre><code>int term_order(Term t) {
+    return t.row * 10000 + t.col;
+}
+
+/* 若 data 已依 row-major 排序：
+   1. 較小位置直接複製到結果
+   2. 相同位置加總
+   3. 加總為 0 時不輸出該 term */</code></pre>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function stacksQueuesMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="stack-queue-title">
+      <div class="section-heading">
+        <p class="eyebrow">Linear Containers</p>
+        <h2 id="stack-queue-title">Stack 與 Queue 的操作圖像</h2>
+        <p>Stack 是 LIFO，最新放入的資料最先移除；Queue 是 FIFO，最早等待的資料最先移除。兩者常被用來控制演算法的探索順序。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Stack ADT</h3>
+          <p><code>push</code> 放入 top，<code>pop</code> 從 top 移除。適合括號配對、表示式處理、遞迴模擬與 DFS。</p>
+          <div class="mini-array"><span class="cell">12</span><span class="cell">18</span><span class="cell active">top 31</span></div>
+          <div class="chapter-tags"><span>LIFO</span><span>DFS</span><span>Call Stack</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Queue ADT</h3>
+          <p><code>enqueue</code> 從 rear 加入，<code>dequeue</code> 從 front 移除。適合排程、buffer 與 BFS。</p>
+          <div class="mini-array"><span class="cell compare">front 8</span><span class="cell">14</span><span class="cell active">rear 27</span></div>
+          <div class="chapter-tags"><span>FIFO</span><span>BFS</span><span>Scheduling</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Circular Queue</h3>
+          <p>用 <code>(index + 1) % capacity</code> 讓 rear/front 繞回陣列開頭，避免 dequeue 後前方空間無法再用。</p>
+          <div class="chapter-tags"><span>Modulo</span><span>Wrap</span><span>Size</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Expression Evaluation</h3>
+          <p>Infix 轉 postfix 時，operand 直接輸出，operator 依優先權與括號進出 stack；postfix evaluation 再用 stack 保存中間值。</p>
+          <div class="chapter-tags"><span>Infix</span><span>Postfix</span><span>Precedence</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="stack-code-title">
+      <div class="section-heading">
+        <p class="eyebrow">Standard C</p>
+        <h2 id="stack-code-title">Stack 與循環佇列 C 程式</h2>
+        <p>固定容量版本適合課堂練習，重點是清楚處理 overflow、underflow 與 wrap-around。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Array stack</h3>
+          <pre><code>#define MAX_STACK 100
+
+typedef struct {
+    int data[MAX_STACK];
+    int top;
+} Stack;
+
+void init_stack(Stack *s) { s-&gt;top = -1; }
+int is_empty(const Stack *s) { return s-&gt;top == -1; }
+int is_full(const Stack *s) { return s-&gt;top == MAX_STACK - 1; }
+
+int push(Stack *s, int value) {
+    if (is_full(s)) return 0;
+    s-&gt;data[++s-&gt;top] = value;
+    return 1;
+}
+
+int pop(Stack *s, int *out) {
+    if (is_empty(s)) return 0;
+    *out = s-&gt;data[s-&gt;top--];
+    return 1;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Circular queue</h3>
+          <pre><code>#define MAX_QUEUE 100
+
+typedef struct {
+    int data[MAX_QUEUE];
+    int front;
+    int rear;
+    int size;
+} Queue;
+
+void init_queue(Queue *q) {
+    q-&gt;front = 0; q-&gt;rear = 0; q-&gt;size = 0;
+}
+
+int enqueue(Queue *q, int value) {
+    if (q-&gt;size == MAX_QUEUE) return 0;
+    q-&gt;data[q-&gt;rear] = value;
+    q-&gt;rear = (q-&gt;rear + 1) % MAX_QUEUE;
+    ++q-&gt;size;
+    return 1;
+}
+
+int dequeue(Queue *q, int *out) {
+    if (q-&gt;size == 0) return 0;
+    *out = q-&gt;data[q-&gt;front];
+    q-&gt;front = (q-&gt;front + 1) % MAX_QUEUE;
+    --q-&gt;size;
+    return 1;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="expression-title">
+      <div class="section-heading">
+        <p class="eyebrow">Expression Lab Notes</p>
+        <h2 id="expression-title">Infix / Postfix 與 Maze BFS</h2>
+        <p>Stack 解決巢狀結構，Queue 解決層次擴張。這就是為什麼 postfix evaluation 需要 stack，而無權迷宮最短步數會使用 BFS queue。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>Infix to postfix</h4>
+          <p><code>A * (B + C) - D</code> 轉成 <code>A B C + * D -</code>。括號內先處理，乘法優先於減法。</p>
+        </article>
+        <article class="lesson-block">
+          <h4>Maze BFS</h4>
+          <p>從起點 enqueue，反覆 dequeue 一格並 enqueue 尚未拜訪的鄰格。第一次到達終點時，即為最少邊數路徑。</p>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function linkedListsMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="list-types-title">
+      <div class="section-heading">
+        <p class="eyebrow">Linked Representation</p>
+        <h2 id="list-types-title">串列節點與變形</h2>
+        <p>Linked list 用指標保存順序，不要求元素在記憶體中連續。它的優勢是局部插入刪除，代價是無法 O(1) 隨機存取。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Singly linked list</h3>
+          <p>每個節點只有 <code>next</code>。插入刪除時要保存前一個節點，否則無法改掉前驅的 next。</p>
+          <div class="mini-array"><span class="cell">head</span><span class="diagram-arrow">-&gt;</span><span class="cell">12</span><span class="diagram-arrow">-&gt;</span><span class="cell">31</span><span class="diagram-arrow">-&gt; NULL</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Circular list</h3>
+          <p>最後一個節點指回第一個節點，適合輪替問題與 queue。走訪時必須知道停止條件，避免無限迴圈。</p>
+          <div class="chapter-tags"><span>tail-&gt;next=head</span><span>Josephus</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Doubly linked list</h3>
+          <p>每個節點有 <code>prev</code> 與 <code>next</code>，可雙向走訪，但每次插入刪除都要同步維護兩邊連結。</p>
+          <div class="chapter-tags"><span>prev</span><span>next</span><span>Bidirectional</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Header node</h3>
+          <p>Header node 不存有效資料，用來統一空串列、插入第一個節點與刪除第一個節點的程式流程。</p>
+          <div class="chapter-tags"><span>Sentinel</span><span>Boundary</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="list-pointer-title">
+      <div class="section-heading">
+        <p class="eyebrow">Pointer Trace</p>
+        <h2 id="list-pointer-title">插入刪除指標追蹤</h2>
+        <p>串列題目最容易錯在更新順序。插入時先讓新節點接上後半段，再讓前驅指向新節點；刪除時先保存被刪節點，再接回前後段。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Singly linked node</h3>
+          <pre><code>#include &lt;stdlib.h&gt;
+
+typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;
+
+Node *insert_after(Node *prev, int value) {
+    if (prev == NULL) return NULL;
+    Node *node = malloc(sizeof(Node));
+    if (node == NULL) return NULL;
+    node-&gt;data = value;
+    node-&gt;next = prev-&gt;next;
+    prev-&gt;next = node;
+    return node;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Delete after</h3>
+          <pre><code>int delete_after(Node *prev, int *out) {
+    if (prev == NULL || prev-&gt;next == NULL) return 0;
+    Node *victim = prev-&gt;next;
+    *out = victim-&gt;data;
+    prev-&gt;next = victim-&gt;next;
+    free(victim);
+    return 1;
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="list-app-title">
+      <div class="section-heading">
+        <p class="eyebrow">Applications</p>
+        <h2 id="list-app-title">串列應用：Stack、Queue、多項式</h2>
+        <p>Stack 可在 head push/pop；Queue 可保存 front/rear；多項式可用依 exponent 排序的 linked terms 進行 merge add。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>Polynomial terms</h4>
+          <p>每個節點保存 <code>coef</code>、<code>exp</code>、<code>next</code>。相加時同次方合併，係數為 0 的項目直接略過。</p>
+        </article>
+        <article class="lesson-block">
+          <h4>Memory ownership</h4>
+          <p>建立節點的函式要明確說明誰負責釋放；整條串列通常提供 <code>destroy_list</code> 從 head 逐一 free。</p>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function graphAdvancedTemplate() {
+  return `
+    <section class="section" aria-labelledby="graph-code-title">
+      <div class="section-heading">
+        <p class="eyebrow">Graph C Implementations</p>
+        <h2 id="graph-code-title">BFS、DFS、Dijkstra、Prim/Kruskal 程式骨架</h2>
+        <p>以下使用 adjacency matrix 版本呈現核心流程，適合課堂追蹤；大型稀疏圖可改成 adjacency list 與 priority queue。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>BFS and DFS</h3>
+          <pre><code>#define MAX_V 32
+
+void bfs(int n, int g[MAX_V][MAX_V], int start) {
+    int visited[MAX_V] = {0};
+    int q[MAX_V], front = 0, rear = 0;
+    visited[start] = 1;
+    q[rear++] = start;
+
+    while (front &lt; rear) {
+        int v = q[front++];
+        for (int w = 0; w &lt; n; ++w) {
+            if (g[v][w] && !visited[w]) {
+                visited[w] = 1;
+                q[rear++] = w;
+            }
+        }
+    }
+}
+
+void dfs_visit(int n, int g[MAX_V][MAX_V],
+               int v, int visited[]) {
+    visited[v] = 1;
+    for (int w = 0; w &lt; n; ++w) {
+        if (g[v][w] && !visited[w]) {
+            dfs_visit(n, g, w, visited);
+        }
+    }
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Dijkstra</h3>
+          <pre><code>#define INF 1000000000
+
+void dijkstra(int n, int cost[MAX_V][MAX_V],
+              int start, int dist[]) {
+    int fixed[MAX_V] = {0};
+    for (int i = 0; i &lt; n; ++i) dist[i] = cost[start][i];
+    dist[start] = 0;
+
+    for (int step = 0; step &lt; n; ++step) {
+        int u = -1, best = INF;
+        for (int i = 0; i &lt; n; ++i)
+            if (!fixed[i] && dist[i] &lt; best) {
+                best = dist[i]; u = i;
+            }
+        if (u == -1) break;
+        fixed[u] = 1;
+        for (int v = 0; v &lt; n; ++v)
+            if (!fixed[v] && cost[u][v] &lt; INF &&
+                dist[u] + cost[u][v] &lt; dist[v])
+                dist[v] = dist[u] + cost[u][v];
+    }
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Prim MST</h3>
+          <pre><code>int prim(int n, int cost[MAX_V][MAX_V], int start) {
+    int in_tree[MAX_V] = {0};
+    int low[MAX_V];
+    for (int i = 0; i &lt; n; ++i) low[i] = cost[start][i];
+    in_tree[start] = 1;
+
+    int total = 0;
+    for (int e = 1; e &lt; n; ++e) {
+        int u = -1, best = INF;
+        for (int i = 0; i &lt; n; ++i)
+            if (!in_tree[i] && low[i] &lt; best) {
+                best = low[i]; u = i;
+            }
+        if (u == -1) return INF;
+        in_tree[u] = 1;
+        total += best;
+        for (int v = 0; v &lt; n; ++v)
+            if (!in_tree[v] && cost[u][v] &lt; low[v])
+                low[v] = cost[u][v];
+    }
+    return total;
+}</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Kruskal and components</h3>
+          <pre><code>int parent[MAX_V];
+
+int find_set(int x) {
+    while (parent[x] != x) {
+        parent[x] = parent[parent[x]];
+        x = parent[x];
+    }
+    return x;
+}
+
+int union_set(int a, int b) {
+    int ra = find_set(a), rb = find_set(b);
+    if (ra == rb) return 0;
+    parent[rb] = ra;
+    return 1;
+}
+
+/* Kruskal:
+   1. sort edges by weight
+   2. scan edges from light to heavy
+   3. add edge only if union_set succeeds */</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="topological-title">
+      <div class="section-heading">
+        <p class="eyebrow">Directed Graphs</p>
+        <h2 id="topological-title">Topological sort 與 connected components</h2>
+        <p>DAG 可用 indegree queue 做 topological sort；無向圖可重複啟動 DFS/BFS，計算每個 connected component。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block"><h4>Topological sort</h4><p>把 indegree 為 0 的頂點入 queue，移除時降低鄰居 indegree；若最後輸出頂點數不足，表示有 cycle。</p></article>
+        <article class="lesson-block"><h4>Connected components</h4><p>從尚未拜訪的頂點啟動 DFS，每一次啟動代表找到一個 component。</p></article>
+      </div>
+    </section>
+  `;
+}
+
+function sortingSupplementTemplate() {
+  return `
+    <section class="section" aria-labelledby="external-sort-title">
+      <div class="section-heading">
+        <p class="eyebrow">External Sorting</p>
+        <h2 id="external-sort-title">外部排序與 k-way merge</h2>
+        <p>當資料大到無法一次放入記憶體，排序成本主要來自磁碟 I/O。External sort 先分批排序產生 runs，再用 k-way merge 合併。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Run generation</h3>
+          <p>每次讀入一批可放入記憶體的資料，用內部排序法排好後寫成 sorted run。</p>
+          <div class="chapter-tags"><span>Chunk</span><span>Run</span><span>I/O</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>k-way merge</h3>
+          <p>同時打開 k 個 run，每個 run 取目前最小候選值放入 min heap，反覆輸出最小值並補下一筆。</p>
+          <div class="chapter-tags"><span>Min Heap</span><span>Buffer</span><span>Merge</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Pass count</h3>
+          <p>k 越大，merge pass 越少，但需要更多 input buffers。實務設計常在記憶體、檔案數與 I/O pattern 之間取平衡。</p>
+          <div class="chapter-tags"><span>Passes</span><span>Buffers</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>課堂測驗方向</h3>
+          <p>給定記憶體容量、run 數與 k 值，計算需要幾輪 merge，並追蹤 heap 中候選元素的變化。</p>
+          <div class="chapter-tags"><span>Quiz</span><span>Trace</span></div>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function hashingMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="hash-title">
+      <div class="section-heading">
+        <p class="eyebrow">Hash Table</p>
+        <h2 id="hash-title">雜湊、碰撞與負載因子</h2>
+        <p>Hash table 的目標是平均 O(1) 查詢，但前提是 hash function 分布良好且 load factor 受控制。碰撞不是例外，而是設計的一部分。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card"><h3>Hash function</h3><p>把 key 轉成 table index。整數常用 modulo；字串需逐字元混合，避免 anagram 或共同前綴集中。</p><div class="chapter-tags"><span>Key</span><span>Index</span></div></article>
+        <article class="algorithm-card"><h3>Chaining</h3><p>每格 bucket 保存 linked list。碰撞項目掛在同一 bucket，刪除簡單，但需要額外指標空間。</p><div class="chapter-tags"><span>Bucket</span><span>List</span></div></article>
+        <article class="algorithm-card"><h3>Open addressing</h3><p>碰撞後用 probing 找下一格。Linear probing 容易 primary clustering；quadratic probing 可減輕連續群聚。</p><div class="chapter-tags"><span>Probe</span><span>Tombstone</span></div></article>
+        <article class="algorithm-card"><h3>Rehashing</h3><p>當 load factor 過高，建立更大的表並重新插入所有 key，降低平均探測長度。</p><div class="chapter-tags"><span>Resize</span><span>Load</span></div></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="hash-code-title">
+      <div class="section-heading"><p class="eyebrow">Standard C</p><h2 id="hash-code-title">Chaining 與 linear probing C 範例</h2><p>課堂可先用整數 key 練習，再把 hash function 換成字串版本。</p></div>
+      <div class="code-grid">
+        <article class="code-panel"><h3>Chaining insert</h3><pre><code>#define TABLE_SIZE 101
+
+typedef struct Entry {
+    int key;
+    int value;
+    struct Entry *next;
+} Entry;
+
+int hash_int(int key) {
+    if (key &lt; 0) key = -key;
+    return key % TABLE_SIZE;
+}
+
+int put_chain(Entry *table[], Entry *node) {
+    int h = hash_int(node-&gt;key);
+    node-&gt;next = table[h];
+    table[h] = node;
+    return h;
+}</code></pre></article>
+        <article class="code-panel"><h3>Linear probing search</h3><pre><code>#define EMPTY 0
+#define USED 1
+#define DELETED 2
+
+typedef struct {
+    int key;
+    int value;
+    int state;
+} Slot;
+
+int find_slot(Slot table[], int key) {
+    int h = hash_int(key);
+    for (int step = 0; step &lt; TABLE_SIZE; ++step) {
+        int i = (h + step) % TABLE_SIZE;
+        if (table[i].state == EMPTY) return -1;
+        if (table[i].state == USED && table[i].key == key)
+            return i;
+    }
+    return -1;
+}</code></pre></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="load-title">
+      <div class="section-heading"><p class="eyebrow">Load Factor</p><h2 id="load-title">Load factor 視覺化</h2><p><code>alpha = count / table_size</code>。Chaining 可容忍 alpha 超過 1，但平均串列長度會上升；open addressing 通常需要在 0.5 到 0.75 左右 rehash。</p></div>
+      <div class="mini-array"><span class="cell sorted">0</span><span class="cell compare">17</span><span class="cell sorted">2</span><span class="cell active">collision</span><span class="cell">4</span><span class="cell">5</span><span class="cell compare">23</span></div>
+    </section>
+  `;
+}
+
+function priorityQueuesMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="pq-title">
+      <div class="section-heading"><p class="eyebrow">Priority Queue</p><h2 id="pq-title">進階優先佇列</h2><p>Unit 05 已介紹 binary heap；本章重點是 meld、decrease-key 與 amortized cost，理解為什麼 Dijkstra、Prim 和事件模擬需要不同層級的 priority queue。</p></div>
+      <div class="teaching-grid">
+        <article class="algorithm-card"><h3>Binary heap</h3><p>陣列表示完全二元樹，insert 上濾、delete-min 下濾，適合一般用途。</p><div class="chapter-tags"><span>O(log n)</span><span>Array</span></div></article>
+        <article class="algorithm-card"><h3>Leftist tree</h3><p>保存 null path length，讓右路徑短，meld 時沿右路徑合併並交換左右子樹。</p><div class="chapter-tags"><span>Meld</span><span>NPL</span></div></article>
+        <article class="algorithm-card"><h3>Binomial heap</h3><p>由多棵 binomial trees 組成，像二進位加法一樣合併同 degree 的樹。</p><div class="chapter-tags"><span>Forest</span><span>Union</span></div></article>
+        <article class="algorithm-card"><h3>Fibonacci / Pairing heap</h3><p>延遲整理結構來取得良好的 amortized decrease-key；pairing heap 實作較簡潔，常作為實務折衷。</p><div class="chapter-tags"><span>Amortized</span><span>Decrease-key</span></div></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="pq-code-title">
+      <div class="section-heading"><p class="eyebrow">Standard C</p><h2 id="pq-code-title">Min heap C 程式與操作比較</h2><p>先把 binary heap 寫穩，再比較其他可合併 heap 的動機。</p></div>
+      <div class="code-grid">
+        <article class="code-panel"><h3>Insert</h3><pre><code>typedef struct {
+    int data[256];
+    int size;
+} MinHeap;
+
+int heap_push(MinHeap *h, int value) {
+    if (h-&gt;size == 256) return 0;
+    int i = h-&gt;size++;
+    while (i &gt; 0) {
+        int p = (i - 1) / 2;
+        if (h-&gt;data[p] &lt;= value) break;
+        h-&gt;data[i] = h-&gt;data[p];
+        i = p;
+    }
+    h-&gt;data[i] = value;
+    return 1;
+}</code></pre></article>
+        <article class="code-panel"><h3>Delete min</h3><pre><code>int heap_pop(MinHeap *h, int *out) {
+    if (h-&gt;size == 0) return 0;
+    *out = h-&gt;data[0];
+    int last = h-&gt;data[--h-&gt;size];
+    int i = 0;
+    while (i * 2 + 1 &lt; h-&gt;size) {
+        int c = i * 2 + 1;
+        if (c + 1 &lt; h-&gt;size && h-&gt;data[c + 1] &lt; h-&gt;data[c]) ++c;
+        if (h-&gt;data[c] &gt;= last) break;
+        h-&gt;data[i] = h-&gt;data[c];
+        i = c;
+    }
+    h-&gt;data[i] = last;
+    return 1;
+}</code></pre></article>
+      </div>
+    </section>
+  `;
+}
+
+function efficientBstsMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="balanced-title">
+      <div class="section-heading"><p class="eyebrow">Balanced Search Trees</p><h2 id="balanced-title">旋轉與平衡搜尋樹</h2><p>BST 的搜尋成本由高度決定。AVL、splay tree、red-black tree 都透過旋轉或重新著色限制高度或改善近期使用資料的成本。</p></div>
+      <div class="teaching-grid">
+        <article class="algorithm-card"><h3>Single rotation</h3><p>LL 或 RR 失衡時用一次旋轉恢復高度，同時維持 inorder key order。</p><div class="chapter-tags"><span>LL</span><span>RR</span></div></article>
+        <article class="algorithm-card"><h3>Double rotation</h3><p>LR 或 RL 失衡時先對 child 旋轉，再對 root 旋轉。</p><div class="chapter-tags"><span>LR</span><span>RL</span></div></article>
+        <article class="algorithm-card"><h3>AVL tree</h3><p>每個節點左右子樹高度差最多 1，搜尋很穩定，但插入刪除維護較嚴格。</p><div class="chapter-tags"><span>Height</span><span>Strict</span></div></article>
+        <article class="algorithm-card"><h3>Red-black tree</h3><p>用顏色規則限制最長路徑不超過最短路徑兩倍，常用於標準函式庫 map/set。</p><div class="chapter-tags"><span>Color</span><span>Worst-case</span></div></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="rotation-code-title">
+      <div class="section-heading"><p class="eyebrow">Standard C</p><h2 id="rotation-code-title">旋轉與 AVL 插入骨架</h2><p>旋轉後要更新子樹指標與高度。只要 inorder 順序不變，BST order 就被保留下來。</p></div>
+      <div class="code-grid">
+        <article class="code-panel"><h3>Right rotation</h3><pre><code>typedef struct TNode {
+    int key;
+    int height;
+    struct TNode *left;
+    struct TNode *right;
+} TNode;
+
+TNode *rotate_right(TNode *y) {
+    TNode *x = y-&gt;left;
+    TNode *t2 = x-&gt;right;
+    x-&gt;right = y;
+    y-&gt;left = t2;
+    /* update_height(y); update_height(x); */
+    return x;
+}</code></pre></article>
+        <article class="code-panel"><h3>AVL cases</h3><pre><code>/* balance = height(left) - height(right)
+   LL: balance &gt; 1 and key &lt; node-&gt;left-&gt;key
+   RR: balance &lt; -1 and key &gt; node-&gt;right-&gt;key
+   LR: rotate_left(node-&gt;left), then rotate_right(node)
+   RL: rotate_right(node-&gt;right), then rotate_left(node) */</code></pre></article>
+      </div>
+    </section>
+  `;
+}
+
+function multiwaySearchTreesMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="btree-title">
+      <div class="section-heading"><p class="eyebrow">Disk-friendly Index</p><h2 id="btree-title">m-way、B-tree 與 B+ tree</h2><p>多路搜尋樹把多個 key 放在同一節點，降低高度，讓每次磁碟讀取取得更多比較資訊。這是資料庫與檔案系統索引的核心動機。</p></div>
+      <div class="teaching-grid">
+        <article class="algorithm-card"><h3>m-way search tree</h3><p>一個有 k 個 key 的節點最多有 k + 1 個 child，每個 child 對應一段 key range。</p><div class="chapter-tags"><span>Ranges</span><span>Children</span></div></article>
+        <article class="algorithm-card"><h3>B-tree</h3><p>維持最小填充率，插入 overflow 時把中間 key 往上提升並分裂節點。</p><div class="chapter-tags"><span>Split</span><span>Merge</span></div></article>
+        <article class="algorithm-card"><h3>B+ tree</h3><p>內部節點只做導覽，資料集中在葉節點；葉節點串接後特別適合範圍查詢。</p><div class="chapter-tags"><span>Leaf chain</span><span>Range</span></div></article>
+        <article class="algorithm-card"><h3>External storage</h3><p>設計目標從 CPU 比較次數轉向減少 block I/O，因此節點大小常對齊磁碟頁或資料庫 page。</p><div class="chapter-tags"><span>Page</span><span>I/O</span></div></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="btree-flow-title">
+      <div class="section-heading"><p class="eyebrow">Insertion Flow</p><h2 id="btree-flow-title">B-tree 插入分裂流程</h2><p>先在葉節點插入 key；若節點超過容量，選中間 key 上推，左右兩側分成兩個節點。若 parent 也 overflow，分裂會一路往 root 傳播。</p></div>
+      <div class="mini-array"><span class="cell">10</span><span class="cell">20</span><span class="cell active">30</span><span class="cell">40</span><span class="diagram-arrow">split</span><span class="cell compare">promote 30</span></div>
+    </section>
+    <section class="section" aria-labelledby="btree-code-title">
+      <div class="section-heading"><p class="eyebrow">Standard C</p><h2 id="btree-code-title">B-tree 節點結構</h2><p>完整 B-tree 程式較長，課堂先掌握節點欄位、key count 與 child pointer 的關係。</p></div>
+      <div class="code-grid"><article class="code-panel"><h3>Node layout</h3><pre><code>#define ORDER 5
+
+typedef struct BNode {
+    int key_count;
+    int keys[ORDER - 1];
+    struct BNode *child[ORDER];
+    int is_leaf;
+} BNode;
+
+/* key_count == k 時：
+   keys[0..k-1] 有效
+   non-leaf 節點 child[0..k] 有效 */</code></pre></article></div>
+    </section>
+  `;
+}
+
+function digitalSearchStructuresMaterialsTemplate() {
+  return `
+    <section class="section" aria-labelledby="trie-title">
+      <div class="section-heading"><p class="eyebrow">String Keys</p><h2 id="trie-title">Trie、Patricia 與壓縮搜尋結構</h2><p>Digital search structures 不把 key 當成一個整體比較，而是逐字元或逐位元分支。它們特別適合字典、prefix query 與文字搜尋。</p></div>
+      <div class="teaching-grid">
+        <article class="algorithm-card"><h3>Trie</h3><p>每條 root-to-node path 對應一個 prefix。節點要有終止標記，才能區分 app 與 apple。</p><div class="chapter-tags"><span>Prefix</span><span>Terminal</span></div></article>
+        <article class="algorithm-card"><h3>Digital search tree</h3><p>依 key 的 bit 或 character 決定往哪個分支走，適合固定 alphabet 或 bit string。</p><div class="chapter-tags"><span>Bit</span><span>Branch</span></div></article>
+        <article class="algorithm-card"><h3>Patricia</h3><p>壓縮只有單一 child 的路徑，並記錄分歧 bit，降低空節點與長鏈空間浪費。</p><div class="chapter-tags"><span>Compressed</span><span>Bit index</span></div></article>
+        <article class="algorithm-card"><h3>Suffix tree</h3><p>保存字串所有 suffix 的壓縮 trie，可支援快速 substring query，但建構與實作複雜度較高。</p><div class="chapter-tags"><span>Substring</span><span>Text</span></div></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="trie-code-title">
+      <div class="section-heading"><p class="eyebrow">Standard C</p><h2 id="trie-code-title">Trie 插入與搜尋 C 範例</h2><p>以下用小寫英文 alphabet 示範。若 alphabet 很大，可把 child array 改成 map 或排序邊表。</p></div>
+      <div class="code-grid">
+        <article class="code-panel"><h3>Trie node</h3><pre><code>#define ALPHA 26
+
+typedef struct TrieNode {
+    int is_word;
+    struct TrieNode *child[ALPHA];
+} TrieNode;
+
+int index_of(char c) { return c - 'a'; }</code></pre></article>
+        <article class="code-panel"><h3>Insert and search</h3><pre><code>int trie_search(TrieNode *root, const char word[]) {
+    TrieNode *cur = root;
+    for (int i = 0; word[i] != '\\0'; ++i) {
+        int k = index_of(word[i]);
+        if (k &lt; 0 || k &gt;= ALPHA || cur-&gt;child[k] == 0)
+            return 0;
+        cur = cur-&gt;child[k];
+    }
+    return cur-&gt;is_word;
+}
+
+/* insert:
+   for each char, create missing child node;
+   after final char, set is_word = 1 */</code></pre></article>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="prefix-title">
+      <div class="section-heading"><p class="eyebrow">Prefix Query</p><h2 id="prefix-title">Prefix 查詢練習</h2><p>查詢 prefix 時先走到 prefix 最後一個字元；若路徑存在，從該節點 DFS 收集所有 terminal words。Compressed trie 則一次比對一段 edge label。</p></div>
+      <div class="mini-array"><span class="cell sorted">tea</span><span class="cell sorted">team</span><span class="cell active">tear</span><span class="cell compare">to</span><span class="cell compare">top</span></div>
+    </section>
+  `;
+}
+
 function chapterLabTemplate(unit) {
-  if (unit === "01") return basicConceptsMaterialsTemplate();
-  if (unit === "02") return arraysStructuresMaterialsTemplate();
+  if (unit === "01") return `${basicConceptsMaterialsTemplate()}${basicConceptsSupplementTemplate()}`;
+  if (unit === "02") return `${arraysStructuresMaterialsTemplate()}${arraysStructuresSupplementTemplate()}`;
+  if (unit === "03") return stacksQueuesMaterialsTemplate();
+  if (unit === "04") return linkedListsMaterialsTemplate();
   if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}`;
-  if (unit === "06") return `${graphMaterialsTemplate()}${graphLabTemplate()}`;
-  if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingLabTemplate()}`;
+  if (unit === "06") return `${graphMaterialsTemplate()}${graphAdvancedTemplate()}${graphLabTemplate()}`;
+  if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingSupplementTemplate()}${sortingLabTemplate()}`;
+  if (unit === "08") return hashingMaterialsTemplate();
+  if (unit === "09") return priorityQueuesMaterialsTemplate();
+  if (unit === "10") return efficientBstsMaterialsTemplate();
+  if (unit === "11") return multiwaySearchTreesMaterialsTemplate();
+  if (unit === "12") return digitalSearchStructuresMaterialsTemplate();
   return "";
 }
 
