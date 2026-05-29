@@ -6,6 +6,8 @@
 
 **每次整理、增加、刪除或修改任何章節教材時，都必須同步更新本檔案，並與該次教材變更放在同一個 commit。**
 
+跨電腦或跨 Codex 工作環境維護時，必須先閱讀 `MAINTENANCE.md` 與 `AGENTS.md`。開始修改前先確認工作區狀態，並在工作區乾淨時執行 `git pull --ff-only origin main`，確保本地版本已同步 GitHub。
+
 需要更新的項目包含：
 
 - 各章完成度與下一步。
@@ -87,4 +89,5 @@
 
 ## 更新紀錄
 
+- 2026-05-29：新增 `MAINTENANCE.md` 與 `AGENTS.md`，記錄跨電腦維護流程、先 pull 再更新、驗證、commit/push 與 Codex 維護原則。
 - 2026-05-29：建立本 tasklist；記錄 Unit 01-12 初始狀態、Unit 05/06/07 已完成內容與後續待辦。

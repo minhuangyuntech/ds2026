@@ -14,6 +14,10 @@
 
 每次整理、增加、刪除或修改章節教材時，都必須同步更新 `TASKLIST.md`。該檔案記錄各章完成度、後續待辦，以及與 *Fundamentals of Data Structures in C, 2/e* 的重點對照。
 
+## 跨電腦維護
+
+如果在另一台電腦或另一個 Codex 工作環境維護本網站，開始修改前必須先依照 `MAINTENANCE.md` 執行 `git status -sb` 與 `git pull --ff-only origin main`。給 Codex 或其他 coding agent 的簡明規則放在 `AGENTS.md`。
+
 ## 本地預覽
 
 直接開啟 `index.html` 即可使用。若要用本地伺服器預覽：
@@ -41,8 +45,11 @@ http://localhost:8080
 
 ```text
 ds2026/
+  AGENTS.md
   index.html
+  MAINTENANCE.md
   README.md
+  TASKLIST.md
   .nojekyll
   chapters/
     01-basic-concepts.html
