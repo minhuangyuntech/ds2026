@@ -1595,6 +1595,76 @@ function treeMaterialsTemplate() {
         <h2 id="binary-tree-title">二元樹與重要性質</h2>
         <p>二元樹限制每個節點最多兩個 child，因此天然適合用遞迴定義：一棵二元樹不是空樹，就是由 root、left subtree、right subtree 組成。</p>
       </div>
+      <div class="tree-diagram-grid">
+        <article class="tree-diagram-card">
+          <h3>Binary Tree</h3>
+          <p>每個節點最多有 left child 與 right child；不要求每個位置都填滿。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Binary tree example">
+            <line class="tree-diagram-edge" x1="180" y1="48" x2="108" y2="118"></line>
+            <line class="tree-diagram-edge" x1="180" y1="48" x2="252" y2="118"></line>
+            <line class="tree-diagram-edge" x1="108" y1="118" x2="145" y2="192"></line>
+            <circle class="tree-diagram-node root" cx="180" cy="48" r="24"></circle><text class="tree-diagram-label" x="180" y="54">A</text>
+            <circle class="tree-diagram-node internal" cx="108" cy="118" r="23"></circle><text class="tree-diagram-label" x="108" y="124">B</text>
+            <circle class="tree-diagram-node" cx="252" cy="118" r="23"></circle><text class="tree-diagram-label" x="252" y="124">C</text>
+            <circle class="tree-diagram-node leaf" cx="145" cy="192" r="22"></circle><text class="tree-diagram-label" x="145" y="198">D</text>
+            <text class="tree-diagram-note" x="82" y="158">right child</text>
+            <text class="tree-diagram-note" x="180" y="236">允許缺少某些 child</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Full Binary Tree</h3>
+          <p>每個 internal node 都剛好有兩個 child；不會出現只有一個 child 的節點。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Full binary tree example">
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="105" y2="112"></line>
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="255" y2="112"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="65" y2="190"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="145" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="215" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="295" y2="190"></line>
+            <circle class="tree-diagram-node root" cx="180" cy="44" r="23"></circle><text class="tree-diagram-label" x="180" y="50">A</text>
+            <circle class="tree-diagram-node internal" cx="105" cy="112" r="22"></circle><text class="tree-diagram-label" x="105" y="118">B</text>
+            <circle class="tree-diagram-node internal" cx="255" cy="112" r="22"></circle><text class="tree-diagram-label" x="255" y="118">C</text>
+            <circle class="tree-diagram-node leaf" cx="65" cy="190" r="21"></circle><text class="tree-diagram-label" x="65" y="196">D</text>
+            <circle class="tree-diagram-node leaf" cx="145" cy="190" r="21"></circle><text class="tree-diagram-label" x="145" y="196">E</text>
+            <circle class="tree-diagram-node leaf" cx="215" cy="190" r="21"></circle><text class="tree-diagram-label" x="215" y="196">F</text>
+            <circle class="tree-diagram-node leaf" cx="295" cy="190" r="21"></circle><text class="tree-diagram-label" x="295" y="196">G</text>
+            <text class="tree-diagram-note" x="180" y="236">internal node 的 degree 都是 2</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Complete Binary Tree</h3>
+          <p>最後一層以外全部填滿；最後一層由左往右連續填入。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Complete binary tree example">
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="105" y2="112"></line>
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="255" y2="112"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="65" y2="190"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="145" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="215" y2="190"></line>
+            <circle class="tree-diagram-node root" cx="180" cy="44" r="23"></circle><text class="tree-diagram-label" x="180" y="50">A</text>
+            <circle class="tree-diagram-node internal" cx="105" cy="112" r="22"></circle><text class="tree-diagram-label" x="105" y="118">B</text>
+            <circle class="tree-diagram-node internal" cx="255" cy="112" r="22"></circle><text class="tree-diagram-label" x="255" y="118">C</text>
+            <circle class="tree-diagram-node leaf" cx="65" cy="190" r="21"></circle><text class="tree-diagram-label" x="65" y="196">D</text>
+            <circle class="tree-diagram-node leaf" cx="145" cy="190" r="21"></circle><text class="tree-diagram-label" x="145" y="196">E</text>
+            <circle class="tree-diagram-node leaf" cx="215" cy="190" r="21"></circle><text class="tree-diagram-label" x="215" y="196">F</text>
+            <text class="tree-diagram-note" x="282" y="196">下一格才會是 G</text>
+            <text class="tree-diagram-note" x="180" y="236">適合用陣列表示，也是 heap 的形狀基礎</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Skewed Binary Tree</h3>
+          <p>每層幾乎只有一個 child，搜尋或插入成本會接近 linked list。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Skewed binary tree example">
+            <line class="tree-diagram-edge" x1="95" y1="42" x2="145" y2="92"></line>
+            <line class="tree-diagram-edge" x1="145" y1="92" x2="195" y2="142"></line>
+            <line class="tree-diagram-edge" x1="195" y1="142" x2="245" y2="192"></line>
+            <circle class="tree-diagram-node root" cx="95" cy="42" r="23"></circle><text class="tree-diagram-label" x="95" y="48">A</text>
+            <circle class="tree-diagram-node internal" cx="145" cy="92" r="22"></circle><text class="tree-diagram-label" x="145" y="98">B</text>
+            <circle class="tree-diagram-node internal" cx="195" cy="142" r="22"></circle><text class="tree-diagram-label" x="195" y="148">C</text>
+            <circle class="tree-diagram-node leaf" cx="245" cy="192" r="22"></circle><text class="tree-diagram-label" x="245" y="198">D</text>
+            <text class="tree-diagram-note" x="180" y="236">高度接近節點數，最壞 O(n)</text>
+          </svg>
+        </article>
+      </div>
       <div class="chapter-layout">
         <article class="chapter-panel">
           <h3>常見型態</h3>
@@ -1961,6 +2031,48 @@ void threaded_inorder(ThreadNode *head) {
         <h2 id="heap-priority-title">Heap 與 Priority Queue</h2>
         <p>Heap 是 complete binary tree，通常用陣列表示。Max heap 要求每個 parent 都大於等於 children；Min heap 則相反。這個結構可支援 priority queue 的 insert 與 delete max/min。</p>
       </div>
+      <div class="tree-diagram-grid">
+        <article class="tree-diagram-card">
+          <h3>Max Heap Tree</h3>
+          <p>每個 parent 的鍵值都大於或等於 children；root 保存目前最大值。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Max heap tree example">
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="105" y2="112"></line>
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="255" y2="112"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="65" y2="190"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="145" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="215" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="295" y2="190"></line>
+            <circle class="tree-diagram-node heap-max" cx="180" cy="44" r="24"></circle><text class="tree-diagram-label" x="180" y="50">90</text>
+            <circle class="tree-diagram-node internal" cx="105" cy="112" r="23"></circle><text class="tree-diagram-label" x="105" y="118">75</text>
+            <circle class="tree-diagram-node internal" cx="255" cy="112" r="23"></circle><text class="tree-diagram-label" x="255" y="118">60</text>
+            <circle class="tree-diagram-node leaf" cx="65" cy="190" r="22"></circle><text class="tree-diagram-label" x="65" y="196">42</text>
+            <circle class="tree-diagram-node leaf" cx="145" cy="190" r="22"></circle><text class="tree-diagram-label" x="145" y="196">30</text>
+            <circle class="tree-diagram-node leaf" cx="215" cy="190" r="22"></circle><text class="tree-diagram-label" x="215" y="196">55</text>
+            <circle class="tree-diagram-node leaf" cx="295" cy="190" r="22"></circle><text class="tree-diagram-label" x="295" y="196">20</text>
+            <text class="tree-diagram-note strong" x="180" y="236">parent >= children，delete-max 取 root</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Min Heap Tree</h3>
+          <p>每個 parent 的鍵值都小於或等於 children；root 保存目前最小值。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Min heap tree example">
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="105" y2="112"></line>
+            <line class="tree-diagram-edge" x1="180" y1="44" x2="255" y2="112"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="65" y2="190"></line>
+            <line class="tree-diagram-edge" x1="105" y1="112" x2="145" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="215" y2="190"></line>
+            <line class="tree-diagram-edge" x1="255" y1="112" x2="295" y2="190"></line>
+            <circle class="tree-diagram-node heap-min" cx="180" cy="44" r="24"></circle><text class="tree-diagram-label" x="180" y="50">8</text>
+            <circle class="tree-diagram-node internal" cx="105" cy="112" r="23"></circle><text class="tree-diagram-label" x="105" y="118">12</text>
+            <circle class="tree-diagram-node internal" cx="255" cy="112" r="23"></circle><text class="tree-diagram-label" x="255" y="118">20</text>
+            <circle class="tree-diagram-node leaf" cx="65" cy="190" r="22"></circle><text class="tree-diagram-label" x="65" y="196">24</text>
+            <circle class="tree-diagram-node leaf" cx="145" cy="190" r="22"></circle><text class="tree-diagram-label" x="145" y="196">31</text>
+            <circle class="tree-diagram-node leaf" cx="215" cy="190" r="22"></circle><text class="tree-diagram-label" x="215" y="196">45</text>
+            <circle class="tree-diagram-node leaf" cx="295" cy="190" r="22"></circle><text class="tree-diagram-label" x="295" y="196">50</text>
+            <text class="tree-diagram-note strong" x="180" y="236">parent <= children，delete-min 取 root</text>
+          </svg>
+        </article>
+      </div>
       <div class="tree-material-grid">
         <div class="lesson-column">
           <article class="lesson-block">
@@ -2030,6 +2142,93 @@ int heap_delete_max(int heap[], int *size, int *out) {
         <p class="eyebrow">Selection Trees and Forests</p>
         <h2 id="tree-extension-title">Selection Tree 與 Forest</h2>
         <p>教科書在 heap 與 BST 之後，進一步介紹 selection tree 與 forest。這些主題把「樹」從單一階層資料結構推廣到多路選擇、競賽淘汰與多棵樹的集合。</p>
+      </div>
+      <div class="tree-diagram-grid">
+        <article class="tree-diagram-card">
+          <h3>Winner Tree</h3>
+          <p>每次比較把勝者往上送，root 保存整體勝者；適合 k-way merge 反覆選最小值。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Winner tree example">
+            <line class="tree-diagram-edge" x1="180" y1="50" x2="100" y2="125"></line>
+            <line class="tree-diagram-edge" x1="180" y1="50" x2="260" y2="125"></line>
+            <line class="tree-diagram-edge" x1="100" y1="125" x2="65" y2="202"></line>
+            <line class="tree-diagram-edge" x1="100" y1="125" x2="135" y2="202"></line>
+            <line class="tree-diagram-edge" x1="260" y1="125" x2="225" y2="202"></line>
+            <line class="tree-diagram-edge" x1="260" y1="125" x2="295" y2="202"></line>
+            <circle class="tree-diagram-node winner" cx="180" cy="50" r="24"></circle><text class="tree-diagram-label" x="180" y="56">3</text>
+            <circle class="tree-diagram-node winner" cx="100" cy="125" r="23"></circle><text class="tree-diagram-label" x="100" y="131">3</text>
+            <circle class="tree-diagram-node winner" cx="260" cy="125" r="23"></circle><text class="tree-diagram-label" x="260" y="131">4</text>
+            <circle class="tree-diagram-node leaf" cx="65" cy="202" r="22"></circle><text class="tree-diagram-label" x="65" y="208">7</text>
+            <circle class="tree-diagram-node leaf" cx="135" cy="202" r="22"></circle><text class="tree-diagram-label" x="135" y="208">3</text>
+            <circle class="tree-diagram-node leaf" cx="225" cy="202" r="22"></circle><text class="tree-diagram-label" x="225" y="208">9</text>
+            <circle class="tree-diagram-node leaf" cx="295" cy="202" r="22"></circle><text class="tree-diagram-label" x="295" y="208">4</text>
+            <text class="tree-diagram-note strong" x="180" y="236">root = winner，例中以較小值獲勝</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Loser Tree</h3>
+          <p>internal node 保存比較失敗者，整體勝者另存在 root 或外部變數；多路合併時更新路徑較有效率。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Loser tree example">
+            <line class="tree-diagram-edge" x1="180" y1="70" x2="100" y2="135"></line>
+            <line class="tree-diagram-edge" x1="180" y1="70" x2="260" y2="135"></line>
+            <line class="tree-diagram-edge" x1="100" y1="135" x2="65" y2="205"></line>
+            <line class="tree-diagram-edge" x1="100" y1="135" x2="135" y2="205"></line>
+            <line class="tree-diagram-edge" x1="260" y1="135" x2="225" y2="205"></line>
+            <line class="tree-diagram-edge" x1="260" y1="135" x2="295" y2="205"></line>
+            <circle class="tree-diagram-node winner" cx="180" cy="32" r="23"></circle><text class="tree-diagram-label" x="180" y="38">3</text>
+            <text class="tree-diagram-note strong" x="180" y="70">winner</text>
+            <circle class="tree-diagram-node loser" cx="180" cy="100" r="23"></circle><text class="tree-diagram-label" x="180" y="106">4</text>
+            <circle class="tree-diagram-node loser" cx="100" cy="155" r="22"></circle><text class="tree-diagram-label" x="100" y="161">7</text>
+            <circle class="tree-diagram-node loser" cx="260" cy="155" r="22"></circle><text class="tree-diagram-label" x="260" y="161">9</text>
+            <circle class="tree-diagram-node leaf" cx="65" cy="215" r="20"></circle><text class="tree-diagram-label" x="65" y="221">7</text>
+            <circle class="tree-diagram-node leaf" cx="135" cy="215" r="20"></circle><text class="tree-diagram-label" x="135" y="221">3</text>
+            <circle class="tree-diagram-node leaf" cx="225" cy="215" r="20"></circle><text class="tree-diagram-label" x="225" y="221">9</text>
+            <circle class="tree-diagram-node leaf" cx="295" cy="215" r="20"></circle><text class="tree-diagram-label" x="295" y="221">4</text>
+            <text class="tree-diagram-note" x="180" y="250">internal nodes store losers</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Forest</h3>
+          <p>Forest 是多棵互不相交的樹集合；刪除 root 後，原本的子樹就形成 forest。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Forest example">
+            <line class="tree-diagram-edge" x1="75" y1="72" x2="45" y2="145"></line>
+            <line class="tree-diagram-edge" x1="75" y1="72" x2="105" y2="145"></line>
+            <line class="tree-diagram-edge" x1="190" y1="70" x2="170" y2="145"></line>
+            <line class="tree-diagram-edge" x1="190" y1="70" x2="220" y2="145"></line>
+            <line class="tree-diagram-edge" x1="285" y1="72" x2="285" y2="145"></line>
+            <circle class="tree-diagram-node root" cx="75" cy="72" r="23"></circle><text class="tree-diagram-label" x="75" y="78">B</text>
+            <circle class="tree-diagram-node leaf" cx="45" cy="145" r="21"></circle><text class="tree-diagram-label" x="45" y="151">E</text>
+            <circle class="tree-diagram-node leaf" cx="105" cy="145" r="21"></circle><text class="tree-diagram-label" x="105" y="151">F</text>
+            <circle class="tree-diagram-node root" cx="190" cy="70" r="23"></circle><text class="tree-diagram-label" x="190" y="76">C</text>
+            <circle class="tree-diagram-node leaf" cx="170" cy="145" r="21"></circle><text class="tree-diagram-label" x="170" y="151">G</text>
+            <circle class="tree-diagram-node leaf" cx="220" cy="145" r="21"></circle><text class="tree-diagram-label" x="220" y="151">H</text>
+            <circle class="tree-diagram-node root" cx="285" cy="72" r="23"></circle><text class="tree-diagram-label" x="285" y="78">D</text>
+            <circle class="tree-diagram-node leaf" cx="285" cy="145" r="21"></circle><text class="tree-diagram-label" x="285" y="151">I</text>
+            <text class="tree-diagram-note strong" x="75" y="210">T1</text>
+            <text class="tree-diagram-note strong" x="190" y="210">T2</text>
+            <text class="tree-diagram-note strong" x="285" y="210">T3</text>
+            <text class="tree-diagram-note" x="180" y="238">多棵樹彼此沒有共同節點</text>
+          </svg>
+        </article>
+        <article class="tree-diagram-card">
+          <h3>Left-Child Right-Sibling</h3>
+          <p>一般樹轉成二元樹：left 指向第一個 child，right 指向下一個 sibling。</p>
+          <svg class="tree-diagram-svg" viewBox="0 0 360 260" role="img" aria-label="Left child right sibling tree example">
+            <line class="tree-diagram-edge" x1="72" y1="48" x2="72" y2="120"></line>
+            <line class="tree-diagram-edge" x1="72" y1="120" x2="160" y2="120"></line>
+            <line class="tree-diagram-edge" x1="160" y1="120" x2="248" y2="120"></line>
+            <line class="tree-diagram-edge" x1="72" y1="120" x2="72" y2="195"></line>
+            <line class="tree-diagram-edge" x1="72" y1="195" x2="160" y2="195"></line>
+            <circle class="tree-diagram-node root" cx="72" cy="48" r="23"></circle><text class="tree-diagram-label" x="72" y="54">A</text>
+            <circle class="tree-diagram-node internal" cx="72" cy="120" r="22"></circle><text class="tree-diagram-label" x="72" y="126">B</text>
+            <circle class="tree-diagram-node internal" cx="160" cy="120" r="22"></circle><text class="tree-diagram-label" x="160" y="126">C</text>
+            <circle class="tree-diagram-node internal" cx="248" cy="120" r="22"></circle><text class="tree-diagram-label" x="248" y="126">D</text>
+            <circle class="tree-diagram-node leaf" cx="72" cy="195" r="21"></circle><text class="tree-diagram-label" x="72" y="201">E</text>
+            <circle class="tree-diagram-node leaf" cx="160" cy="195" r="21"></circle><text class="tree-diagram-label" x="160" y="201">F</text>
+            <text class="tree-diagram-note" x="46" y="88">first child</text>
+            <text class="tree-diagram-note" x="160" y="104">next sibling</text>
+            <text class="tree-diagram-note" x="180" y="238">一般樹可用二元鏈結表示</text>
+          </svg>
+        </article>
       </div>
       <div class="teaching-grid">
         <article class="algorithm-card">

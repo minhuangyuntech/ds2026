@@ -545,6 +545,105 @@ main {
   font-size: 13px;
 }
 
+.tree-diagram-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 1rem;
+}
+
+.tree-diagram-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem;
+}
+
+.tree-diagram-card h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.tree-diagram-card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.tree-diagram-svg {
+  background:
+    linear-gradient(#eef2f7 1px, transparent 1px),
+    linear-gradient(90deg, #eef2f7 1px, transparent 1px),
+    #fbfcff;
+  background-size: 28px 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: block;
+  min-height: 230px;
+  width: 100%;
+}
+
+.tree-diagram-edge {
+  stroke: #8b95a3;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+
+.tree-diagram-node {
+  fill: var(--violet);
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.tree-diagram-node.root,
+.tree-diagram-node.winner {
+  fill: var(--teal);
+}
+
+.tree-diagram-node.internal {
+  fill: var(--amber);
+}
+
+.tree-diagram-node.leaf {
+  fill: var(--coral);
+}
+
+.tree-diagram-node.heap-max {
+  fill: #e46053;
+}
+
+.tree-diagram-node.heap-min {
+  fill: #4c9f70;
+}
+
+.tree-diagram-node.loser {
+  fill: #5f6f89;
+}
+
+.tree-diagram-label,
+.tree-diagram-note {
+  font-weight: 900;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.tree-diagram-label {
+  fill: #fff;
+  font-size: 14px;
+}
+
+.tree-diagram-note {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
+.tree-diagram-note.strong {
+  fill: var(--ink);
+  font-size: 13px;
+}
+
 .tree-material-grid,
 .graph-material-grid {
   display: grid;
@@ -1665,6 +1764,7 @@ code {
   .chapter-grid,
   .practice-grid,
   .term-grid,
+  .tree-diagram-grid,
   .tree-compare,
   .traversal-row,
   .metric-row,
