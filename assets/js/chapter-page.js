@@ -4031,6 +4031,237 @@ if (scanf("%d", &amp;value) != 1) {
   `;
 }
 
+const chapterExtensions = {
+  "00": {
+    eyebrow: "Reading C Programs",
+    title: "從編譯器訊息建立除錯習慣",
+    intro: "學習 C 時，先把 warning 當成必須處理的訊息。型別不相容、未初始化變數、格式字串錯誤與遺漏 prototype，往往會在資料結構程式變長後放大成難追蹤的錯誤。",
+    cards: [
+      ["Declaration and definition", "宣告告訴編譯器名稱與型別；定義才配置儲存空間或提供函式本體。Header 通常放宣告，.c 檔放定義。", "Header|Prototype|Linker"],
+      ["Scope and lifetime", "區域變數離開 block 後不再有效；static 變數會保留值；malloc 配置的空間則持續到 free。", "Block|static|malloc"],
+      ["Undefined behavior", "越界、使用已釋放記憶體、除以 0、讀取未初始化變數，都可能產生不可預測結果。", "Bounds|Lifetime|Safety"],
+    ],
+    practice: [
+      "找出一段 scanf 遺漏 & 的程式，說明 compiler warning 與執行結果。",
+      "比較 local array、static array、malloc array 的生命週期。",
+      "用 -Wall -Wextra 編譯一段有未使用變數與格式錯誤的程式。",
+    ],
+  },
+  "01": {
+    eyebrow: "Specification Practice",
+    title: "用規格描述資料結構操作",
+    intro: "實作前先寫規格，可以把資料結構問題拆成可驗證的行為。這也是後續設計測試資料與分析邊界案例的起點。",
+    cards: [
+      ["Precondition", "操作開始前必須成立的條件。例如 delete(list, pos) 要求 0 <= pos < length。", "Input|Valid range"],
+      ["Postcondition", "操作完成後保證成立的結果。例如成功插入後 length 增加 1，原有元素相對順序不變。", "Output|State"],
+      ["Invariant", "每次操作前後都要維持的規則。例如動態陣列永遠滿足 0 <= length <= capacity。", "Rule|Verification"],
+    ],
+    practice: [
+      "替 queue enqueue/dequeue 寫出 precondition 與 postcondition。",
+      "分析兩層迴圈中內層只跑 i 次時，總成本為何是 O(n^2)。",
+      "列出 malloc 失敗時 ADT create 操作應回傳的狀態。",
+    ],
+  },
+  "02": {
+    eyebrow: "Representation Trade-offs",
+    title: "連續記憶體、壓縮表示與成本",
+    intro: "表示法的選擇會直接改變空間需求與操作流程。陣列適合直接索引，稀疏表示適合只保存有效項目。",
+    cards: [
+      ["Cache locality", "Row-major 陣列依列掃描時，連續元素較可能位於同一 cache line；依欄掃描可能增加 cache miss。", "Row-major|Cache"],
+      ["Sparse transpose", "簡單 transpose 逐欄掃描 triples；fast transpose 則先計算各欄數量與起始位置。", "Triple|Prefix sum"],
+      ["Polynomial merge", "兩個依 exponent 遞減排列的 term array 可用雙指標線性合併，概念與 merge sort 類似。", "Two pointers|O(m+n)"],
+    ],
+    practice: [
+      "計算 int A[4][6] 中 A[3][2] 相對於 A[0][0] 的 byte offset。",
+      "比較 1000 x 1000 矩陣只有 100 個非零項時 dense 與 triple 表示的空間。",
+      "手動合併兩個多項式 term arrays，略過係數加總為 0 的項目。",
+    ],
+  },
+  "03": {
+    eyebrow: "State Trace",
+    title: "用狀態表追蹤 Stack 與 Circular Queue",
+    intro: "線性容器最適合用逐步狀態表練習。每一步都記錄 top、front、rear、size 與內容，就能快速找出 off-by-one 錯誤。",
+    cards: [
+      ["Stack trace", "push 先增加 top 再寫入；pop 先讀取 top 再減少。空 stack 常用 top = -1 表示。", "top|LIFO"],
+      ["Queue trace", "rear 指向下一個可寫位置，front 指向下一個可讀位置；size 用來區分空與滿。", "front|rear|size"],
+      ["Expression stack", "遇到 operand 直接輸出；遇到 operator 比較 precedence；遇到右括號則彈出直到左括號。", "Operator|Precedence"],
+    ],
+    practice: [
+      "用 capacity = 5 的 circular queue 追蹤 enqueue 10,20,30、dequeue 兩次、再 enqueue 40,50,60。",
+      "把 A + B * C 轉為 postfix，列出每一步 operator stack。",
+      "說明 BFS 為什麼使用 queue 而不是 stack。",
+    ],
+  },
+  "04": {
+    eyebrow: "Pointer Discipline",
+    title: "串列操作中的 ownership 與邊界案例",
+    intro: "Linked list 的核心不是背程式，而是確保每一次指標更新都不遺失節點、不重複釋放，也不留下無法抵達的記憶體。",
+    cards: [
+      ["Insert order", "插入節點時先讓 node->next 指向後半段，再讓 prev->next 指向 node，避免遺失原串列。", "Insert|next"],
+      ["Delete order", "刪除前先保存 victim 與 victim->next，接回串列後再 free victim。", "Delete|free"],
+      ["Sentinel node", "Header node 可統一空串列與刪除第一個節點的流程，減少特殊分支。", "Header|Boundary"],
+    ],
+    practice: [
+      "畫出刪除 head、tail、中間節點時需要更新的指標。",
+      "寫 destroy_list 並說明為什麼要在 free 前保存 next。",
+      "比較 singly list 與 doubly list 刪除已知節點時需要的資訊。",
+    ],
+  },
+  "05": {
+    eyebrow: "Tree Reasoning",
+    title: "BST 刪除、走訪序列與高度",
+    intro: "樹題目常同時考形狀與操作。先確認走訪順序，再分析高度；處理 BST 刪除時，依 child 數量拆成三種情況。",
+    cards: [
+      ["Leaf deletion", "刪除 leaf 時直接讓 parent 對應 child pointer 變成 NULL。", "BST|Leaf"],
+      ["One-child deletion", "用唯一 child 接替被刪節點的位置，保留整棵子樹。", "BST|Relink"],
+      ["Two-child deletion", "以 inorder successor 或 predecessor 取代 key，再到子樹中刪除替代節點。", "Successor|Predecessor"],
+    ],
+    practice: [
+      "對 50,30,70,20,40,60,80 建立 BST，再依序刪除 20、30、50。",
+      "比較遞增插入與亂序插入對 BST 高度的影響。",
+      "給定 preorder 與 inorder，重建唯一二元樹。",
+    ],
+  },
+  "06": {
+    eyebrow: "Graph Reasoning",
+    title: "Frontier、Relaxation 與圖演算法選擇",
+    intro: "圖演算法的差異常集中在 frontier 如何管理：BFS 用 queue，DFS 用 stack，Dijkstra 選最短暫定距離，Prim 選連到生成樹的最輕邊。",
+    cards: [
+      ["Visited timing", "BFS 通常在 enqueue 時標記 visited，避免同一頂點被重複加入 queue。", "BFS|Queue"],
+      ["Relaxation", "若 dist[u] + w(u,v) < dist[v]，就更新 dist[v] 與 parent[v]。", "Dijkstra|Distance"],
+      ["MST versus shortest path", "MST 最小化整棵樹總權重；shortest path tree 最小化從單一起點到各點的距離。", "Prim|Dijkstra"],
+    ],
+    practice: [
+      "對同一張圖列出 BFS queue 與 DFS recursion stack 的變化。",
+      "追蹤 Dijkstra 每輪 fixed 頂點與 dist 陣列。",
+      "舉例說明 MST 不一定是 shortest path tree。",
+    ],
+  },
+  "07": {
+    eyebrow: "Sorting Decisions",
+    title: "穩定性、輸入形狀與演算法選擇",
+    intro: "排序法沒有單一最佳答案。除了 Big-O，還要觀察資料是否近乎有序、是否需要穩定排序、是否允許額外空間，以及資料是否大到必須使用外部排序。",
+    cards: [
+      ["Stable sorting", "相同 key 的資料排序後仍保留原相對順序，適合多欄位依序排序。", "Stable|Records"],
+      ["Nearly sorted input", "Insertion sort 在接近有序資料上接近 O(n)，常被用於小區間或混合排序。", "Insertion|Adaptive"],
+      ["Worst-case guard", "Quick sort 若 pivot 選得差會退化為 O(n^2)；可用 randomized pivot 或 introsort 降低風險。", "Quick sort|Pivot"],
+    ],
+    practice: [
+      "設計一組資料驗證某排序法是否穩定。",
+      "比較 reverse order 對 insertion、merge、heap、quick sort 的影響。",
+      "計算 64 個 sorted runs 使用 4-way merge 需要幾輪合併。",
+    ],
+  },
+  "08": {
+    eyebrow: "Hash Table Trace",
+    title: "探測序列、刪除標記與 rehash",
+    intro: "Hash table 的平均效率來自短探測序列。練習時要記錄每一個 key 的 home bucket、碰撞位置與最終插入位置。",
+    cards: [
+      ["Linear probing", "依序檢查 h, h+1, h+2...，容易形成連續群聚。", "Probe|Cluster"],
+      ["Tombstone", "Open addressing 刪除不能直接改成 EMPTY，否則會截斷其他 key 的搜尋路徑。", "Delete|DELETED"],
+      ["Rehash", "負載因子過高時建立較大的表，重新計算每個 key 的位置。", "Load factor|Resize"],
+    ],
+    practice: [
+      "table size = 11，使用 key % 11 插入 22,1,13,11,24,33，追蹤 linear probing。",
+      "說明為什麼刪除 22 後不能直接標成 EMPTY。",
+      "比較 chaining 與 open addressing 在高負載下的差異。",
+    ],
+  },
+  "09": {
+    eyebrow: "Heap Operations",
+    title: "上濾、下濾、meld 與 decrease-key",
+    intro: "Priority queue 的操作成本取決於結構。Binary heap 適合一般 insert/delete-min；若演算法頻繁合併 heaps，leftist tree 或其他 meldable heap 更合適。",
+    cards: [
+      ["Percolate up", "插入元素先放在最後，再反覆與 parent 比較並上移。", "Insert|O(log n)"],
+      ["Percolate down", "delete-min 以最後元素補 root，再與較小 child 交換直到 heap order 恢復。", "Delete-min|O(log n)"],
+      ["Decrease-key", "降低 priority 後通常要上濾；Dijkstra 常需要快速定位待更新元素。", "Index map|Dijkstra"],
+    ],
+    practice: [
+      "把 8,3,12,1,6,5 依序插入 min heap，畫出每一步。",
+      "從 heap 刪除最小值兩次，追蹤下濾過程。",
+      "比較 binary heap 與 leftist tree 的 meld 成本。",
+    ],
+  },
+  "10": {
+    eyebrow: "Rotation Trace",
+    title: "從失衡路徑判斷旋轉",
+    intro: "AVL 插入後，從新節點往 root 回溯，找到第一個失衡節點。再根據插入路徑是 LL、RR、LR 或 RL 選擇旋轉。",
+    cards: [
+      ["LL case", "插入發生在左 child 的左子樹，對失衡節點做 right rotation。", "AVL|Right rotate"],
+      ["RR case", "插入發生在右 child 的右子樹，對失衡節點做 left rotation。", "AVL|Left rotate"],
+      ["LR and RL", "折線型路徑需要兩次旋轉：先轉 child，再轉失衡節點。", "Double rotation|Height"],
+    ],
+    practice: [
+      "依序插入 30,20,10，標出 LL 失衡與旋轉後結果。",
+      "依序插入 30,10,20，標出 LR 兩次旋轉。",
+      "比較 AVL 與 red-black tree 對平衡條件的嚴格程度。",
+    ],
+  },
+  "11": {
+    eyebrow: "Index Blocks",
+    title: "B-tree 分裂與 B+ tree 範圍查詢",
+    intro: "多路搜尋樹的重點是降低高度與 block I/O。每個節點放多個 keys，讓一次讀取可以縮小更大的搜尋範圍。",
+    cards: [
+      ["Node split", "插入後若節點 overflow，將中間 key 提升到 parent，左右 keys 分成兩個節點。", "B-tree|Split"],
+      ["Leaf chain", "B+ tree 葉節點彼此串接，找到起點後可沿鏈結線性輸出範圍結果。", "B+ tree|Range"],
+      ["Fan-out", "節點可容納越多 children，樹越矮；實務上常讓節點大小接近 storage page。", "Page|Height"],
+    ],
+    practice: [
+      "對 order 4 B-tree 插入 10,20,5,6,12,30,7,17，追蹤分裂。",
+      "說明 B+ tree 查詢 20 到 50 範圍資料的流程。",
+      "比較 binary search tree 與 B-tree 在磁碟上的 I/O 次數。",
+    ],
+  },
+  "12": {
+    eyebrow: "Prefix Search",
+    title: "Trie 自動完成與壓縮路徑",
+    intro: "Trie 將共同 prefix 合併成共用路徑。查詢字串長度為 L 時，走訪成本主要與 L 有關，而不是字典中單字數量。",
+    cards: [
+      ["Terminal marker", "節點必須記錄是否為完整單字，才能區分 car 與 cargo。", "Word|Prefix"],
+      ["Autocomplete", "走到 prefix 最後節點後，用 DFS 收集所有 terminal descendants。", "DFS|Suggestions"],
+      ["Compressed edge", "若一段路徑沒有分支，可把多個字元壓成單一 edge label，節省節點數。", "Patricia|Compressed trie"],
+    ],
+    practice: [
+      "把 tea, team, tear, to, top 插入 trie，畫出共享 prefix。",
+      "列出 prefix te 的 autocomplete 結果。",
+      "比較 trie、hash table、BST 對 prefix query 的支援差異。",
+    ],
+  },
+};
+
+function chapterExtensionTemplate(unit) {
+  const extension = chapterExtensions[unit];
+  if (!extension) return "";
+  const cards = extension.cards
+    .map(
+      ([title, text, tags]) => `
+        <article class="algorithm-card">
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(text)}</p>
+          <div class="chapter-tags">${tags
+            .split("|")
+            .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+            .join("")}</div>
+        </article>
+      `,
+    )
+    .join("");
+  return `
+    <section class="section" aria-labelledby="extension-${unit}-title">
+      <div class="section-heading">
+        <p class="eyebrow">${escapeHtml(extension.eyebrow)}</p>
+        <h2 id="extension-${unit}-title">${escapeHtml(extension.title)}</h2>
+        <p>${escapeHtml(extension.intro)}</p>
+      </div>
+      <div class="teaching-grid">${cards}</div>
+      <article class="chapter-panel standalone-code-panel">
+        <h3>課堂練習</h3>
+        <ol>${listItems(extension.practice)}</ol>
+      </article>
+    </section>
+  `;
+}
+
 function chapterLabTemplate(unit) {
   if (unit === "00") return standardCSyntaxMaterialsTemplate();
   if (unit === "01") return `${basicConceptsMaterialsTemplate()}${basicConceptsSupplementTemplate()}`;
@@ -4069,6 +4300,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </section>
 
     ${chapterLabTemplate(unit)}
+    ${chapterExtensionTemplate(unit)}
 
     <section class="section">
       <div class="chapter-layout">
