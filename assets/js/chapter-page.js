@@ -2649,27 +2649,55 @@ function graphMaterialsTemplate() {
         <p>18 世紀的柯尼茲堡有七座橋連接四塊陸地。問題是：能否選一個起點，每座橋恰好走一次，最後走完全部橋梁？歐拉把地圖簡化成圖，開啟了 graph theory 的研究。</p>
       </div>
       <div class="definition-panel">
-        <svg class="graph-mini-svg" viewBox="0 0 620 300" role="img" aria-label="柯尼茲堡七橋問題抽象圖">
-          <path class="graph-mini-edge" d="M303,68 C235,48 168,74 127,132"></path>
-          <path class="graph-mini-edge" d="M303,68 C240,104 190,128 129,148"></path>
-          <path class="graph-mini-edge" d="M303,230 C234,251 170,221 127,168"></path>
-          <path class="graph-mini-edge" d="M303,230 C238,195 188,174 129,154"></path>
-          <line class="graph-mini-edge" x1="348" y1="148" x2="472" y2="148"></line>
-          <path class="graph-mini-edge" d="M512,126 C475,56 406,42 342,66"></path>
-          <path class="graph-mini-edge" d="M512,170 C472,239 405,251 342,232"></path>
-          <circle class="graph-mini-node start" cx="105" cy="150" r="30"></circle>
-          <text class="graph-mini-label" x="105" y="156">K</text>
-          <circle class="graph-mini-node" cx="325" cy="62" r="30"></circle>
-          <text class="graph-mini-label" x="325" y="68">N</text>
-          <circle class="graph-mini-node target" cx="325" cy="238" r="30"></circle>
-          <text class="graph-mini-label" x="325" y="244">S</text>
-          <circle class="graph-mini-node" cx="500" cy="150" r="30"></circle>
-          <text class="graph-mini-label" x="500" y="156">L</text>
-          <text class="graph-mini-weight" x="105" y="202">Kneiphof：degree 5</text>
-          <text class="graph-mini-weight" x="325" y="22">北岸 N：degree 3</text>
-          <text class="graph-mini-weight" x="325" y="286">南岸 S：degree 3</text>
-          <text class="graph-mini-weight" x="500" y="202">Lomse：degree 3</text>
-        </svg>
+        <div class="konigsberg-grid">
+          <figure class="konigsberg-figure">
+            <figcaption>原始橋梁配置示意圖</figcaption>
+            <svg class="konigsberg-map-svg" viewBox="0 0 620 300" role="img" aria-label="柯尼茲堡四塊陸地與七座橋配置示意圖">
+              <rect class="konigsberg-water" width="620" height="300"></rect>
+              <path class="konigsberg-land" d="M0,0 H620 V78 C520,68 452,75 374,92 C300,108 228,96 156,78 C96,63 48,66 0,82 Z"></path>
+              <path class="konigsberg-land" d="M0,216 C72,230 136,220 192,205 C258,187 315,194 382,212 C470,236 537,225 620,214 V300 H0 Z"></path>
+              <path class="konigsberg-land island" d="M164,121 C221,92 307,100 364,122 C397,135 397,169 361,181 C296,202 218,195 166,174 C135,162 135,137 164,121 Z"></path>
+              <path class="konigsberg-land island" d="M447,111 C491,92 561,101 594,124 C615,139 613,162 590,177 C551,199 488,197 449,177 C420,162 420,127 447,111 Z"></path>
+              <g class="konigsberg-bridges">
+                <rect x="185" y="79" width="20" height="57" transform="rotate(-24 195 108)"></rect>
+                <rect x="287" y="86" width="20" height="47" transform="rotate(9 297 110)"></rect>
+                <rect x="193" y="170" width="20" height="55" transform="rotate(24 203 198)"></rect>
+                <rect x="292" y="174" width="20" height="43" transform="rotate(-10 302 196)"></rect>
+                <rect x="380" y="141" width="62" height="20"></rect>
+                <rect x="470" y="76" width="20" height="49" transform="rotate(19 480 100)"></rect>
+                <rect x="480" y="175" width="20" height="50" transform="rotate(-19 490 200)"></rect>
+              </g>
+              <text class="konigsberg-map-label" x="310" y="42">北岸 N</text>
+              <text class="konigsberg-map-label" x="310" y="270">南岸 S</text>
+              <text class="konigsberg-map-label island" x="270" y="153">Kneiphof K</text>
+              <text class="konigsberg-map-label island" x="520" y="153">Lomse L</text>
+            </svg>
+          </figure>
+          <figure class="konigsberg-figure">
+            <figcaption>抽象成 multigraph</figcaption>
+            <svg class="graph-mini-svg" viewBox="0 0 620 300" role="img" aria-label="柯尼茲堡七橋問題抽象圖">
+              <path class="graph-mini-edge" d="M303,68 C235,48 168,74 127,132"></path>
+              <path class="graph-mini-edge" d="M303,68 C240,104 190,128 129,148"></path>
+              <path class="graph-mini-edge" d="M303,230 C234,251 170,221 127,168"></path>
+              <path class="graph-mini-edge" d="M303,230 C238,195 188,174 129,154"></path>
+              <line class="graph-mini-edge" x1="348" y1="148" x2="472" y2="148"></line>
+              <path class="graph-mini-edge" d="M512,126 C475,56 406,42 342,66"></path>
+              <path class="graph-mini-edge" d="M512,170 C472,239 405,251 342,232"></path>
+              <circle class="graph-mini-node start" cx="105" cy="150" r="30"></circle>
+              <text class="graph-mini-label" x="105" y="156">K</text>
+              <circle class="graph-mini-node" cx="325" cy="62" r="30"></circle>
+              <text class="graph-mini-label" x="325" y="68">N</text>
+              <circle class="graph-mini-node target" cx="325" cy="238" r="30"></circle>
+              <text class="graph-mini-label" x="325" y="244">S</text>
+              <circle class="graph-mini-node" cx="500" cy="150" r="30"></circle>
+              <text class="graph-mini-label" x="500" y="156">L</text>
+              <text class="graph-mini-weight" x="105" y="202">Kneiphof：degree 5</text>
+              <text class="graph-mini-weight" x="325" y="22">北岸 N：degree 3</text>
+              <text class="graph-mini-weight" x="325" y="286">南岸 S：degree 3</text>
+              <text class="graph-mini-weight" x="500" y="202">Lomse：degree 3</text>
+            </svg>
+          </figure>
+        </div>
         <div class="insight-box">
           <strong>建模：</strong>四塊陸地是 vertices，七座橋是 edges。同一對陸地之間可以有多座橋，因此這是一個 multigraph。<br>
           <strong>判斷：</strong>若要每條 edge 恰好走一次，途中每次進入一個頂點，通常也必須由另一條 edge 離開。Euler circuit 要求所有頂點 degree 都是偶數；Euler trail 則最多只能有兩個奇數 degree 頂點。柯尼茲堡的四個頂點 degree 分別為 5、3、3、3，全都是奇數，因此無法一次走完七座橋。

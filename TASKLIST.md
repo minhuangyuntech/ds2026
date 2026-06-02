@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：補強 Unit 06 柯尼茲堡七橋問題，新增保留河道、四塊陸地與七座橋位置的原始橋梁配置示意圖，並與 multigraph 抽象圖並列對照。
 - 2026-06-02：擴充 Unit 06 Graph 經典例題，加入柯尼茲堡七橋問題的抽象圖、multigraph 建模、四個頂點 degree 分析，以及 Euler trail / Euler circuit 的存在條件。
 - 2026-06-02：擴充 Unit 06 Graph 名詞整理，將每個名詞補成完整定義與具體範例；新增 in-degree/out-degree、walk、reachable、strongly connected、tree/forest、minimum spanning tree、multigraph、complete graph、bipartite graph、DAG 與 bridge 等課堂常用詞彙。
 - 2026-06-02：擴充 Unit 07 Radix Sort，新增 LSD Radix Sort 動態圖例互動介面；提供重置、上一步、下一步、自動播放與速度控制，逐步顯示個位/十位/百位 pass、0-9 buckets、穩定分桶、收回順序與目前陣列狀態。

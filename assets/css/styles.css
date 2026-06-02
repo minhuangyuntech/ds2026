@@ -565,6 +565,63 @@ main {
   font-size: 13px;
 }
 
+.konigsberg-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.konigsberg-figure {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.konigsberg-figure figcaption {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.konigsberg-map-svg {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: block;
+  min-height: 220px;
+  width: 100%;
+}
+
+.konigsberg-water {
+  fill: #b8dce8;
+}
+
+.konigsberg-land {
+  fill: #cbdc9a;
+  stroke: #91a66a;
+  stroke-width: 2;
+}
+
+.konigsberg-land.island {
+  fill: #d9e7ae;
+}
+
+.konigsberg-bridges rect {
+  fill: #bf8257;
+  stroke: #805337;
+  stroke-width: 3;
+}
+
+.konigsberg-map-label {
+  fill: #304435;
+  font-size: 15px;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+.konigsberg-map-label.island {
+  font-size: 14px;
+}
+
 .tree-diagram-grid {
   display: grid;
   gap: 0.8rem;
@@ -1861,6 +1918,7 @@ code {
   .graph-grid,
   .tree-material-grid,
   .graph-material-grid,
+  .konigsberg-grid,
   .chapter-layout,
   .teaching-grid,
   .lesson-layout,
