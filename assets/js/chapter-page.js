@@ -2581,6 +2581,11 @@ const graphTerms = [
     "編譯前置工作 A 指向建置 B，B 指向測試 C；只要不形成回圈，就是 DAG。",
   ],
   [
+    "Euler Trail / Euler Circuit",
+    "恰好經過每條 edge 一次的走法稱為 Euler trail；若起點與終點相同，稱為 Euler circuit。無向連通圖存在 Euler circuit 的條件是所有頂點 degree 皆為偶數；若恰有兩個奇數 degree 頂點，則只能形成起終點不同的 Euler trail。",
+    "柯尼茲堡七橋問題有四個奇數 degree 頂點，因此既沒有 Euler trail，也沒有 Euler circuit。",
+  ],
+  [
     "Bridge / Cut Edge",
     "在無向圖中，移除後會讓 connected components 數量增加的邊稱為 bridge 或 cut edge。它代表網路中不能輕易失去的關鍵連線。",
     "A-B-C 中，移除 {B, C} 後 C 會與 A、B 分離，因此 {B, C} 是 bridge。",
@@ -2634,6 +2639,41 @@ function graphMaterialsTemplate() {
           <circle class="graph-mini-node target" cx="455" cy="184" r="24"></circle><text class="graph-mini-label" x="455" y="190">D</text>
           <circle class="graph-mini-node" cx="540" cy="74" r="24"></circle><text class="graph-mini-label" x="540" y="80">E</text>
         </svg>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="konigsberg-title">
+      <div class="section-heading">
+        <p class="eyebrow">Classic Example</p>
+        <h2 id="konigsberg-title">柯尼茲堡七橋問題</h2>
+        <p>18 世紀的柯尼茲堡有七座橋連接四塊陸地。問題是：能否選一個起點，每座橋恰好走一次，最後走完全部橋梁？歐拉把地圖簡化成圖，開啟了 graph theory 的研究。</p>
+      </div>
+      <div class="definition-panel">
+        <svg class="graph-mini-svg" viewBox="0 0 620 300" role="img" aria-label="柯尼茲堡七橋問題抽象圖">
+          <path class="graph-mini-edge" d="M303,68 C235,48 168,74 127,132"></path>
+          <path class="graph-mini-edge" d="M303,68 C240,104 190,128 129,148"></path>
+          <path class="graph-mini-edge" d="M303,230 C234,251 170,221 127,168"></path>
+          <path class="graph-mini-edge" d="M303,230 C238,195 188,174 129,154"></path>
+          <line class="graph-mini-edge" x1="348" y1="148" x2="472" y2="148"></line>
+          <path class="graph-mini-edge" d="M512,126 C475,56 406,42 342,66"></path>
+          <path class="graph-mini-edge" d="M512,170 C472,239 405,251 342,232"></path>
+          <circle class="graph-mini-node start" cx="105" cy="150" r="30"></circle>
+          <text class="graph-mini-label" x="105" y="156">K</text>
+          <circle class="graph-mini-node" cx="325" cy="62" r="30"></circle>
+          <text class="graph-mini-label" x="325" y="68">N</text>
+          <circle class="graph-mini-node target" cx="325" cy="238" r="30"></circle>
+          <text class="graph-mini-label" x="325" y="244">S</text>
+          <circle class="graph-mini-node" cx="500" cy="150" r="30"></circle>
+          <text class="graph-mini-label" x="500" y="156">L</text>
+          <text class="graph-mini-weight" x="105" y="202">Kneiphof：degree 5</text>
+          <text class="graph-mini-weight" x="325" y="22">北岸 N：degree 3</text>
+          <text class="graph-mini-weight" x="325" y="286">南岸 S：degree 3</text>
+          <text class="graph-mini-weight" x="500" y="202">Lomse：degree 3</text>
+        </svg>
+        <div class="insight-box">
+          <strong>建模：</strong>四塊陸地是 vertices，七座橋是 edges。同一對陸地之間可以有多座橋，因此這是一個 multigraph。<br>
+          <strong>判斷：</strong>若要每條 edge 恰好走一次，途中每次進入一個頂點，通常也必須由另一條 edge 離開。Euler circuit 要求所有頂點 degree 都是偶數；Euler trail 則最多只能有兩個奇數 degree 頂點。柯尼茲堡的四個頂點 degree 分別為 5、3、3、3，全都是奇數，因此無法一次走完七座橋。
+        </div>
       </div>
     </section>
 
