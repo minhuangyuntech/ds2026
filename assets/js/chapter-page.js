@@ -4510,6 +4510,49 @@ function chapterExamplesTemplate(unit) {
   `;
 }
 
+function radixInteractiveLabTemplate() {
+  return `
+    <section id="radix-lab" class="section lab-section" aria-labelledby="radix-lab-title">
+      <div class="section-heading">
+        <p class="eyebrow">Radix Sort Lab</p>
+        <h2 id="radix-lab-title">LSD Radix Sort：逐位分桶與穩定收回</h2>
+        <p>使用個位、十位、百位依序分類。每一步都保留同桶內原本順序，才能在下一輪延續已完成的低位排序結果。</p>
+      </div>
+      <div class="visual-panel radix-lab-panel">
+        <div class="toolbar" aria-label="Radix Sort 動態圖例控制">
+          <button type="button" class="icon-btn" id="radix-reset" title="回到起點" aria-label="回到起點">
+            <i data-lucide="rotate-ccw"></i><span>重置</span>
+          </button>
+          <button type="button" class="icon-btn" id="radix-prev" title="上一步" aria-label="上一步">
+            <i data-lucide="step-back"></i><span>上一步</span>
+          </button>
+          <button type="button" class="icon-btn primary" id="radix-play" title="播放或暫停" aria-label="播放或暫停">
+            <i data-lucide="play"></i><span>播放</span>
+          </button>
+          <button type="button" class="icon-btn" id="radix-next" title="下一步" aria-label="下一步">
+            <i data-lucide="step-forward"></i><span>下一步</span>
+          </button>
+          <label class="field compact-field">
+            <span>速度</span>
+            <input id="radix-speed" type="range" min="180" max="1200" value="620">
+          </label>
+        </div>
+        <div class="radix-lab-summary" aria-live="polite">
+          <div><span>位數</span><strong id="radix-digit">準備</strong></div>
+          <div><span>階段</span><strong id="radix-phase">尚未開始</strong></div>
+          <div><span>步驟</span><strong id="radix-step-count">1 / 1</strong></div>
+        </div>
+        <div class="radix-array-zone">
+          <p class="eyebrow">Current Array</p>
+          <div id="radix-array" class="radix-array-row"></div>
+        </div>
+        <div id="radix-buckets" class="radix-bucket-grid" aria-label="Radix Sort buckets"></div>
+        <div id="radix-lab-note" class="insight-box">按下一步，從個位數開始分桶。</div>
+      </div>
+    </section>
+  `;
+}
+
 function chapterLabTemplate(unit) {
   if (unit === "00") return standardCSyntaxMaterialsTemplate();
   if (unit === "01") return `${basicConceptsMaterialsTemplate()}${basicConceptsSupplementTemplate()}`;
@@ -4518,7 +4561,7 @@ function chapterLabTemplate(unit) {
   if (unit === "04") return linkedListsMaterialsTemplate();
   if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}`;
   if (unit === "06") return `${graphMaterialsTemplate()}${graphAdvancedTemplate()}${graphLabTemplate()}`;
-  if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingSupplementTemplate()}${sortingLabTemplate()}`;
+  if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingSupplementTemplate()}${radixInteractiveLabTemplate()}${sortingLabTemplate()}`;
   if (unit === "08") return hashingMaterialsTemplate();
   if (unit === "09") return priorityQueuesMaterialsTemplate();
   if (unit === "10") return efficientBstsMaterialsTemplate();

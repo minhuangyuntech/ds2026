@@ -1132,6 +1132,117 @@ main {
   text-anchor: middle;
 }
 
+.radix-lab-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.radix-lab-summary {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.radix-lab-summary div {
+  background: #f5f7fb;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.7rem;
+}
+
+.radix-lab-summary span,
+.radix-array-zone .eyebrow {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.radix-array-zone {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.radix-array-zone .eyebrow {
+  margin: 0;
+}
+
+.radix-array-row,
+.radix-bucket-grid {
+  display: grid;
+  gap: 0.45rem;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.radix-array-cell {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.55rem 0.35rem;
+  text-align: center;
+}
+
+.radix-array-cell.active,
+.radix-bucket.active {
+  background: #fff5d6;
+  border-color: var(--amber);
+}
+
+.radix-array-cell small {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.radix-bucket {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-height: 8.5rem;
+  overflow: hidden;
+}
+
+.radix-bucket > strong {
+  background: #edf0f6;
+  display: block;
+  padding: 0.45rem;
+  text-align: center;
+}
+
+.radix-bucket div {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.45rem;
+}
+
+.radix-bucket span,
+.radix-bucket em {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-style: normal;
+  font-weight: 800;
+  padding: 0.28rem 0.15rem;
+  text-align: center;
+}
+
+.radix-bucket span.active {
+  background: #ffeaa6;
+  border-color: var(--amber);
+}
+
+.radix-bucket em {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .bucket {
   align-items: stretch;
   flex-direction: column;
@@ -1783,6 +1894,15 @@ code {
   .field,
   .icon-btn {
     flex: 1 1 100%;
+  }
+
+  .radix-array-row,
+  .radix-bucket-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .radix-bucket {
+    min-height: 6.5rem;
   }
 
   .algorithm-tabs .tab,

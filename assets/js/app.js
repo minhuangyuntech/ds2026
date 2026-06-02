@@ -28,6 +28,7 @@ function clamp(value, min, max) {
 document.addEventListener("DOMContentLoaded", () => {
   if ($("#chapter-grid")) renderChapters();
   if ($("#sort-svg")) initSortingLab();
+  if ($("#radix-buckets")) initRadixLab();
   if ($("#tree-svg")) initTreeLab();
   if ($("#graph-svg")) initGraphLab();
   if ($("#heap-demo-svg")) initHeapDemo();
@@ -595,6 +596,134 @@ function pauseSort() {
   sortState.playing = false;
   const playLabel = $("#sort-play span");
   if (playLabel) playLabel.textContent = "播放";
+}
+
+const radixLabState = {
+  base: [179, 208, 306, 93, 859, 984, 55, 9, 271, 33],
+  steps: [],
+  index: 0,
+  timer: null,
+  playing: false,
+};
+
+function radixDigitLabel(exp) {
+  if (exp === 1) return "個位數";
+  if (exp === 10) return "十位數";
+  if (exp === 100) return "百位數";
+  return `${exp} 位`;
+}
+
+function buildRadixLabSteps(source) {
+  const arr = source.slice();
+  const steps = [];
+  const addStep = (exp, phase, buckets, activeValue, activeBucket, note) => {
+    steps.push({
+      values: arr.slice(),
+      exp,
+      phase,
+      buckets: buckets.map((bucket) => bucket.slice()),
+      activeValue,
+      activeBucket,
+      note,
+    });
+  };
+  addStep(0, "準備", Array.from({ length: 10 }, () => []), null, null, "按下一步，從個位數開始分桶。");
+
+  const max = Math.max(...arr);
+  for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+    const buckets = Array.from({ length: 10 }, () => []);
+    const label = radixDigitLabel(exp);
+    addStep(exp, "開始分桶", buckets, null, null, `${label} pass：由左至右讀取陣列。`);
+    for (const value of arr) {
+      const digit = Math.floor(value / exp) % 10;
+      buckets[digit].push(value);
+      addStep(exp, "分桶", buckets, value, digit, `${value} 的${label}是 ${digit}，放入 bucket ${digit}。`);
+    }
+
+    let index = 0;
+    addStep(exp, "開始收回", buckets, null, null, `從 bucket 0 到 bucket 9 穩定收回資料。`);
+    for (let digit = 0; digit < buckets.length; digit += 1) {
+      for (const value of buckets[digit]) {
+        arr[index] = value;
+        index += 1;
+        addStep(exp, "收回", buckets, value, digit, `從 bucket ${digit} 收回 ${value}，寫入位置 ${index}。`);
+      }
+    }
+    addStep(exp, "完成一輪", buckets, null, null, `${label} pass 完成：${arr.join(", ")}。`);
+  }
+  addStep(0, "排序完成", Array.from({ length: 10 }, () => []), null, null, `排序完成：${arr.join(", ")}。`);
+  return steps;
+}
+
+function initRadixLab() {
+  radixLabState.steps = buildRadixLabSteps(radixLabState.base);
+  radixLabState.index = 0;
+  $("#radix-reset").addEventListener("click", () => {
+    pauseRadixLab();
+    radixLabState.index = 0;
+    renderRadixLab();
+  });
+  $("#radix-prev").addEventListener("click", () => {
+    pauseRadixLab();
+    if (radixLabState.index > 0) radixLabState.index -= 1;
+    renderRadixLab();
+  });
+  $("#radix-next").addEventListener("click", () => {
+    pauseRadixLab();
+    advanceRadixLab();
+  });
+  $("#radix-play").addEventListener("click", toggleRadixLabPlayback);
+  renderRadixLab();
+}
+
+function renderRadixLab() {
+  const step = radixLabState.steps[radixLabState.index];
+  $("#radix-digit").textContent = step.phase === "排序完成" ? "完成" : step.exp ? radixDigitLabel(step.exp) : "準備";
+  $("#radix-phase").textContent = step.phase;
+  $("#radix-step-count").textContent = `${radixLabState.index + 1} / ${radixLabState.steps.length}`;
+  $("#radix-lab-note").textContent = step.note;
+  $("#radix-array").innerHTML = step.values
+    .map((value, index) => {
+      const active = value === step.activeValue ? " active" : "";
+      return `<span class="radix-array-cell${active}"><small>a[${index + 1}]</small><strong>${value}</strong></span>`;
+    })
+    .join("");
+  $("#radix-buckets").innerHTML = step.buckets
+    .map((bucket, digit) => {
+      const active = digit === step.activeBucket ? " active" : "";
+      const values = bucket.length
+        ? bucket.map((value) => `<span${value === step.activeValue ? " class=\"active\"" : ""}>${value}</span>`).join("")
+        : "<em>empty</em>";
+      return `<div class="radix-bucket${active}"><strong>${digit}</strong><div>${values}</div></div>`;
+    })
+    .join("");
+}
+
+function advanceRadixLab() {
+  if (radixLabState.index < radixLabState.steps.length - 1) {
+    radixLabState.index += 1;
+    renderRadixLab();
+  } else {
+    pauseRadixLab();
+  }
+}
+
+function toggleRadixLabPlayback() {
+  if (radixLabState.playing) {
+    pauseRadixLab();
+    return;
+  }
+  radixLabState.playing = true;
+  $("#radix-play span").textContent = "暫停";
+  radixLabState.timer = window.setInterval(advanceRadixLab, Number($("#radix-speed").value));
+}
+
+function pauseRadixLab() {
+  if (radixLabState.timer) window.clearInterval(radixLabState.timer);
+  radixLabState.timer = null;
+  radixLabState.playing = false;
+  const label = $("#radix-play span");
+  if (label) label.textContent = "播放";
 }
 
 const treeState = {
