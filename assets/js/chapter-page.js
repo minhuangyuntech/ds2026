@@ -2567,8 +2567,8 @@ const graphTerms = [
   ],
   [
     "Complete Graph",
-    "無向圖中，若每一對不同頂點之間都有邊相連，稱為 complete graph，記為 Kₙ。n 個頂點的 complete graph 共有 n(n - 1) / 2 條邊。",
-    "K₄ 有 4 個頂點，每個頂點都連到另外 3 個頂點，共有 6 條邊。",
+    "若每一對不同頂點之間都有邊相連，稱為 complete graph。具有 n 個頂點的 complete undirected graph 共有 n(n - 1) / 2 條 edges；complete directed graph 則有 n(n - 1) 條 arcs。",
+    "無向 K₄ 有 6 條 edges；若改成 complete directed graph，則有 12 條 arcs。",
   ],
   [
     "Bipartite Graph",
@@ -3887,6 +3887,188 @@ int union_set(int a, int b) {
   `;
 }
 
+function graphLectureSupplementTemplate() {
+  return `
+    <section class="section" aria-labelledby="graph-representation-supplement-title">
+      <div class="section-heading">
+        <p class="eyebrow">Representation Extensions</p>
+        <h2 id="graph-representation-supplement-title">進階圖表示法與查詢成本</h2>
+        <p>相鄰矩陣與相鄰串列是基礎。當查詢方向、共享 edge node 或空間成本成為重點時，可以改用更貼近問題的資料結構。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Matrix 的 row 與 column</h3>
+          <p>無向圖的 adjacency matrix 對稱，頂點 <code>v</code> 的 degree 等於第 <code>v</code> 列總和。有向圖中，row sum 是 out-degree，column sum 是 in-degree。</p>
+          <div class="chapter-tags"><span>Symmetric</span><span>Row Sum</span><span>Column Sum</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Inverse Adjacency List</h3>
+          <p>一般 adjacency list 儲存 outgoing edges；inverse adjacency list 反過來儲存 incoming edges。需要快速計算 in-degree 或找 predecessors 時很有用。</p>
+          <div class="chapter-tags"><span>Incoming</span><span>Predecessor</span><span>In-degree</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Orthogonal List</h3>
+          <p>有向圖的每個 arc node 同時串入 tail 的 outgoing list 與 head 的 incoming list。每條 arc 只建一個 node，卻能沿兩種方向走訪。</p>
+          <div class="chapter-tags"><span>Digraph</span><span>Tail Link</span><span>Head Link</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Adjacency Multilist</h3>
+          <p>無向圖的一條 edge 同時 incident to 兩個 vertices。Multilist 讓同一個 edge node 被兩端的 adjacency lists 共用，不必存兩份 edge 資料。</p>
+          <div class="chapter-tags"><span>Undirected</span><span>Shared Node</span><span>Edge Record</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Sequential Packed Lists</h3>
+          <p>若圖結構建立後很少修改，可把所有 adjacency lists 連續放進陣列。索引 <code>offset[i]</code> 記錄 vertex <code>i</code> 的鄰居起點，<code>offset[i + 1]</code> 則界定終點。</p>
+          <div class="chapter-tags"><span>Compact Array</span><span>Offset</span><span>Static Graph</span></div>
+        </article>
+      </div>
+      <div class="insight-box"><strong>Weighted network：</strong>若 edge 帶有距離、費用或時間，可在 matrix cell 或 list node 加入 weight。帶權圖也常稱為 network。</div>
+    </section>
+
+    <section class="section" aria-labelledby="spanning-tree-supplement-title">
+      <div class="section-heading">
+        <p class="eyebrow">Spanning Trees</p>
+        <h2 id="spanning-tree-supplement-title">搜尋樹、非樹邊與 Sollin 演算法</h2>
+        <p>對 connected graph 執行 DFS 或 BFS，都能得到包含全部 vertices 的 spanning tree。搜尋方式不同，得到的樹形也可能不同。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>Spanning tree 的三個性質</h4>
+          <ul>
+            <li>有 <code>n</code> 個 vertices 的 spanning tree 恰好有 <code>n - 1</code> 條 edges。</li>
+            <li>拿掉任一 tree edge，圖就不再 connected。</li>
+            <li>加入任一 nontree edge，樹中就會形成一個 cycle。</li>
+          </ul>
+        </article>
+        <article class="lesson-block">
+          <h4>Sollin / Boruvka MST</h4>
+          <p>每一輪把目前的 spanning forest 視為多個 components，替每個 component 選一條最便宜的 outgoing edge。合併後 component 數量會快速下降，直到只剩一棵 MST。</p>
+          <p><strong>例：</strong>初始有 {A}、{B}、{C}、{D}。若最便宜 edges 是 AB=2、BC=3、CD=1，第一輪可同時合併多個 components。</p>
+        </article>
+      </div>
+      <div class="insight-box"><strong>Greedy 約束：</strong>Kruskal、Prim 與 Sollin 每次都做局部最佳選擇，但必須只使用原圖 edges、最後選出 <code>n - 1</code> 條 edges，且不能產生 cycle。</div>
+    </section>
+
+    <section class="section" aria-labelledby="biconnected-title">
+      <div class="section-heading">
+        <p class="eyebrow">Connectivity Analysis</p>
+        <h2 id="biconnected-title">Articulation Point 與 Biconnected Component</h2>
+        <p>Connected 只表示目前互通；若希望網路能承受單一節點故障，還要分析哪些 vertices 是關鍵斷點。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>Articulation Point</h3>
+          <p>在 connected undirected graph 中，刪除頂點 <code>v</code> 與所有 incident edges 後，如果 connected components 數量增加，則 <code>v</code> 是 articulation point。</p>
+          <div class="term-example"><strong>例：</strong><span>A-B-C 且 B-D 中，刪除 B 後 A、C、D 分離，因此 B 是 articulation point。</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Biconnected Graph</h3>
+          <p>沒有 articulation point 的 connected graph 稱為 biconnected graph。Biconnected component 則是不能再擴張的 maximal biconnected subgraph。</p>
+          <div class="term-example"><strong>判讀：</strong><span>三角形 A-B-C-A 刪除任一頂點後仍連通，因此是 biconnected。</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>DFS Number：dfn</h3>
+          <p>執行 DFS 時，依第一次拜訪順序替每個 vertex 編號。若 <code>u</code> 是 <code>v</code> 的 ancestor，則 <code>dfn[u] &lt; dfn[v]</code>。</p>
+          <div class="chapter-tags"><span>DFS Tree</span><span>Ancestor</span><span>Visit Order</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Low Link：low</h3>
+          <p><code>low[u]</code> 是從 <code>u</code> 經 descendants，再使用至多一條 back edge 所能抵達的最小 <code>dfn</code>。若 child <code>w</code> 滿足 <code>low[w] &gt;= dfn[u]</code>，表示 <code>w</code> 無法繞回 <code>u</code> 的 ancestor。</p>
+          <div class="chapter-tags"><span>Back Edge</span><span>low[w] &gt;= dfn[u]</span><span>O(V + E)</span></div>
+        </article>
+      </div>
+      <div class="insight-box"><strong>Root 特例：</strong>DFS tree 的 root 必須有兩個以上 children 才是 articulation point；非 root vertex 則檢查是否存在 child <code>w</code> 使 <code>low[w] &gt;= dfn[u]</code>。</div>
+    </section>
+
+    <section class="section" aria-labelledby="all-pairs-title">
+      <div class="section-heading">
+        <p class="eyebrow">All-Pairs Shortest Paths</p>
+        <h2 id="all-pairs-title">Floyd-Warshall 與 Transitive Closure</h2>
+        <p>Dijkstra 解決單一起點、非負 edge weight 的最短路徑。若要一次求出每一對 vertices 的最短距離，可使用 Floyd-Warshall dynamic programming。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Floyd-Warshall</h3>
+          <pre><code>void floyd_warshall(int n, int dist[MAX_V][MAX_V]) {
+    for (int k = 0; k &lt; n; ++k)
+        for (int i = 0; i &lt; n; ++i)
+            for (int j = 0; j &lt; n; ++j)
+                if (dist[i][k] &lt; INF && dist[k][j] &lt; INF &&
+                    dist[i][k] + dist[k][j] &lt; dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+}</code></pre>
+        </article>
+        <article class="analysis-panel">
+          <h3>狀態轉移</h3>
+          <p><code>D[k][i][j]</code> 表示只允許編號不大於 <code>k</code> 的 vertices 作為中繼點時，從 <code>i</code> 到 <code>j</code> 的最短距離。</p>
+          <div class="definition-formula">D[i][j] = min(D[i][j], D[i][k] + D[k][j])</div>
+          <ul>
+            <li>時間複雜度：<code>O(V^3)</code></li>
+            <li>若執行後出現 <code>D[i][i] &lt; 0</code>，表示存在 negative cycle。</li>
+            <li>把距離改成 boolean reachable，並把 min/+ 改成 OR/AND，即得到 Warshall transitive closure。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="activity-network-title">
+      <div class="section-heading">
+        <p class="eyebrow">Project Networks</p>
+        <h2 id="activity-network-title">AOV、AOE 與 Critical Path</h2>
+        <p>DAG 不只用於排序，也能表示專案先後關係。AOV 把活動放在 vertex；AOE 則把活動放在 edge，適合估算專案完成時間。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>AOV：Activity On Vertex</h4>
+          <p>Vertex 代表課程或工作，directed edge 代表 precedence relation。Topological order 是符合所有先後限制的線性排列；若輸出 vertices 數量不足，表示網路有 directed cycle。</p>
+          <p><strong>例：</strong>資料結構 -> 演算法 -> 專題實作。資料結構是演算法的 predecessor，專題實作是演算法的 successor。</p>
+        </article>
+        <article class="lesson-block">
+          <h4>AOE：Activity On Edge</h4>
+          <p>Edge 代表活動，weight 是所需時間；vertex 代表事件完成。Critical path 是從起點到終點的最長路徑，它決定專案最快完成時間。</p>
+          <p><strong>例：</strong>A->B 需 3 天、B->D 需 5 天、A->C 需 4 天、C->D 需 2 天。兩條路徑長度分別為 8 與 6，因此 A-B-D 是 critical path。</p>
+        </article>
+      </div>
+      <div class="analysis-panel">
+        <table class="comparison-table">
+          <thead><tr><th>值</th><th>意義</th><th>計算方向</th></tr></thead>
+          <tbody>
+            <tr><td><code>earliest[v]</code></td><td>事件最早發生時間；取所有 predecessors 路徑的最大值</td><td>沿 topological order 向前計算</td></tr>
+            <tr><td><code>latest[v]</code></td><td>不延遲專案的最晚發生時間；由終點向前回推</td><td>沿 reverse topological order 向後計算</td></tr>
+            <tr><td><code>slack</code></td><td><code>late - early</code>；若為 0，代表 critical activity</td><td>比較活動可延遲時間</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="graph-lecture-practice-title">
+      <div class="section-heading">
+        <p class="eyebrow">Lecture Practice</p>
+        <h2 id="graph-lecture-practice-title">投影片延伸例題</h2>
+        <p>以下題目銜接本章新增概念，可用於課堂練習或複習。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>表示法與連通性</h4>
+          <ol>
+            <li>給定 directed graph，分別建立 adjacency list 與 inverse adjacency list。</li>
+            <li>畫出 A-B-C、B-D 的 DFS tree，判斷 articulation point。</li>
+            <li>對一張 DFS tree 標記 <code>dfn</code> 與 <code>low</code>，找出 biconnected components。</li>
+          </ol>
+        </article>
+        <article class="lesson-block">
+          <h4>路徑與專案網路</h4>
+          <ol>
+            <li>用 Floyd-Warshall 追蹤加入中繼點 <code>k</code> 前後的 distance matrix。</li>
+            <li>設計一張 AOV 課程先修圖，列出至少兩種合法 topological orders。</li>
+            <li>對 AOE network 計算 earliest、latest 與 slack，標出 critical path。</li>
+          </ol>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
 function sortingSupplementTemplate() {
   return `
     <section class="section" aria-labelledby="external-sort-title">
@@ -4877,7 +5059,7 @@ function chapterLabTemplate(unit) {
   if (unit === "03") return stacksQueuesMaterialsTemplate();
   if (unit === "04") return linkedListsMaterialsTemplate();
   if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}`;
-  if (unit === "06") return `${graphMaterialsTemplate()}${graphAdvancedTemplate()}${graphLabTemplate()}`;
+  if (unit === "06") return `${graphMaterialsTemplate()}${graphAdvancedTemplate()}${graphLectureSupplementTemplate()}${graphLabTemplate()}`;
   if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingSupplementTemplate()}${radixInteractiveLabTemplate()}${sortingLabTemplate()}`;
   if (unit === "08") return hashingMaterialsTemplate();
   if (unit === "09") return priorityQueuesMaterialsTemplate();

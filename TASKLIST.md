@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：依 CH6_1、CH6_2 課堂投影片補強 Unit 06，新增 complete directed graph、inverse adjacency list、orthogonal list、adjacency multilist、sequential packed lists、weighted network、spanning tree 性質、Sollin/Boruvka MST、articulation point、biconnected component、dfn/low、Floyd-Warshall、transitive closure、negative cycle、AOV/AOE、critical path 與 earliest/latest/slack，並加入六題延伸例題。
 - 2026-06-02：擴充 Unit 06 Graph ADT 後的圖形教材，新增無向圖、有向圖、自我邊與 multigraph 圖例；再以一張簡單原圖示範三角形、path 與 spanning tree 等合法 subgraphs。
 - 2026-06-02：修正 Unit 06 柯尼茲堡 multigraph 彎曲 edge 的 SVG 樣式，加入 `fill: none`，移除 path 預設填色造成的黑色區域。
 - 2026-06-02：修正 Unit 06 柯尼茲堡七橋問題的 multigraph 抽象圖，將誤接的中央邊改為 Kneiphof K 至 Lomse L，並加入七條 edge 關係摘要方便逐條核對。
