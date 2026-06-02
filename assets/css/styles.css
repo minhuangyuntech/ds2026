@@ -728,6 +728,131 @@ main {
   font-size: 13px;
 }
 
+.representation-source-grid,
+.weighted-representation-grid {
+  align-items: center;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.8fr);
+}
+
+.representation-diagram-grid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.representation-diagram-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.9rem;
+}
+
+.representation-diagram-card h3,
+.representation-diagram-card p {
+  margin: 0;
+}
+
+.representation-diagram-card h3 {
+  font-size: 1rem;
+}
+
+.representation-diagram-card p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.matrix-example-table th,
+.matrix-example-table td,
+.weighted-edge-table th,
+.weighted-edge-table td {
+  text-align: center;
+}
+
+.matrix-hit {
+  background: #dcefe9;
+  color: #216856;
+  font-weight: 900;
+}
+
+.adjacency-list-example,
+.multilist-example {
+  background: #f5f7fb;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.7rem;
+}
+
+.adjacency-list-example > div {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+}
+
+.adjacency-list-example strong {
+  min-width: 1.2rem;
+}
+
+.pointer-node {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 900;
+  min-width: 2rem;
+  padding: 0.3rem 0.45rem;
+  text-align: center;
+}
+
+.multilist-heads,
+.multilist-records {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.multilist-heads span {
+  color: var(--muted);
+  font-family: Consolas, monospace;
+  font-size: 0.84rem;
+}
+
+.multilist-records {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.multilist-records span {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.45rem;
+  text-align: center;
+}
+
+.multilist-records small {
+  color: var(--muted);
+}
+
+.edge-weight-label {
+  fill: var(--coral);
+  font-size: 15px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 4px;
+  text-anchor: middle;
+}
+
 .tree-diagram-grid {
   display: grid;
   gap: 0.8rem;
@@ -2042,6 +2167,8 @@ code {
   .graph-material-grid,
   .konigsberg-grid,
   .graph-code-pair,
+  .representation-source-grid,
+  .weighted-representation-grid,
   .chapter-layout,
   .teaching-grid,
   .lesson-layout,
@@ -2081,6 +2208,7 @@ code {
   .practice-grid,
   .term-grid,
   .graph-example-grid,
+  .representation-diagram-grid,
   .tree-diagram-grid,
   .tree-compare,
   .traversal-row,

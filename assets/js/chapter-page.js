@@ -2999,6 +2999,107 @@ int add_edge(Graph *g, int from, int to, int weight) {
       </div>
     </section>
 
+    <section class="section" aria-labelledby="representation-diagrams-title">
+      <div class="section-heading">
+        <p class="eyebrow">Representation Diagrams</p>
+        <h2 id="representation-diagrams-title">從同一張圖看四種表示法</h2>
+        <p>以下以無向圖 <code>G</code> 為共同基準：<code>V = {A, B, C, D}</code>，<code>E = {{A, B}, {A, C}, {B, C}, {B, D}}</code>。表示法不同，但保存的 graph 關係必須一致。</p>
+      </div>
+      <div class="definition-panel">
+        <div class="representation-source-grid">
+          <svg class="graph-example-svg" viewBox="0 0 360 235" role="img" aria-label="圖表示法的共同基準無向圖">
+            <line class="graph-example-edge" x1="85" y1="58" x2="265" y2="58"></line>
+            <line class="graph-example-edge" x1="85" y1="58" x2="125" y2="174"></line>
+            <line class="graph-example-edge" x1="265" y1="58" x2="125" y2="174"></line>
+            <line class="graph-example-edge" x1="265" y1="58" x2="280" y2="174"></line>
+            <circle class="graph-example-node" cx="85" cy="58" r="23"></circle><text class="graph-example-label" x="85" y="64">A</text>
+            <circle class="graph-example-node" cx="265" cy="58" r="23"></circle><text class="graph-example-label" x="265" y="64">B</text>
+            <circle class="graph-example-node" cx="125" cy="174" r="23"></circle><text class="graph-example-label" x="125" y="180">C</text>
+            <circle class="graph-example-node" cx="280" cy="174" r="23"></circle><text class="graph-example-label" x="280" y="180">D</text>
+          </svg>
+          <div class="lesson-block">
+            <h4>共同基準圖 G</h4>
+            <ul>
+              <li>A 的 neighbors：B、C</li>
+              <li>B 的 neighbors：A、C、D</li>
+              <li>C 的 neighbors：A、B</li>
+              <li>D 的 neighbor：B</li>
+            </ul>
+            <p>後面的 matrix、lists 與 edge records 都是在保存這四組 adjacency 關係。</p>
+          </div>
+        </div>
+      </div>
+      <div class="representation-diagram-grid">
+        <article class="representation-diagram-card">
+          <h3>相鄰矩陣 Adjacency Matrix</h3>
+          <p>以 <code>matrix[i][j]</code> 表示 vertex <code>i</code> 與 <code>j</code> 是否相鄰。無向圖的矩陣沿對角線對稱；每一列的總和就是該 vertex 的 degree。</p>
+          <div class="responsive-table">
+            <table class="matrix-example-table">
+              <thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
+              <tbody>
+                <tr><th>A</th><td>0</td><td class="matrix-hit">1</td><td class="matrix-hit">1</td><td>0</td></tr>
+                <tr><th>B</th><td class="matrix-hit">1</td><td>0</td><td class="matrix-hit">1</td><td class="matrix-hit">1</td></tr>
+                <tr><th>C</th><td class="matrix-hit">1</td><td class="matrix-hit">1</td><td>0</td><td>0</td></tr>
+                <tr><th>D</th><td>0</td><td class="matrix-hit">1</td><td>0</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="term-example"><strong>觀察：</strong><span>第 B 列有三個 1，因此 deg(B) = 3。查詢 {B, D} 是否存在只需讀取 matrix[B][D]。</span></div>
+        </article>
+        <article class="representation-diagram-card">
+          <h3>相鄰串列 Adjacency List</h3>
+          <p>每個 vertex 有一條 linked list，節點依序列出 neighbors。無向 edge 會在兩端各出現一次，因此共需要 <code>2|E|</code> 個 list nodes。</p>
+          <div class="adjacency-list-example" aria-label="相鄰串列圖例">
+            <div><strong>A</strong><span class="diagram-arrow">-&gt;</span><span class="pointer-node">B</span><span class="diagram-arrow">-&gt;</span><span class="pointer-node">C</span><span class="diagram-arrow">-&gt; NULL</span></div>
+            <div><strong>B</strong><span class="diagram-arrow">-&gt;</span><span class="pointer-node">A</span><span class="diagram-arrow">-&gt;</span><span class="pointer-node">C</span><span class="diagram-arrow">-&gt;</span><span class="pointer-node">D</span><span class="diagram-arrow">-&gt; NULL</span></div>
+            <div><strong>C</strong><span class="diagram-arrow">-&gt;</span><span class="pointer-node">A</span><span class="diagram-arrow">-&gt;</span><span class="pointer-node">B</span><span class="diagram-arrow">-&gt; NULL</span></div>
+            <div><strong>D</strong><span class="diagram-arrow">-&gt;</span><span class="pointer-node">B</span><span class="diagram-arrow">-&gt; NULL</span></div>
+          </div>
+          <div class="term-example"><strong>觀察：</strong><span>列出 B 的 neighbors 只需走訪 B 的串列，成本為 O(deg(B))。</span></div>
+        </article>
+        <article class="representation-diagram-card">
+          <h3>相鄰多重串列 Adjacency Multilist</h3>
+          <p>無向 edge 不再複製成兩個 list nodes。每條 edge 建立一個共享 record，並同時掛入兩端 vertices 的 edge chains。</p>
+          <div class="multilist-example" aria-label="相鄰多重串列圖例">
+            <div class="multilist-heads">
+              <span><strong>A</strong> -> e1 -> e2</span>
+              <span><strong>B</strong> -> e1 -> e3 -> e4</span>
+              <span><strong>C</strong> -> e2 -> e3</span>
+              <span><strong>D</strong> -> e4</span>
+            </div>
+            <div class="multilist-records">
+              <span><strong>e1</strong><small>A | B</small></span>
+              <span><strong>e2</strong><small>A | C</small></span>
+              <span><strong>e3</strong><small>B | C</small></span>
+              <span><strong>e4</strong><small>B | D</small></span>
+            </div>
+          </div>
+          <div class="term-example"><strong>觀察：</strong><span>e1 只有一份 record，卻同時出現在 A 與 B 的 chains。要刪除 edge 或保存 edge 狀態時較方便。</span></div>
+        </article>
+        <article class="representation-diagram-card">
+          <h3>加權邊 Weighted Edges</h3>
+          <p>Edge record 或 matrix cell 不只保存是否相鄰，也保存距離、費用或時間。不存在的 edge 通常使用 <code>INF</code>。</p>
+          <div class="weighted-representation-grid">
+            <svg class="graph-example-svg" viewBox="0 0 360 235" role="img" aria-label="帶權無向圖範例">
+              <line class="graph-example-edge" x1="85" y1="58" x2="265" y2="58"></line><text class="edge-weight-label" x="175" y="45">4</text>
+              <line class="graph-example-edge" x1="85" y1="58" x2="125" y2="174"></line><text class="edge-weight-label" x="85" y="126">2</text>
+              <line class="graph-example-edge" x1="265" y1="58" x2="125" y2="174"></line><text class="edge-weight-label" x="205" y="130">6</text>
+              <line class="graph-example-edge" x1="265" y1="58" x2="280" y2="174"></line><text class="edge-weight-label" x="294" y="124">3</text>
+              <circle class="graph-example-node" cx="85" cy="58" r="23"></circle><text class="graph-example-label" x="85" y="64">A</text>
+              <circle class="graph-example-node" cx="265" cy="58" r="23"></circle><text class="graph-example-label" x="265" y="64">B</text>
+              <circle class="graph-example-node" cx="125" cy="174" r="23"></circle><text class="graph-example-label" x="125" y="180">C</text>
+              <circle class="graph-example-node" cx="280" cy="174" r="23"></circle><text class="graph-example-label" x="280" y="180">D</text>
+            </svg>
+            <table class="weighted-edge-table">
+              <thead><tr><th>edge</th><th>weight</th></tr></thead>
+              <tbody><tr><td>A-B</td><td>4</td></tr><tr><td>A-C</td><td>2</td></tr><tr><td>B-C</td><td>6</td></tr><tr><td>B-D</td><td>3</td></tr></tbody>
+            </table>
+          </div>
+          <div class="term-example"><strong>觀察：</strong><span>weighted adjacency list node 可保存 <code>{to, weight, next}</code>。Dijkstra 與 MST 都會讀取 weight。</span></div>
+        </article>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="graph-algorithms-title">
       <div class="section-heading">
         <p class="eyebrow">Core Algorithms</p>
