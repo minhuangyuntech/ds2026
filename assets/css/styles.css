@@ -515,6 +515,7 @@ main {
 
 .tree-mini-edge,
 .graph-mini-edge {
+  fill: none;
   stroke: #8792a1;
   stroke-linecap: round;
   stroke-width: 3;
