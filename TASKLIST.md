@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：為 Unit 00-12 全部章節新增「各小節例題」題庫；每個單元拆成 4 個核心小節，每小節至少 3 題，共新增 52 組、156 題，可用於課堂追蹤、作業與操作驗證。
 - 2026-05-30：為 Unit 00-12 全部章節新增第二輪課堂延伸教材；每章加入三個主題概念卡與課堂練習，涵蓋 C 除錯習慣、ADT 規格、表示法成本、容器狀態追蹤、pointer ownership、BST deletion、graph relaxation、sorting stability、hash probing、heap operations、AVL rotation、B-tree split 與 trie autocomplete。
 - 2026-05-29：新增 Unit 00 Standard C Syntax 章節，補標準 C 語言簡易語法介紹，涵蓋程式骨架、編譯、型別、控制流程、函式、指標、陣列、structure 與標準輸入輸出；首頁章節索引同步加入 C 語法入口。
 - 2026-05-29：清理首頁與章節教材中的網站功能、部署、來源查核與自述性文字，改為直接呈現課程學習主線、資料表示、操作成本與 C 實作提醒。

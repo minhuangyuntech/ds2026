@@ -4262,6 +4262,112 @@ function chapterExtensionTemplate(unit) {
   `;
 }
 
+const chapterExampleSets = {
+  "00": [
+    ["程式骨架與編譯", ["寫出包含 stdio.h、main 與 return 0 的最小 C 程式。", "說明 gcc -std=c11 -Wall -Wextra 中每個選項的用途。", "判斷遺漏函式 prototype 可能造成的 compiler warning。"]],
+    ["型別與輸入輸出", ["選擇 int、double、char、size_t 對應的 printf 格式字串。", "說明 7 / 2 與 7.0 / 2 的結果為何不同。", "修正 scanf(\"%d\", value) 中的錯誤，並檢查回傳值。"]],
+    ["控制流程與函式", ["用 for 寫出 1 到 n 的整數總和。", "把 linear search 改寫成 while 版本。", "比較 pass by value 與 pointer swap 對呼叫端變數的影響。"]],
+    ["指標、陣列與結構", ["說明 a[i] 與 *(a + i) 的關係。", "寫出保存姓名與分數的 Student structure。", "找出使用未初始化 pointer 解參照的風險。"]],
+  ],
+  "01": [
+    ["ADT 與規格", ["替 stack push 寫出 precondition 與 postcondition。", "替 queue dequeue 設計空容器錯誤狀態。", "說明 List ADT 為什麼不應先綁定 array 或 linked list。"]],
+    ["不變量與測試", ["為 dynamic array 寫出 length 與 capacity 不變量。", "列出插入第一筆、最後一筆與滿容量時的測試案例。", "設計一個能抓出 off-by-one 錯誤的邊界測試。"]],
+    ["Big-O 分析", ["分析單層迴圈從 0 跑到 n - 1 的時間複雜度。", "分析內層只跑 i 次的雙層迴圈總成本。", "比較 O(n log n) 與 O(n^2) 在 n = 1000 時的估算步數。"]],
+    ["遞迴與記憶體", ["追蹤 factorial(4) 的 call stack。", "把遞迴計算總和改寫成迭代版本。", "說明 malloc 失敗後程式應如何處理。"]],
+  ],
+  "02": [
+    ["陣列與位址", ["計算 int A[4][6] 中 A[3][2] 的元素位移。", "若 int 為 4 bytes，計算 A[2][5] 相對於 base address 的 byte offset。", "說明 row-major 陣列依欄掃描可能造成較多 cache miss 的原因。"]],
+    ["字串與結構", ["為 10 個字元的文字配置足夠的 char array 容量。", "找出未保留字串終止字元空間的錯誤。", "設計 Term structure 保存多項式係數與次方。"]],
+    ["稀疏矩陣", ["把一個 3 x 4 稀疏矩陣轉成 triples。", "比較 dense matrix 與 triple representation 的空間成本。", "手動執行 sparse matrix transpose，交換 row 與 col。"]],
+    ["多項式表示", ["將 3x^5 - 2x^2 + 7 寫成 term array。", "合併兩個依 exponent 遞減排序的多項式。", "處理係數相加為 0 時應如何略過該項。"]],
+  ],
+  "03": [
+    ["Stack ADT", ["追蹤 push 10、push 20、pop、push 30 後的 top。", "設計空 stack pop 的錯誤處理。", "用 stack 判斷括號字串 ((a+b)*c) 是否平衡。"]],
+    ["Circular Queue", ["capacity = 5 時追蹤 enqueue 與 dequeue 後的 front、rear、size。", "說明只看 front == rear 為何無法區分空與滿。", "設計 wrap-around 測試讓 rear 回到陣列開頭。"]],
+    ["表示式處理", ["將 A + B * C 轉為 postfix。", "追蹤 (A + B) * C 的 operator stack。", "用 stack 計算 postfix 2 3 4 * +。"]],
+    ["Maze 與 BFS", ["說明無權迷宮找最少步數為何使用 queue。", "列出 BFS 搜尋一個 3 x 3 迷宮時的 frontier。", "比較 DFS 與 BFS 找到的第一條路徑可能有何差異。"]],
+  ],
+  "04": [
+    ["Singly Linked List", ["畫出 head -> 10 -> 20 -> NULL。", "在 10 後插入 15，列出指標更新順序。", "刪除 head 時應更新哪一個 pointer。"]],
+    ["Circular 與 Doubly List", ["說明 circular list 的停止條件。", "刪除 doubly list 中間節點時要更新哪些 prev/next。", "比較 singly 與 doubly list 反向走訪能力。"]],
+    ["Header Node", ["說明 sentinel 如何簡化空串列插入。", "以 header node 寫出刪除第一個有效節點的步驟。", "比較有 header 與無 header 的邊界分支數量。"]],
+    ["記憶體管理", ["寫出 destroy_list 的逐節點釋放流程。", "說明 free 前為何要先保存 next。", "找出刪除節點後再次解參照 victim 的錯誤。"]],
+  ],
+  "05": [
+    ["樹術語與形狀", ["給定一棵樹，標出 root、leaf、degree、height。", "判斷一棵樹是否為 full binary tree。", "判斷 complete binary tree 最後一層是否符合由左至右填入。"]],
+    ["走訪", ["列出一棵二元樹的 inorder、preorder、postorder。", "用 queue 追蹤 level-order traversal。", "用 stack 模擬 iterative inorder traversal。"]],
+    ["BST 操作", ["依序插入 50、30、70、20、40、60、80。", "刪除 BST 中的 leaf 20。", "刪除 BST 中有兩個 child 的 50，選擇 inorder successor。"]],
+    ["Heap、Forest 與 Union-Find", ["將 15 插入 max heap 並追蹤上濾。", "把一般樹轉成 left-child right-sibling 表示。", "對 Union-Find 執行 union(1,2)、union(2,3)、find(3)。"]],
+  ],
+  "06": [
+    ["圖表示法", ["把一張無向圖寫成 adjacency matrix。", "把同一張圖寫成 adjacency list。", "比較稀疏圖使用 matrix 與 list 的空間成本。"]],
+    ["BFS 與 DFS", ["追蹤 BFS queue 中每一步的 frontier。", "追蹤 DFS recursion stack 與回溯順序。", "用 DFS 計算一張無向圖的 connected components。"]],
+    ["Dijkstra", ["追蹤每一輪 fixed 頂點與 dist 陣列。", "對一條邊執行 relaxation 並更新 parent。", "說明負權重邊為何不適合直接使用 Dijkstra。"]],
+    ["Minimum Spanning Tree", ["用 Prim 從 A 開始選出 MST edges。", "用 Kruskal 依權重排序並略過形成 cycle 的邊。", "舉例說明 MST 與 shortest path tree 的目標不同。"]],
+  ],
+  "07": [
+    ["基礎排序", ["追蹤 insertion sort 對 5,2,4,1 的每一輪。", "追蹤 selection sort 每輪選出的最小值。", "說明 bubble sort 如何利用 swap flag 提前停止。"]],
+    ["分治排序", ["將 8,3,7,2 拆分並執行 merge sort。", "追蹤 quick sort partition 中 pivot 的最終位置。", "比較 merge sort 與 quick sort 的額外空間需求。"]],
+    ["Heap 與 Radix Sort", ["將陣列建成 max heap 並追蹤 heapify。", "追蹤 heap sort 每輪把 root 移到尾端。", "對 170,45,75,90 執行 LSD radix sort 的個位數 pass。"]],
+    ["穩定性與外部排序", ["設計含相同 key 的 record 測試排序穩定性。", "比較近乎有序資料使用 insertion 與 heap sort。", "計算 64 個 runs 使用 4-way merge 需要幾輪。"]],
+  ],
+  "08": [
+    ["Hash Function", ["使用 key % 11 計算 22、35、47 的 bucket。", "說明只把字元 ASCII 相加作為 string hash 的缺點。", "設計一組會集中到同一 bucket 的 keys。"]],
+    ["Chaining", ["將碰撞 keys 插入同一 bucket linked list。", "追蹤 chaining search 的節點比較次數。", "比較 load factor 為 0.5 與 2.0 時平均串列長度。"]],
+    ["Open Addressing", ["table size = 11 時插入 22、1、13、11、24、33。", "比較 linear probing 與 quadratic probing 的探測序列。", "說明刪除時為何需要 tombstone。"]],
+    ["Rehashing", ["當 count = 8、table size = 11 時估算 load factor。", "把舊表 keys 重新插入 size = 23 的新表。", "比較 rehash 前後搜尋所需探測次數。"]],
+  ],
+  "09": [
+    ["Priority Queue ADT", ["說明 insert、find-min、delete-min 的行為。", "用 priority queue 模擬三個不同優先權工作。", "比較 FIFO queue 與 priority queue 移除順序。"]],
+    ["Binary Heap", ["依序插入 8、3、12、1、6、5 建立 min heap。", "執行 delete-min 並追蹤下濾。", "由 index i 推導 parent、left、right 索引。"]],
+    ["Meldable Heap", ["說明 leftist tree 為何維持短右路徑。", "追蹤兩棵 leftist trees 的 meld。", "比較 binary heap 與 leftist tree 的 merge 成本。"]],
+    ["Decrease-key", ["將 heap 中一個 key 從 20 降為 4 並追蹤上濾。", "說明 Dijkstra 為何需要 decrease-key。", "設計外部 index map 來定位 heap 元素。"]],
+  ],
+  "10": [
+    ["BST 失衡", ["依序插入 10、20、30、40，觀察 BST 高度。", "比較平衡 BST 與 skewed BST 的搜尋成本。", "找出一組會產生最壞高度的插入順序。"]],
+    ["Single Rotation", ["依序插入 30、20、10，執行 LL right rotation。", "依序插入 10、20、30，執行 RR left rotation。", "驗證旋轉前後 inorder 順序不變。"]],
+    ["Double Rotation", ["依序插入 30、10、20，執行 LR rotations。", "依序插入 10、30、20，執行 RL rotations。", "標出每次旋轉後需要更新的高度。"]],
+    ["AVL、Splay 與 Red-black", ["比較 AVL 與 red-black tree 的平衡嚴格程度。", "追蹤 splay tree 存取節點後的 zig-zig。", "列出 red-black tree root 與紅色節點的基本規則。"]],
+  ],
+  "11": [
+    ["m-way Search Tree", ["給定節點 keys 20、40，說明三個 child ranges。", "比較二元樹與多路樹在相同 key 數下的高度。", "說明 fan-out 增加如何降低 block I/O。"]],
+    ["B-tree Split", ["對 order 4 B-tree 插入 10、20、5、6。", "節點 overflow 時選出中間 key 上推。", "追蹤 root split 後樹高增加。"]],
+    ["B-tree Delete", ["刪除後節點低於最小 keys 時向 sibling 借 key。", "說明無法借 key 時如何 merge。", "追蹤 merge 造成 parent 也 underflow 的情況。"]],
+    ["B+ Tree Range Query", ["找到 key 20 所在 leaf 後查詢 20 到 50。", "說明 leaf chain 如何支援順序掃描。", "比較 B-tree 與 B+ tree 資料儲存位置。"]],
+  ],
+  "12": [
+    ["Trie Insert", ["插入 tea、team、tear，畫出共享 prefix。", "插入 to、top，標出新的分支。", "說明 app 與 apple 為何需要 terminal marker。"]],
+    ["Trie Search", ["追蹤搜尋 team 的字元路徑。", "比較搜尋 tea 與搜尋 te 的結果。", "處理包含非 a-z 字元的輸入。"]],
+    ["Patricia 與 Compressed Trie", ["找出 trie 中只有單一 child 的路徑。", "將共同路徑壓縮為 edge label。", "比較壓縮前後節點數量。"]],
+    ["Prefix 與 Suffix Query", ["列出 prefix te 的 autocomplete 結果。", "比較 trie 與 hash table 支援 prefix query 的差異。", "說明 suffix tree 如何支援 substring 搜尋。"]],
+  ],
+};
+
+function chapterExamplesTemplate(unit) {
+  const groups = chapterExampleSets[unit];
+  if (!groups) return "";
+  const sections = groups
+    .map(
+      ([title, questions], index) => `
+        <article class="lesson-block">
+          <h3>${index + 1}. ${escapeHtml(title)}</h3>
+          <ol>${listItems(questions)}</ol>
+        </article>
+      `,
+    )
+    .join("");
+  return `
+    <section class="section" aria-labelledby="examples-${unit}-title">
+      <div class="section-heading">
+        <p class="eyebrow">Worked Example Prompts</p>
+        <h2 id="examples-${unit}-title">各小節例題</h2>
+        <p>每個核心小節至少包含三題。可先手動追蹤資料狀態，再對照 C 程式或互動實驗室驗證。</p>
+      </div>
+      <div class="teaching-grid">${sections}</div>
+    </section>
+  `;
+}
+
 function chapterLabTemplate(unit) {
   if (unit === "00") return standardCSyntaxMaterialsTemplate();
   if (unit === "01") return `${basicConceptsMaterialsTemplate()}${basicConceptsSupplementTemplate()}`;
@@ -4301,6 +4407,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ${chapterLabTemplate(unit)}
     ${chapterExtensionTemplate(unit)}
+    ${chapterExamplesTemplate(unit)}
 
     <section class="section">
       <div class="chapter-layout">
