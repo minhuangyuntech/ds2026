@@ -2745,6 +2745,134 @@ function graphMaterialsTemplate() {
       </div>
     </section>
 
+    <section class="section" aria-labelledby="graph-types-title">
+      <div class="section-heading">
+        <p class="eyebrow">Graph Examples</p>
+        <h2 id="graph-types-title">常見圖形態範例</h2>
+        <p>同一組 vertices 可以因 edge 的方向、數量與端點不同，形成不同類型的圖。先從圖形辨識結構，再思考實作時 adjacency list 或 adjacency matrix 應保存哪些資料。</p>
+      </div>
+      <div class="graph-example-grid">
+        <article class="graph-example-card">
+          <h3>無向圖 Undirected Graph</h3>
+          <p>每條 edge 沒有方向，A 與 B 相連也代表 B 與 A 相連。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="無向圖範例">
+            <line class="graph-example-edge" x1="68" y1="58" x2="210" y2="58"></line>
+            <line class="graph-example-edge" x1="68" y1="58" x2="112" y2="145"></line>
+            <line class="graph-example-edge" x1="210" y1="58" x2="112" y2="145"></line>
+            <line class="graph-example-edge" x1="210" y1="58" x2="230" y2="145"></line>
+            <circle class="graph-example-node" cx="68" cy="58" r="20"></circle><text class="graph-example-label" x="68" y="64">A</text>
+            <circle class="graph-example-node" cx="210" cy="58" r="20"></circle><text class="graph-example-label" x="210" y="64">B</text>
+            <circle class="graph-example-node" cx="112" cy="145" r="20"></circle><text class="graph-example-label" x="112" y="151">C</text>
+            <circle class="graph-example-node" cx="230" cy="145" r="20"></circle><text class="graph-example-label" x="230" y="151">D</text>
+          </svg>
+          <div class="diagram-note">E = {{A, B}, {A, C}, {B, C}, {B, D}}</div>
+        </article>
+        <article class="graph-example-card">
+          <h3>有向圖 Directed Graph</h3>
+          <p>每條 arc 都有方向，(A, B) 與 (B, A) 是不同關係。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="有向圖範例">
+            <defs><marker id="graph-example-arrow-directed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker></defs>
+            <line class="graph-example-edge directed" x1="88" y1="58" x2="188" y2="58"></line>
+            <line class="graph-example-edge directed" x1="202" y1="78" x2="142" y2="127"></line>
+            <line class="graph-example-edge directed" x1="119" y1="128" x2="78" y2="80"></line>
+            <circle class="graph-example-node" cx="68" cy="58" r="20"></circle><text class="graph-example-label" x="68" y="64">A</text>
+            <circle class="graph-example-node" cx="210" cy="58" r="20"></circle><text class="graph-example-label" x="210" y="64">B</text>
+            <circle class="graph-example-node" cx="130" cy="145" r="20"></circle><text class="graph-example-label" x="130" y="151">C</text>
+          </svg>
+          <div class="diagram-note">E = {(A, B), (B, C), (C, A)}</div>
+        </article>
+        <article class="graph-example-card">
+          <h3>有自我邊的圖 Self-loop</h3>
+          <p>Self-loop 的起點與終點相同，會落在 adjacency matrix 的對角線位置。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="具有自我邊的圖範例">
+            <line class="graph-example-edge" x1="90" y1="100" x2="190" y2="100"></line>
+            <path class="graph-example-edge" d="M58,84 C16,10 132,10 88,84"></path>
+            <circle class="graph-example-node" cx="70" cy="100" r="20"></circle><text class="graph-example-label" x="70" y="106">A</text>
+            <circle class="graph-example-node" cx="210" cy="100" r="20"></circle><text class="graph-example-label" x="210" y="106">B</text>
+          </svg>
+          <div class="diagram-note">E = {{A, A}, {A, B}}</div>
+        </article>
+        <article class="graph-example-card">
+          <h3>多邊圖 Multigraph</h3>
+          <p>同一對 vertices 之間允許存在多條 edges，每條 edge 可代表不同路線。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="多邊圖範例">
+            <path class="graph-example-edge" d="M90,100 C120,48 160,48 190,100"></path>
+            <line class="graph-example-edge" x1="90" y1="100" x2="190" y2="100"></line>
+            <path class="graph-example-edge" d="M90,100 C120,152 160,152 190,100"></path>
+            <circle class="graph-example-node" cx="70" cy="100" r="20"></circle><text class="graph-example-label" x="70" y="106">A</text>
+            <circle class="graph-example-node" cx="210" cy="100" r="20"></circle><text class="graph-example-label" x="210" y="106">B</text>
+          </svg>
+          <div class="diagram-note">A 與 B 之間共有 3 條 edges</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="subgraph-examples-title">
+      <div class="section-heading">
+        <p class="eyebrow">Subgraph Examples</p>
+        <h2 id="subgraph-examples-title">從一張圖取出子圖</h2>
+        <p>Subgraph 只保留原圖中的部分 vertices 與部分 edges，不能新增原圖不存在的 edge。以下先給定原圖 G，再列出三個合法子圖。</p>
+      </div>
+      <div class="graph-example-grid">
+        <article class="graph-example-card graph-example-card-source">
+          <h3>原圖 G</h3>
+          <p>V = {A, B, C, D}，共有五條 edges。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="子圖範例的原圖">
+            <line class="graph-example-edge" x1="70" y1="48" x2="210" y2="48"></line>
+            <line class="graph-example-edge" x1="70" y1="48" x2="70" y2="145"></line>
+            <line class="graph-example-edge" x1="210" y1="48" x2="70" y2="145"></line>
+            <line class="graph-example-edge" x1="210" y1="48" x2="210" y2="145"></line>
+            <line class="graph-example-edge" x1="70" y1="145" x2="210" y2="145"></line>
+            <circle class="graph-example-node" cx="70" cy="48" r="20"></circle><text class="graph-example-label" x="70" y="54">A</text>
+            <circle class="graph-example-node" cx="210" cy="48" r="20"></circle><text class="graph-example-label" x="210" y="54">B</text>
+            <circle class="graph-example-node" cx="70" cy="145" r="20"></circle><text class="graph-example-label" x="70" y="151">C</text>
+            <circle class="graph-example-node" cx="210" cy="145" r="20"></circle><text class="graph-example-label" x="210" y="151">D</text>
+          </svg>
+          <div class="diagram-note">E = {{A, B}, {A, C}, {B, C}, {B, D}, {C, D}}</div>
+        </article>
+        <article class="graph-example-card">
+          <h3>子圖 H₁：三角形</h3>
+          <p>保留 A、B、C 與它們之間的三條 edges。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="三角形子圖">
+            <line class="graph-example-edge" x1="70" y1="48" x2="210" y2="48"></line>
+            <line class="graph-example-edge" x1="70" y1="48" x2="140" y2="145"></line>
+            <line class="graph-example-edge" x1="210" y1="48" x2="140" y2="145"></line>
+            <circle class="graph-example-node" cx="70" cy="48" r="20"></circle><text class="graph-example-label" x="70" y="54">A</text>
+            <circle class="graph-example-node" cx="210" cy="48" r="20"></circle><text class="graph-example-label" x="210" y="54">B</text>
+            <circle class="graph-example-node" cx="140" cy="145" r="20"></circle><text class="graph-example-label" x="140" y="151">C</text>
+          </svg>
+          <div class="diagram-note">V(H₁) = {A, B, C}</div>
+        </article>
+        <article class="graph-example-card">
+          <h3>子圖 H₂：Path</h3>
+          <p>保留四個 vertices，但只取形成 A-B-D 的兩條 edges。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="路徑子圖">
+            <line class="graph-example-edge" x1="70" y1="74" x2="140" y2="74"></line>
+            <line class="graph-example-edge" x1="140" y1="74" x2="210" y2="135"></line>
+            <circle class="graph-example-node" cx="50" cy="74" r="20"></circle><text class="graph-example-label" x="50" y="80">A</text>
+            <circle class="graph-example-node" cx="140" cy="74" r="20"></circle><text class="graph-example-label" x="140" y="80">B</text>
+            <circle class="graph-example-node muted" cx="50" cy="145" r="20"></circle><text class="graph-example-label" x="50" y="151">C</text>
+            <circle class="graph-example-node" cx="230" cy="145" r="20"></circle><text class="graph-example-label" x="230" y="151">D</text>
+          </svg>
+          <div class="diagram-note">C 是保留但沒有 incident edge 的孤立頂點</div>
+        </article>
+        <article class="graph-example-card">
+          <h3>子圖 H₃：Spanning Tree</h3>
+          <p>保留全部 vertices，以三條 edges 連通所有頂點且不形成 cycle。</p>
+          <svg class="graph-example-svg" viewBox="0 0 280 190" role="img" aria-label="生成樹子圖">
+            <line class="graph-example-edge" x1="70" y1="48" x2="210" y2="48"></line>
+            <line class="graph-example-edge" x1="70" y1="48" x2="70" y2="145"></line>
+            <line class="graph-example-edge" x1="210" y1="48" x2="210" y2="145"></line>
+            <circle class="graph-example-node" cx="70" cy="48" r="20"></circle><text class="graph-example-label" x="70" y="54">A</text>
+            <circle class="graph-example-node" cx="210" cy="48" r="20"></circle><text class="graph-example-label" x="210" y="54">B</text>
+            <circle class="graph-example-node" cx="70" cy="145" r="20"></circle><text class="graph-example-label" x="70" y="151">C</text>
+            <circle class="graph-example-node" cx="210" cy="145" r="20"></circle><text class="graph-example-label" x="210" y="151">D</text>
+          </svg>
+          <div class="diagram-note">V(H₃) = V(G)，|E(H₃)| = |V| - 1</div>
+        </article>
+      </div>
+    </section>
+
     <section class="section" aria-labelledby="graph-representations-title">
       <div class="section-heading">
         <p class="eyebrow">Representations in C</p>

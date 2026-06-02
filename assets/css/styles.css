@@ -630,6 +630,74 @@ main {
   text-anchor: middle;
 }
 
+.graph-example-grid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.graph-example-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem;
+}
+
+.graph-example-card-source {
+  border-color: var(--teal);
+}
+
+.graph-example-card h3 {
+  font-size: 0.98rem;
+  margin: 0;
+}
+
+.graph-example-card p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.graph-example-svg {
+  background: #fbfcff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: block;
+  width: 100%;
+}
+
+.graph-example-edge {
+  fill: none;
+  stroke: #8792a1;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.graph-example-edge.directed {
+  marker-end: url(#graph-example-arrow-directed);
+}
+
+.graph-example-node {
+  fill: var(--violet);
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.graph-example-node.muted {
+  fill: #a7b0bd;
+}
+
+.graph-example-label {
+  fill: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
 .tree-diagram-grid {
   display: grid;
   gap: 0.8rem;
@@ -1937,6 +2005,10 @@ code {
   .chapter-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .graph-example-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
@@ -1961,6 +2033,7 @@ code {
   .chapter-grid,
   .practice-grid,
   .term-grid,
+  .graph-example-grid,
   .tree-diagram-grid,
   .tree-compare,
   .traversal-row,

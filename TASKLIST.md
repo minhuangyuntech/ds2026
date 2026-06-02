@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：擴充 Unit 06 Graph ADT 後的圖形教材，新增無向圖、有向圖、自我邊與 multigraph 圖例；再以一張簡單原圖示範三角形、path 與 spanning tree 等合法 subgraphs。
 - 2026-06-02：修正 Unit 06 柯尼茲堡 multigraph 彎曲 edge 的 SVG 樣式，加入 `fill: none`，移除 path 預設填色造成的黑色區域。
 - 2026-06-02：修正 Unit 06 柯尼茲堡七橋問題的 multigraph 抽象圖，將誤接的中央邊改為 Kneiphof K 至 Lomse L，並加入七條 edge 關係摘要方便逐條核對。
 - 2026-06-02：補強 Unit 06 柯尼茲堡七橋問題，新增保留河道、四塊陸地與七座橋位置的原始橋梁配置示意圖，並與 multigraph 抽象圖並列對照。
