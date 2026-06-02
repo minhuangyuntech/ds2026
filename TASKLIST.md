@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：擴充 Unit 06 Graph ADT 後的名詞教材，新增 Adjacent 與 Incident 對照小節，以無向圖、有向圖文字說明及 A-B-C 圖例區分 vertex-to-vertex 與 edge-to-vertex 關係。
 - 2026-06-02：重整 Unit 06 Graph 程式骨架區，將 BFS/DFS、Dijkstra、Prim 與 Kruskal 改為左右對照版面；左側列出演算法步驟與判讀重點，右側放置對應的 C 程式碼骨架。
 - 2026-06-02：依 CH6_1、CH6_2 課堂投影片補強 Unit 06，新增 complete directed graph、inverse adjacency list、orthogonal list、adjacency multilist、sequential packed lists、weighted network、spanning tree 性質、Sollin/Boruvka MST、articulation point、biconnected component、dfn/low、Floyd-Warshall、transitive closure、negative cycle、AOV/AOE、critical path 與 earliest/latest/slack，並加入六題延伸例題。
 - 2026-06-02：擴充 Unit 06 Graph ADT 後的圖形教材，新增無向圖、有向圖、自我邊與 multigraph 圖例；再以一張簡單原圖示範三角形、path 與 spanning tree 等合法 subgraphs。

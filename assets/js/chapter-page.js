@@ -2745,6 +2745,50 @@ function graphMaterialsTemplate() {
       </div>
     </section>
 
+    <section class="section" aria-labelledby="adjacent-incident-title">
+      <div class="section-heading">
+        <p class="eyebrow">Vertex And Edge Relations</p>
+        <h2 id="adjacent-incident-title">Adjacent 與 Incident 的差異</h2>
+        <p>這兩個詞都和 edge 有關，但描述的對象不同。<strong>Adjacent</strong> 用來描述兩個 vertices 之間的關係；<strong>incident</strong> 則描述一條 edge 與它端點 vertices 的關係。</p>
+      </div>
+      <div class="lesson-layout">
+        <article class="lesson-block">
+          <h4>Adjacent：vertex 與 vertex</h4>
+          <p>在無向圖中，若 edge <code>{A, B}</code> 存在，則 A 與 B 互為 adjacent vertices。相鄰表示一步就能由其中一點走到另一點。</p>
+          <ul>
+            <li>A 與 B adjacent，B 與 A 也 adjacent。</li>
+            <li>若只有 A-B-C，A 與 C 可以經由 path 抵達，但並不 adjacent。</li>
+            <li>在有向圖中，若 arc <code>(A, B)</code> 存在，可說 B is adjacent from A，或 A is adjacent to B；方向不能省略。</li>
+          </ul>
+        </article>
+        <article class="lesson-block">
+          <h4>Incident：edge 與 vertex</h4>
+          <p>若 edge <code>e1 = {A, B}</code> 連接 A 與 B，則 <code>e1</code> is incident on A，也 incident on B。這個詞不是用來描述兩個 vertices。</p>
+          <ul>
+            <li><code>e1</code> incident on A 與 B。</li>
+            <li><code>e2 = {B, C}</code> incident on B 與 C。</li>
+            <li>無向圖中，頂點的 degree 就是 incident edges 的數量。</li>
+          </ul>
+        </article>
+      </div>
+      <div class="definition-panel">
+        <svg class="graph-relation-svg" viewBox="0 0 620 245" role="img" aria-label="Adjacent 與 incident 關係示意圖">
+          <line class="graph-example-edge relation-active" x1="145" y1="112" x2="300" y2="112"></line>
+          <line class="graph-example-edge" x1="340" y1="112" x2="490" y2="112"></line>
+          <circle class="graph-example-node" cx="125" cy="112" r="24"></circle><text class="graph-example-label" x="125" y="118">A</text>
+          <circle class="graph-example-node" cx="320" cy="112" r="24"></circle><text class="graph-example-label" x="320" y="118">B</text>
+          <circle class="graph-example-node muted" cx="510" cy="112" r="24"></circle><text class="graph-example-label" x="510" y="118">C</text>
+          <text class="graph-relation-label active" x="222" y="84">e1 = {A, B}</text>
+          <text class="graph-relation-label" x="415" y="84">e2 = {B, C}</text>
+          <text class="graph-relation-note" x="222" y="175">A 與 B adjacent</text>
+          <text class="graph-relation-note" x="222" y="200">e1 incident on A、B</text>
+          <text class="graph-relation-note" x="415" y="175">A 與 C 不 adjacent</text>
+          <text class="graph-relation-note" x="415" y="200">但存在 path A-B-C</text>
+        </svg>
+      </div>
+      <div class="insight-box"><strong>記憶方式：</strong><code>adjacent(vertex, vertex)</code> 問兩個點是否直接相鄰；<code>incident(edge, vertex)</code> 問一條邊是否接在某個點上。</div>
+    </section>
+
     <section class="section" aria-labelledby="graph-types-title">
       <div class="section-heading">
         <p class="eyebrow">Graph Examples</p>

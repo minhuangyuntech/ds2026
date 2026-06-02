@@ -698,6 +698,36 @@ main {
   text-anchor: middle;
 }
 
+.graph-relation-svg {
+  background: #fbfcff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: block;
+  max-height: 245px;
+  width: 100%;
+}
+
+.graph-example-edge.relation-active {
+  stroke: var(--coral);
+  stroke-width: 5;
+}
+
+.graph-relation-label,
+.graph-relation-note {
+  fill: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+.graph-relation-label.active {
+  fill: var(--coral);
+}
+
+.graph-relation-note {
+  font-size: 13px;
+}
+
 .tree-diagram-grid {
   display: grid;
   gap: 0.8rem;
