@@ -2680,7 +2680,7 @@ function graphMaterialsTemplate() {
               <path class="graph-mini-edge" d="M303,68 C240,104 190,128 129,148"></path>
               <path class="graph-mini-edge" d="M303,230 C234,251 170,221 127,168"></path>
               <path class="graph-mini-edge" d="M303,230 C238,195 188,174 129,154"></path>
-              <line class="graph-mini-edge" x1="348" y1="148" x2="472" y2="148"></line>
+              <line class="graph-mini-edge" x1="135" y1="150" x2="470" y2="150"></line>
               <path class="graph-mini-edge" d="M512,126 C475,56 406,42 342,66"></path>
               <path class="graph-mini-edge" d="M512,170 C472,239 405,251 342,232"></path>
               <circle class="graph-mini-node start" cx="105" cy="150" r="30"></circle>
@@ -2695,6 +2695,7 @@ function graphMaterialsTemplate() {
               <text class="graph-mini-weight" x="325" y="22">北岸 N：degree 3</text>
               <text class="graph-mini-weight" x="325" y="286">南岸 S：degree 3</text>
               <text class="graph-mini-weight" x="500" y="202">Lomse：degree 3</text>
+              <text class="konigsberg-edge-summary" x="310" y="178">K-N x 2、K-S x 2、K-L、N-L、S-L</text>
             </svg>
           </figure>
         </div>

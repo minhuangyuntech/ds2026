@@ -622,6 +622,13 @@ main {
   font-size: 14px;
 }
 
+.konigsberg-edge-summary {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
 .tree-diagram-grid {
   display: grid;
   gap: 0.8rem;
