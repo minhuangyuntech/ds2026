@@ -3944,6 +3944,61 @@ int main(void) {
       </div>
     </section>
 
+    <section class="section" aria-labelledby="c-swap-title">
+      <div class="section-heading">
+        <p class="eyebrow">Function Versus Macro</p>
+        <h2 id="c-swap-title">交換兩個變數：函式呼叫與 SWAP 巨集</h2>
+        <p>交換兩個整數可以寫成接收位址的函式，也可以用前置處理器巨集展開。兩種方法看起來接近，但型別檢查、呼叫方式與副作用風險不同。</p>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Pointer-based swap function</h3>
+          <pre><code>void swap_int(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int x = 10;
+int y = 20;
+swap_int(&amp;x, &amp;y);</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>SWAP macro</h3>
+          <pre><code>#define SWAP(a, b, type) do { \\
+    type temp = (a);          \\
+    (a) = (b);                \\
+    (b) = temp;               \\
+} while (0)
+
+int x = 10;
+int y = 20;
+SWAP(x, y, int);</code></pre>
+        </article>
+      </div>
+      <div class="analysis-panel">
+        <table class="comparison-table">
+          <thead><tr><th>比較項目</th><th>swap_int 函式</th><th>SWAP 巨集</th></tr></thead>
+          <tbody>
+            <tr><td>呼叫方式</td><td>傳入位址：<code>swap_int(&amp;x, &amp;y)</code></td><td>傳入可賦值運算式：<code>SWAP(x, y, int)</code></td></tr>
+            <tr><td>型別</td><td>函式簽章固定為 <code>int *</code></td><td>可指定 <code>int</code>、<code>double</code> 等型別</td></tr>
+            <tr><td>編譯器檢查</td><td>參數型別較容易檢查</td><td>前置處理器先展開文字，錯誤訊息可能較難讀</td></tr>
+            <tr><td>副作用</td><td>每個參數運算式只在呼叫前求值一次</td><td>參數在展開後可能出現多次，不要傳入 <code>i++</code> 或函式呼叫</td></tr>
+            <tr><td>適用情境</td><td>優先選擇，介面清楚且容易維護</td><td>教學比較或需要泛型式交換時使用，必須限制參數形式</td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box">巨集參數會做文字替換。請使用 <code>SWAP(a[i], a[j], int)</code> 這類單純可賦值運算式；避免 <code>SWAP(a[i++], a[j++], int)</code>，否則索引可能被增加多次。</div>
+      </div>
+      <article class="chapter-panel standalone-code-panel">
+        <h3>例題</h3>
+        <ol>
+          <li>令 <code>x = 10</code>、<code>y = 20</code>，分別追蹤 <code>swap_int(&amp;x, &amp;y)</code> 與 <code>SWAP(x, y, int)</code> 執行後的結果。</li>
+          <li>將 <code>SWAP(p, q, double)</code> 展開成實際 C 敘述，說明 <code>do { ... } while (0)</code> 的用途。</li>
+          <li>說明為什麼不應呼叫 <code>SWAP(a[i++], a[j++], int)</code>，並指出索引可能被求值幾次。</li>
+        </ol>
+      </article>
+    </section>
+
     <section class="section" aria-labelledby="c-pointer-title">
       <div class="section-heading">
         <p class="eyebrow">Pointers And Arrays</p>
