@@ -3999,6 +3999,93 @@ SWAP(x, y, int);</code></pre>
       </article>
     </section>
 
+    <section class="section" aria-labelledby="c-preprocessor-title">
+      <div class="section-heading">
+        <p class="eyebrow">Preprocessor</p>
+        <h2 id="c-preprocessor-title">前置處理器與巨集</h2>
+        <p>C compiler 正式分析語法前，前置處理器會先處理以 <code>#</code> 開頭的 directives。常見用途包含引入 header、定義常數、建立簡短巨集與控制條件編譯。</p>
+      </div>
+      <div class="teaching-grid">
+        <article class="algorithm-card">
+          <h3>#include</h3>
+          <p><code>#include &lt;stdio.h&gt;</code> 引入系統 header；<code>#include "stack.h"</code> 引入專案 header。Header 通常放 type、constant 與 function declarations。</p>
+          <div class="chapter-tags"><span>Header</span><span>Declaration</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>#define</h3>
+          <p><code>#define MAX_SIZE 100</code> 建立物件式巨集。前置處理器會在編譯前進行文字替換，不會配置一個可取址的變數。</p>
+          <div class="chapter-tags"><span>Constant</span><span>Substitution</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Function-like macro</h3>
+          <p><code>#define SQUARE(x) ((x) * (x))</code> 看起來像函式，但參數可能被展開多次。每個參數與整體結果都應加括號。</p>
+          <div class="chapter-tags"><span>Parentheses</span><span>Side effect</span></div>
+        </article>
+        <article class="algorithm-card">
+          <h3>Conditional compilation</h3>
+          <p><code>#ifdef DEBUG</code> 可在 debug build 顯示額外資訊；<code>#ifndef</code> 常用來建立 header include guard。</p>
+          <div class="chapter-tags"><span>DEBUG</span><span>Guard</span></div>
+        </article>
+      </div>
+      <div class="code-grid">
+        <article class="code-panel">
+          <h3>Constant and function-like macros</h3>
+          <pre><code>#define MAX_SIZE 100
+#define SQUARE(x) ((x) * (x))
+#define MAX(a, b) ((a) &gt; (b) ? (a) : (b))
+
+int area = SQUARE(5);
+int larger = MAX(12, 30);</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Header include guard</h3>
+          <pre><code>#ifndef STACK_H
+#define STACK_H
+
+#define STACK_CAPACITY 100
+
+typedef struct {
+    int data[STACK_CAPACITY];
+    int top;
+} Stack;
+
+void stack_init(Stack *s);
+
+#endif</code></pre>
+        </article>
+        <article class="code-panel">
+          <h3>Conditional debug output</h3>
+          <pre><code>#ifdef DEBUG
+printf("top = %d\\n", stack.top);
+#endif
+
+/* compile with:
+   gcc -DDEBUG -std=c11 stack.c -o stack */</code></pre>
+        </article>
+      </div>
+      <div class="analysis-panel">
+        <table class="comparison-table">
+          <thead><tr><th>情境</th><th>建議工具</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr><td>簡單整數常數</td><td><code>enum</code>、<code>const</code> 或 <code>#define</code></td><td>依是否需要型別、作用域與可取址能力選擇。</td></tr>
+            <tr><td>需要型別檢查的操作</td><td>函式或 <code>static inline</code></td><td>錯誤訊息清楚，也能避免重複求值。</td></tr>
+            <tr><td>Header 防止重複引入</td><td><code>#ifndef</code> include guard</td><td>避免同一宣告被重複處理。</td></tr>
+            <tr><td>Debug 版本額外訊息</td><td><code>#ifdef DEBUG</code></td><td>release build 可完全移除除錯輸出。</td></tr>
+          </tbody>
+        </table>
+        <div class="insight-box">避免把複雜邏輯塞進巨集。能用函式或 <code>static inline</code> 表達時，通常更容易閱讀、除錯與檢查型別。</div>
+      </div>
+      <article class="chapter-panel standalone-code-panel">
+        <h3>例題</h3>
+        <ol>
+          <li>展開 <code>SQUARE(a + b)</code>，說明為什麼參數與整體結果都需要括號。</li>
+          <li>解釋 <code>SQUARE(i++)</code> 為何危險，並指出 <code>i</code> 可能被增加幾次。</li>
+          <li>為 <code>queue.h</code> 寫出 include guard，並加入容量常數與函式宣告。</li>
+          <li>使用 <code>#ifdef DEBUG</code> 包住一段 queue 狀態輸出，寫出啟用 debug build 的 gcc 指令。</li>
+        </ol>
+      </article>
+    </section>
+
     <section class="section" aria-labelledby="c-pointer-title">
       <div class="section-heading">
         <p class="eyebrow">Pointers And Arrays</p>

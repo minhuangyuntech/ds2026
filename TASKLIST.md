@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：擴充 Unit 00 Standard C Syntax，新增前置處理器與巨集小節，說明 `#include`、`#define`、函式式巨集括號、參數重複求值、`#ifdef DEBUG`、header include guard，以及何時優先使用函式或 `static inline`；加入四題例題。
 - 2026-06-02：擴充 Unit 00 Standard C Syntax，新增 pointer-based `swap_int(&x, &y)` 函式呼叫與 `SWAP(x, y, type)` 巨集比較，說明型別檢查、呼叫方式、`do { ... } while (0)`、巨集參數重複求值風險，並加入三題例題。
 - 2026-06-02：為 Unit 00-12 全部章節新增「各小節例題」題庫；每個單元拆成 4 個核心小節，每小節至少 3 題，共新增 52 組、156 題，可用於課堂追蹤、作業與操作驗證。
 - 2026-05-30：為 Unit 00-12 全部章節新增第二輪課堂延伸教材；每章加入三個主題概念卡與課堂練習，涵蓋 C 除錯習慣、ADT 規格、表示法成本、容器狀態追蹤、pointer ownership、BST deletion、graph relaxation、sorting stability、hash probing、heap operations、AVL rotation、B-tree split 與 trie autocomplete。
