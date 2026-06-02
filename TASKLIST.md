@@ -190,6 +190,7 @@
 
 ## 更新紀錄
 
+- 2026-06-02：擴充 Unit 06 Graph 名詞整理，將每個名詞補成完整定義與具體範例；新增 in-degree/out-degree、walk、reachable、strongly connected、tree/forest、minimum spanning tree、multigraph、complete graph、bipartite graph、DAG 與 bridge 等課堂常用詞彙。
 - 2026-06-02：擴充 Unit 07 Radix Sort，新增 LSD Radix Sort 動態圖例互動介面；提供重置、上一步、下一步、自動播放與速度控制，逐步顯示個位/十位/百位 pass、0-9 buckets、穩定分桶、收回順序與目前陣列狀態。
 - 2026-06-02：擴充 Unit 00 Standard C Syntax，新增前置處理器與巨集小節，說明 `#include`、`#define`、函式式巨集括號、參數重複求值、`#ifdef DEBUG`、header include guard，以及何時優先使用函式或 `static inline`；加入四題例題。
 - 2026-06-02：擴充 Unit 00 Standard C Syntax，新增 pointer-based `swap_int(&x, &y)` 函式呼叫與 `SWAP(x, y, type)` 巨集比較，說明型別檢查、呼叫方式、`do { ... } while (0)`、巨集參數重複求值風險，並加入三題例題。

@@ -2450,31 +2450,151 @@ function treeLabTemplate() {
 }
 
 const graphTerms = [
-  ["Vertex / Node", "圖中的一個物件或狀態，例如城市、課程、網頁、使用者。"],
-  ["Edge / Arc", "連接兩個頂點的關係；有向圖常稱為 arc。"],
-  ["Directed Graph", "邊有方向，(u, v) 與 (v, u) 代表不同關係。"],
-  ["Undirected Graph", "邊沒有方向，{u, v} 表示 u 與 v 彼此相連。"],
-  ["Weighted Graph", "每條邊有成本或距離，例如路長、時間、費用。"],
-  ["Adjacent", "兩個頂點之間有邊相連時，稱為相鄰。"],
-  ["Incident", "某條邊連到某個頂點時，稱該邊 incident to 該頂點。"],
-  ["Degree", "無向圖中與頂點相連的邊數；有向圖分成 in-degree 與 out-degree。"],
-  ["Path", "由一串頂點與邊組成的路徑；若頂點不重複，稱 simple path。"],
-  ["Cycle", "起點與終點相同的路徑；若除了起終點外不重複，稱 simple cycle。"],
-  ["Connected", "無向圖中任兩頂點都有路徑可達，稱為連通圖。"],
-  ["Component", "非連通圖中，每個最大連通子圖稱為 connected component。"],
-  ["Subgraph", "從原圖取部分頂點與邊形成的圖。"],
-  ["Spanning Tree", "包含所有頂點且沒有 cycle 的連通子圖。"],
-  ["Sparse / Dense", "邊數接近 |V| 時偏 sparse；接近 |V|² 時偏 dense。"],
-  ["Self-loop", "邊從頂點連回自己，例如 (v, v)。"],
+  [
+    "Vertex / Node",
+    "圖中的基本物件或狀態，組成頂點集合 V。頂點可以帶有名稱、編號或其他資料；圖演算法通常以頂點作為拜訪與標記的單位。",
+    "在道路圖中，A、B、C 三座城市可分別表示三個 vertices。",
+  ],
+  [
+    "Edge / Arc",
+    "連接兩個頂點的關係，組成邊集合 E。無向圖通常稱 edge；有向圖常稱 arc，並以起點與終點描述方向。",
+    "道路 A-B 可寫成 {A, B}；追蹤關係 A 追蹤 B 可寫成 (A, B)。",
+  ],
+  [
+    "Directed Graph",
+    "每條邊都有方向的圖。邊 (u, v) 表示可以由 u 前往 v，不保證能反向由 v 前往 u，因此 (u, v) 與 (v, u) 是兩條不同的邊。",
+    "課程先修圖中，(資料結構, 演算法) 表示修演算法前應先修資料結構。",
+  ],
+  [
+    "Undirected Graph",
+    "每條邊都沒有方向的圖。邊 {u, v} 表示 u 與 v 彼此相連，從任一端都能走到另一端。",
+    "若 A 與 B 是好友，可用無向邊 {A, B} 表示雙向關係。",
+  ],
+  [
+    "Weighted Graph",
+    "每條邊額外帶有數值權重。權重可以代表距離、時間、費用、容量或風險；最短路徑與最小生成樹會使用這些數值比較方案。",
+    "道路 A-B 的距離為 12 公里，可記為 w(A, B) = 12。",
+  ],
+  [
+    "Adjacent",
+    "若兩個頂點之間有邊直接相連，稱兩個頂點相鄰。相鄰只描述一步可達，不等同於經過多條邊後仍可到達。",
+    "有邊 {A, B} 時 A 與 B adjacent；只有 A-B-C 時，A 與 C 並不 adjacent。",
+  ],
+  [
+    "Incident",
+    "若一條邊連接某個頂點，稱這條邊 incident to 該頂點。這個詞描述邊與頂點的關係，常用於計算 degree。",
+    "邊 {A, B} 同時 incident to A 與 B。",
+  ],
+  [
+    "Degree",
+    "在無向圖中，頂點 v 的 degree 是與 v 相接的邊數，記為 deg(v)。所有頂點的 degree 總和等於 2|E|，因為每條邊會被兩端各計算一次。",
+    "若 A 連到 B、C、D，則 deg(A) = 3。",
+  ],
+  [
+    "In-degree / Out-degree",
+    "在有向圖中，in-degree 是進入某頂點的邊數，out-degree 是從該頂點出發的邊數。拓撲排序常以 in-degree 是否為 0 決定下一個可處理的頂點。",
+    "若有 (A, C)、(B, C)、(C, D)，則 C 的 in-degree = 2，out-degree = 1。",
+  ],
+  [
+    "Walk",
+    "由一串相鄰頂點形成的行走序列，途中允許重複經過頂點與邊。Walk 是最寬鬆的走法描述，可用來說明一次實際移動過程。",
+    "A-B-C-B-D 是合法 walk，因為途中可以再次經過 B。",
+  ],
+  [
+    "Path / Simple Path",
+    "Path 是沿著邊由起點走到終點的路線。不同教材對 path 是否允許重複頂點的用法略有差異；明確要求頂點不重複時，稱為 simple path。",
+    "A-B-C-D 是一條由 A 到 D 的 simple path；A-B-C-B-D 則不是 simple path。",
+  ],
+  [
+    "Cycle / Simple Cycle",
+    "起點與終點相同的封閉路線稱為 cycle。若除了起終點外沒有重複頂點，稱為 simple cycle。偵測 cycle 是判斷樹、DAG 與拓撲排序可行性的關鍵。",
+    "A-B-C-A 是 simple cycle；樹中不會出現任何 cycle。",
+  ],
+  [
+    "Reachable",
+    "若存在一條由 u 到 v 的 path，稱 v 可由 u 到達。對有向圖而言方向很重要：v 可由 u 到達，不代表 u 一定可由 v 到達。",
+    "若只有 (A, B)、(B, C)，則 C reachable from A，但 A 不可由 C 到達。",
+  ],
+  [
+    "Connected Graph",
+    "在無向圖中，若任意兩個頂點之間都有 path，稱為連通圖。只要存在一個無法與其他頂點互通的孤立頂點，整張圖就不是 connected。",
+    "A-B-C 且 C-D 的圖是 connected；若另有孤立頂點 E，則整張圖不連通。",
+  ],
+  [
+    "Connected Component",
+    "非連通無向圖中，每個最大的連通子圖稱為 connected component。最大的意思是不能再加入其他頂點而仍保持連通。",
+    "若邊只有 {A, B} 與 {C, D}，則圖有 {A, B}、{C, D} 兩個 components。",
+  ],
+  [
+    "Strongly Connected",
+    "在有向圖中，若每一對頂點 u、v 都能彼此到達，稱為強連通。圖也可以拆成數個 strongly connected components，分析相互可達的群組。",
+    "具有 (A, B)、(B, C)、(C, A) 時，A、B、C 形成 strongly connected component。",
+  ],
+  [
+    "Subgraph",
+    "從原圖取出部分頂點與部分邊所形成的圖。子圖中的邊仍必須使用被選中的頂點，常用來聚焦局部結構或建立演算法結果。",
+    "原圖有 A、B、C、D 與多條邊時，只取頂點 A、B、C 和邊 {A, B} 即形成 subgraph。",
+  ],
+  [
+    "Tree / Forest",
+    "無向圖中，connected 且沒有 cycle 的圖稱為 tree。數個彼此分離的 trees 合在一起稱為 forest。DFS 與 BFS 都能產生搜尋樹或搜尋森林。",
+    "A-B-C 與 D-E 兩棵分離的樹合在一起是一個 forest。",
+  ],
+  [
+    "Spanning Tree",
+    "連通無向圖中，包含原圖所有頂點且本身是一棵樹的子圖。若原圖有 |V| 個頂點，任何 spanning tree 都恰好有 |V| - 1 條邊。",
+    "三角形 A-B-C-A 可移除任一條邊，得到包含 A、B、C 的 spanning tree。",
+  ],
+  [
+    "Minimum Spanning Tree",
+    "帶權重連通無向圖中，總權重最小的 spanning tree，簡稱 MST。它保留所有頂點的連通性，同時把建設成本降到最低。",
+    "若三角形邊權重為 AB=2、BC=3、AC=9，MST 會選 AB 與 BC，總成本為 5。",
+  ],
+  [
+    "Sparse / Dense",
+    "Sparse graph 的邊數相對少，常接近 |V|；dense graph 的邊數相對多，接近可能的最大邊數。密度會影響 adjacency list 與 adjacency matrix 的選擇。",
+    "1000 個頂點只有 1500 條邊通常偏 sparse，社群關係圖常有這種特性。",
+  ],
+  [
+    "Self-loop",
+    "邊的起點與終點是同一個頂點，稱為 self-loop。某些問題允許它表示自我關係，但處理 degree、cycle 或矩陣表示法時要特別注意。",
+    "有向邊 (A, A) 表示 A 指向自己；在 adjacency matrix 中會落在對角線位置。",
+  ],
+  [
+    "Parallel Edges / Multigraph",
+    "若相同兩個頂點之間允許存在多條邊，稱為 parallel edges；允許此結構的圖稱為 multigraph。每條邊仍可有自己的權重或標籤。",
+    "A 與 B 之間同時有公車與火車路線，可用兩條不同的 parallel edges 表示。",
+  ],
+  [
+    "Complete Graph",
+    "無向圖中，若每一對不同頂點之間都有邊相連，稱為 complete graph，記為 Kₙ。n 個頂點的 complete graph 共有 n(n - 1) / 2 條邊。",
+    "K₄ 有 4 個頂點，每個頂點都連到另外 3 個頂點，共有 6 條邊。",
+  ],
+  [
+    "Bipartite Graph",
+    "若能把頂點分成兩組，且每條邊都只連接不同組的頂點，稱為二分圖。同一組內不會有邊；它很適合表示配對問題。",
+    "學生與課程可分成兩組，學生選課關係用跨組的邊表示。",
+  ],
+  [
+    "DAG",
+    "Directed Acyclic Graph 的縮寫，指沒有 directed cycle 的有向圖。DAG 能進行 topological sort，常用來表示具有先後依賴的工作。",
+    "編譯前置工作 A 指向建置 B，B 指向測試 C；只要不形成回圈，就是 DAG。",
+  ],
+  [
+    "Bridge / Cut Edge",
+    "在無向圖中，移除後會讓 connected components 數量增加的邊稱為 bridge 或 cut edge。它代表網路中不能輕易失去的關鍵連線。",
+    "A-B-C 中，移除 {B, C} 後 C 會與 A、B 分離，因此 {B, C} 是 bridge。",
+  ],
 ];
 
 function graphTermsTemplate() {
   return graphTerms
     .map(
-      ([term, description]) => `
+      ([term, description, example]) => `
         <article class="term-card">
           <h3>${escapeHtml(term)}</h3>
           <p>${escapeHtml(description)}</p>
+          <div class="term-example"><strong>例：</strong><span>${escapeHtml(example)}</span></div>
         </article>
       `,
     )
@@ -2521,7 +2641,7 @@ function graphMaterialsTemplate() {
       <div class="section-heading">
         <p class="eyebrow">Terminology</p>
         <h2 id="graph-terms-title">Graph 名詞整理</h2>
-        <p>先把名詞建立起來，後面談表示法與演算法時才不會混淆。特別注意 directed/undirected、degree/in-degree/out-degree、path/cycle 的差異。</p>
+    <p>先把名詞建立起來，後面談表示法與演算法時才不會混淆。每張卡片都附有具體例子；閱讀時先分辨圖是否有方向、邊是否帶權重，再確認路徑、連通與生成樹等概念。</p>
       </div>
       <div class="term-grid">${graphTermsTemplate()}</div>
     </section>

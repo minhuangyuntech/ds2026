@@ -483,6 +483,26 @@ main {
   margin: 0;
 }
 
+.term-example {
+  background: #f5f8fa;
+  border-left: 3px solid var(--teal);
+  color: var(--muted);
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.7rem;
+  padding: 0.55rem 0.65rem;
+}
+
+.term-example strong {
+  color: var(--teal);
+  font-size: 0.78rem;
+}
+
+.term-example span {
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
 .tree-mini-svg,
 .graph-mini-svg {
   background: #fff;
