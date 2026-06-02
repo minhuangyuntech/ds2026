@@ -3764,9 +3764,21 @@ function graphAdvancedTemplate() {
         <h2 id="graph-code-title">BFS、DFS、Dijkstra、Prim/Kruskal 程式骨架</h2>
         <p>以下使用 adjacency matrix 版本呈現核心流程，適合課堂追蹤；大型稀疏圖可改成 adjacency list 與 priority queue。</p>
       </div>
-      <div class="code-grid">
-        <article class="code-panel">
-          <h3>BFS and DFS</h3>
+      <div class="graph-code-stack">
+        <article class="graph-code-pair">
+          <div class="lesson-block">
+            <h4>BFS 與 DFS 演算法</h4>
+            <p>兩者都從指定起點展開，差別在 frontier 的管理方式。</p>
+            <ol>
+              <li>初始化所有 <code>visited[v] = 0</code>。</li>
+              <li>BFS 將起點 enqueue；每次 dequeue 一個 vertex，再把尚未拜訪的 neighbors enqueue。</li>
+              <li>DFS 標記目前 vertex，逐一對尚未拜訪的 neighbor 遞迴呼叫。</li>
+              <li>每個 vertex 與 edge 至多處理固定次數；使用 adjacency list 時成本為 <code>O(V + E)</code>。</li>
+            </ol>
+            <div class="chapter-tags"><span>BFS：Queue</span><span>DFS：Recursion / Stack</span></div>
+          </div>
+          <div class="code-panel">
+          <h3>C 骨架：BFS and DFS</h3>
           <pre><code>#define MAX_V 32
 
 void bfs(int n, int g[MAX_V][MAX_V], int start) {
@@ -3795,9 +3807,22 @@ void dfs_visit(int n, int g[MAX_V][MAX_V],
         }
     }
 }</code></pre>
+          </div>
         </article>
-        <article class="code-panel">
-          <h3>Dijkstra</h3>
+        <article class="graph-code-pair">
+          <div class="lesson-block">
+            <h4>Dijkstra 演算法</h4>
+            <p>處理 edge weight 皆為非負數的 single-source shortest paths。</p>
+            <ol>
+              <li>令 <code>dist[start] = 0</code>，其他距離先設為直接 edge 成本或 <code>INF</code>。</li>
+              <li>從尚未 fixed 的 vertices 中，選出 <code>dist</code> 最小的 <code>u</code>。</li>
+              <li>固定 <code>u</code>，逐一 relaxation：若 <code>dist[u] + cost[u][v] &lt; dist[v]</code>，就更新 <code>dist[v]</code>。</li>
+              <li>重複直到所有可達 vertices 固定。</li>
+            </ol>
+            <div class="chapter-tags"><span>Nonnegative</span><span>Relaxation</span><span>Shortest Path</span></div>
+          </div>
+          <div class="code-panel">
+          <h3>C 骨架：Dijkstra</h3>
           <pre><code>#define INF 1000000000
 
 void dijkstra(int n, int cost[MAX_V][MAX_V],
@@ -3820,9 +3845,22 @@ void dijkstra(int n, int cost[MAX_V][MAX_V],
                 dist[v] = dist[u] + cost[u][v];
     }
 }</code></pre>
+          </div>
         </article>
-        <article class="code-panel">
-          <h3>Prim MST</h3>
+        <article class="graph-code-pair">
+          <div class="lesson-block">
+            <h4>Prim MST 演算法</h4>
+            <p>從一個 vertex 開始擴張 minimum spanning tree，每次挑選連接樹內與樹外的最輕 edge。</p>
+            <ol>
+              <li>將起點加入 tree，初始化每個 vertex 到目前 tree 的最低成本 <code>low[v]</code>。</li>
+              <li>從 tree 外選擇 <code>low[u]</code> 最小的 vertex <code>u</code>。</li>
+              <li>把 <code>u</code> 與對應 edge 加入 tree，累加成本。</li>
+              <li>使用 <code>u</code> 的 edges 更新其他 tree 外 vertices 的 <code>low</code>。</li>
+            </ol>
+            <div class="chapter-tags"><span>Grow One Tree</span><span>Greedy</span><span>MST</span></div>
+          </div>
+          <div class="code-panel">
+          <h3>C 骨架：Prim MST</h3>
           <pre><code>int prim(int n, int cost[MAX_V][MAX_V], int start) {
     int in_tree[MAX_V] = {0};
     int low[MAX_V];
@@ -3845,9 +3883,22 @@ void dijkstra(int n, int cost[MAX_V][MAX_V],
     }
     return total;
 }</code></pre>
+          </div>
         </article>
-        <article class="code-panel">
-          <h3>Kruskal and components</h3>
+        <article class="graph-code-pair">
+          <div class="lesson-block">
+            <h4>Kruskal MST 演算法</h4>
+            <p>把 vertices 視為多個 components，依 weight 由小到大挑選不會形成 cycle 的 edges。</p>
+            <ol>
+              <li>將所有 edges 依 weight 由小到大排序。</li>
+              <li>依序取出 edge <code>(u, v)</code>，用 disjoint set 找出兩端 components。</li>
+              <li>若兩端屬於不同 components，就加入 MST 並 union；否則略過以避免 cycle。</li>
+              <li>選滿 <code>V - 1</code> 條 edges 後完成。</li>
+            </ol>
+            <div class="chapter-tags"><span>Sort Edges</span><span>Union-Find</span><span>Avoid Cycle</span></div>
+          </div>
+          <div class="code-panel">
+          <h3>C 骨架：Kruskal Components</h3>
           <pre><code>int parent[MAX_V];
 
 int find_set(int x) {
@@ -3869,6 +3920,7 @@ int union_set(int a, int b) {
    1. sort edges by weight
    2. scan edges from light to heavy
    3. add edge only if union_set succeeds */</code></pre>
+          </div>
         </article>
       </div>
     </section>

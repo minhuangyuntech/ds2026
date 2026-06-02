@@ -1425,6 +1425,22 @@ main {
   gap: 1rem;
 }
 
+.graph-code-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.graph-code-pair {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+}
+
+.graph-code-pair .lesson-block,
+.graph-code-pair .code-panel {
+  min-width: 0;
+}
+
 .code-panel {
   background: #101827;
   border: 1px solid #202b3f;
@@ -1995,6 +2011,7 @@ code {
   .tree-material-grid,
   .graph-material-grid,
   .konigsberg-grid,
+  .graph-code-pair,
   .chapter-layout,
   .teaching-grid,
   .lesson-layout,
