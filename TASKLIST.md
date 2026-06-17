@@ -117,6 +117,7 @@
 - [x] Forests and left-child right-sibling representation
 - [x] Disjoint sets / Union-Find
 - [x] Counting binary trees / Catalan recurrence
+- [x] Canvas-based custom tree builder
 
 ### Unit 06 Graphs
 
@@ -130,6 +131,7 @@
 - [x] Dijkstra detailed C implementation
 - [x] Prim and Kruskal detailed C implementation
 - [x] Topological sort and connected components, if aligned with course scope
+- [x] Canvas-based custom directed/undirected graph builder
 
 ### Unit 07 Sorting
 
@@ -190,6 +192,8 @@
 
 ## 更新紀錄
 
+- 2026-06-17：擴充 Unit 06 Graphs，新增 canvas 自定義圖建構器；可建立頂點、切換有向/無向圖、選擇起點與終點建立 weighted edge、刪除選取頂點或 edge，並即時輸出 adjacency list。
+- 2026-06-17：擴充 Unit 05 Trees，新增 canvas 自定義樹建構器；可輸入節點內容、選擇父節點加入 children、點選節點、刪除子樹、載入範例與清空畫布，並即時計算節點數、高度與葉節點數。
 - 2026-06-02：擴充 Unit 06 圖表示法教材，新增共同基準圖與四種詳細圖例：adjacency matrix 0/1 表格、adjacency list 指標節點、adjacency multilist 共享 edge records，以及 weighted edges 圖與權重表。
 - 2026-06-02：擴充 Unit 06 Graph ADT 後的名詞教材，新增 Adjacent 與 Incident 對照小節，以無向圖、有向圖文字說明及 A-B-C 圖例區分 vertex-to-vertex 與 edge-to-vertex 關係。
 - 2026-06-02：重整 Unit 06 Graph 程式骨架區，將 BFS/DFS、Dijkstra、Prim 與 Kruskal 改為左右對照版面；左側列出演算法步驟與判讀重點，右側放置對應的 C 程式碼骨架。

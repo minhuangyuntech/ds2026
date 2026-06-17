@@ -30,7 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if ($("#sort-svg")) initSortingLab();
   if ($("#radix-buckets")) initRadixLab();
   if ($("#tree-svg")) initTreeLab();
+  if ($("#custom-tree-canvas")) initCustomTreeBuilder();
   if ($("#graph-svg")) initGraphLab();
+  if ($("#custom-graph-canvas")) initCustomGraphBuilder();
   if ($("#heap-demo-svg")) initHeapDemo();
 
   if (window.lucide) {
@@ -947,6 +949,324 @@ function drawMiniTree(svg, root) {
   });
 }
 
+const customTreeState = {
+  nodes: [],
+  selectedId: null,
+  nextId: 1,
+};
+
+function initCustomTreeBuilder() {
+  $("#custom-tree-add").addEventListener("click", addCustomTreeNode);
+  $("#custom-tree-delete").addEventListener("click", deleteSelectedCustomTreeNode);
+  $("#custom-tree-sample").addEventListener("click", loadCustomTreeSample);
+  $("#custom-tree-clear").addEventListener("click", clearCustomTree);
+  $("#custom-tree-label").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") addCustomTreeNode();
+  });
+  $("#custom-tree-parent").addEventListener("change", (event) => {
+    customTreeState.selectedId = event.target.value ? Number(event.target.value) : customTreeState.selectedId;
+    renderCustomTree();
+  });
+  $("#custom-tree-canvas").addEventListener("click", selectCustomTreeNodeFromCanvas);
+  window.addEventListener("resize", renderCustomTree);
+  loadCustomTreeSample();
+}
+
+function loadCustomTreeSample() {
+  customTreeState.nodes = [
+    { id: 1, label: "A", parentId: null, children: [2, 3, 4] },
+    { id: 2, label: "B", parentId: 1, children: [5, 6] },
+    { id: 3, label: "C", parentId: 1, children: [7] },
+    { id: 4, label: "D", parentId: 1, children: [] },
+    { id: 5, label: "E", parentId: 2, children: [] },
+    { id: 6, label: "F", parentId: 2, children: [] },
+    { id: 7, label: "G", parentId: 3, children: [] },
+  ];
+  customTreeState.selectedId = 1;
+  customTreeState.nextId = 8;
+  $("#custom-tree-label").value = "H";
+  renderCustomTree();
+  setCustomTreeStatus("已載入範例樹。可選擇任一父節點後加入新節點。");
+}
+
+function clearCustomTree() {
+  customTreeState.nodes = [];
+  customTreeState.selectedId = null;
+  customTreeState.nextId = 1;
+  $("#custom-tree-label").value = "Root";
+  renderCustomTree();
+  setCustomTreeStatus("畫布已清空。下一個加入的節點會成為 root。");
+}
+
+function addCustomTreeNode() {
+  const labelInput = $("#custom-tree-label");
+  const label = labelInput.value.trim();
+  if (!label) {
+    setCustomTreeStatus("請先輸入節點內容。");
+    labelInput.focus();
+    return;
+  }
+
+  let parentId = $("#custom-tree-parent").value ? Number($("#custom-tree-parent").value) : null;
+  if (customTreeState.nodes.length === 0) parentId = null;
+  if (customTreeState.nodes.length > 0 && parentId === null) {
+    setCustomTreeStatus("此建構器維持單一 root；請先選擇父節點再加入。");
+    return;
+  }
+
+  const node = { id: customTreeState.nextId, label, parentId, children: [] };
+  customTreeState.nextId += 1;
+  customTreeState.nodes.push(node);
+  if (parentId !== null) {
+    const parent = getCustomTreeNode(parentId);
+    if (parent) parent.children.push(node.id);
+  }
+  customTreeState.selectedId = node.id;
+  labelInput.value = nextCustomTreeLabel(label);
+  renderCustomTree();
+  setCustomTreeStatus(`已加入節點 ${label}。`);
+}
+
+function nextCustomTreeLabel(label) {
+  if (/^[A-Z]$/.test(label) && label !== "Z") return String.fromCharCode(label.charCodeAt(0) + 1);
+  if (/^N\d+$/.test(label)) return `N${Number(label.slice(1)) + 1}`;
+  return "";
+}
+
+function deleteSelectedCustomTreeNode() {
+  const selected = getCustomTreeNode(customTreeState.selectedId);
+  if (!selected) {
+    setCustomTreeStatus("請先選取要刪除的節點。");
+    return;
+  }
+  const removeIds = new Set();
+  collectCustomTreeSubtree(selected.id, removeIds);
+  if (selected.parentId !== null) {
+    const parent = getCustomTreeNode(selected.parentId);
+    if (parent) parent.children = parent.children.filter((id) => id !== selected.id);
+  }
+  customTreeState.nodes = customTreeState.nodes.filter((node) => !removeIds.has(node.id));
+  customTreeState.selectedId = selected.parentId !== null && getCustomTreeNode(selected.parentId) ? selected.parentId : customTreeRoot()?.id ?? null;
+  renderCustomTree();
+  setCustomTreeStatus(`已刪除 ${selected.label} 與其子樹。`);
+}
+
+function collectCustomTreeSubtree(id, output) {
+  const node = getCustomTreeNode(id);
+  if (!node) return;
+  output.add(id);
+  node.children.forEach((childId) => collectCustomTreeSubtree(childId, output));
+}
+
+function selectCustomTreeNodeFromCanvas(event) {
+  const canvas = $("#custom-tree-canvas");
+  const rect = canvas.getBoundingClientRect();
+  const logicalWidth = Number(canvas.dataset.logicalWidth) || rect.width;
+  const logicalHeight = Number(canvas.dataset.logicalHeight) || rect.height;
+  const x = ((event.clientX - rect.left) / rect.width) * logicalWidth;
+  const y = ((event.clientY - rect.top) / rect.height) * logicalHeight;
+  const hit = customTreeState.nodes.find((node) => {
+    if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return false;
+    return Math.hypot(node.x - x, node.y - y) <= node.radius + 4;
+  });
+  if (hit) {
+    customTreeState.selectedId = hit.id;
+    renderCustomTree();
+    setCustomTreeStatus(`已選取節點 ${hit.label}。`);
+  }
+}
+
+function getCustomTreeNode(id) {
+  return customTreeState.nodes.find((node) => node.id === id) || null;
+}
+
+function customTreeRoot() {
+  return customTreeState.nodes.find((node) => node.parentId === null) || null;
+}
+
+function customTreeHeightFrom(id) {
+  const node = getCustomTreeNode(id);
+  if (!node) return 0;
+  if (!node.children.length) return 1;
+  return 1 + Math.max(...node.children.map((childId) => customTreeHeightFrom(childId)));
+}
+
+function countCustomTreeLeaves() {
+  return customTreeState.nodes.filter((node) => node.children.length === 0).length;
+}
+
+function layoutCustomTree() {
+  const root = customTreeRoot();
+  if (!root) return;
+
+  let order = 0;
+  const assign = (node, depth) => {
+    node.depth = depth;
+    if (!node.children.length) {
+      order += 1;
+      node.slot = order;
+      return node.slot;
+    }
+    const childSlots = node.children.map((childId) => assign(getCustomTreeNode(childId), depth + 1));
+    node.slot = (childSlots[0] + childSlots[childSlots.length - 1]) / 2;
+    return node.slot;
+  };
+
+  assign(root, 0);
+  const leaves = Math.max(1, order);
+  const height = customTreeHeightFrom(root.id);
+  const canvas = $("#custom-tree-canvas");
+  const logicalWidth = Number(canvas.dataset.logicalWidth) || canvas.width;
+  const logicalHeight = Number(canvas.dataset.logicalHeight) || canvas.height;
+  const marginX = 70;
+  const top = 64;
+  const usableWidth = Math.max(1, logicalWidth - marginX * 2);
+  const levelGap = height <= 1 ? 1 : (logicalHeight - 140) / (height - 1);
+  customTreeState.nodes.forEach((node) => {
+    node.x = marginX + ((node.slot - 0.5) / leaves) * usableWidth;
+    node.y = top + node.depth * levelGap;
+    node.radius = Math.max(24, Math.min(36, 18 + String(node.label).length * 3.2));
+  });
+}
+
+function renderCustomTree() {
+  const canvas = $("#custom-tree-canvas");
+  const wrapper = canvas.parentElement;
+  const cssWidth = Math.max(320, Math.round(wrapper.getBoundingClientRect().width - 2));
+  const cssHeight = Math.max(420, Math.round(cssWidth * 0.48));
+  const ratio = window.devicePixelRatio || 1;
+  canvas.dataset.logicalWidth = String(cssWidth);
+  canvas.dataset.logicalHeight = String(cssHeight);
+  canvas.style.width = "100%";
+  canvas.style.height = `${cssHeight}px`;
+  canvas.width = Math.round(cssWidth * ratio);
+  canvas.height = Math.round(cssHeight * ratio);
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  drawCustomTreeBackground(ctx, cssWidth, cssHeight);
+  layoutCustomTree();
+  drawCustomTreeEdges(ctx);
+  drawCustomTreeNodes(ctx);
+  updateCustomTreeControls();
+}
+
+function drawCustomTreeBackground(ctx, width, height) {
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "#fbfcff";
+  ctx.fillRect(0, 0, width, height);
+  ctx.strokeStyle = "#edf1f6";
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= width; x += 28) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= height; y += 28) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+  if (!customTreeState.nodes.length) {
+    ctx.fillStyle = "#66717e";
+    ctx.font = "700 18px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("輸入第一個節點內容並按「加入」，建立 root。", width / 2, height / 2);
+  }
+}
+
+function drawCustomTreeEdges(ctx) {
+  ctx.strokeStyle = "#a8b1c1";
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
+  customTreeState.nodes.forEach((node) => {
+    node.children.forEach((childId) => {
+      const child = getCustomTreeNode(childId);
+      if (!child) return;
+      ctx.beginPath();
+      ctx.moveTo(node.x, node.y + node.radius);
+      ctx.lineTo(child.x, child.y - child.radius);
+      ctx.stroke();
+    });
+  });
+}
+
+function drawCustomTreeNodes(ctx) {
+  customTreeState.nodes.forEach((node) => {
+    const selected = node.id === customTreeState.selectedId;
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+    ctx.fillStyle = selected ? "#e46053" : node.parentId === null ? "#4472c4" : "#7566c9";
+    ctx.fill();
+    ctx.lineWidth = selected ? 5 : 3;
+    ctx.strokeStyle = "#ffffff";
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 16px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(node.label), node.x, node.y);
+
+    if (node.parentId === null) {
+      ctx.fillStyle = "#394354";
+      ctx.font = "700 12px system-ui, sans-serif";
+      ctx.fillText("root", node.x, node.y + node.radius + 16);
+    }
+  });
+}
+
+function updateCustomTreeControls() {
+  const parentSelect = $("#custom-tree-parent");
+  parentSelect.innerHTML = customTreeState.nodes.length
+    ? customTreeState.nodes
+        .map((node) => `<option value="${node.id}"${node.id === customTreeState.selectedId ? " selected" : ""}>${escapeOptionLabel(node)}</option>`)
+        .join("")
+    : '<option value="">建立 root</option>';
+
+  const root = customTreeRoot();
+  $("#custom-tree-node-count").textContent = customTreeState.nodes.length;
+  $("#custom-tree-height").textContent = root ? customTreeHeightFrom(root.id) : 0;
+  $("#custom-tree-leaf-count").textContent = customTreeState.nodes.length ? countCustomTreeLeaves() : 0;
+  $("#custom-tree-selected").textContent = getCustomTreeNode(customTreeState.selectedId)?.label ?? "-";
+  $("#custom-tree-delete").disabled = customTreeState.nodes.length === 0;
+  $("#custom-tree-list").innerHTML = customTreeState.nodes.length
+    ? customTreeState.nodes
+        .map((node) => {
+          const parent = getCustomTreeNode(node.parentId);
+          const active = node.id === customTreeState.selectedId ? " active" : "";
+          return `<button type="button" class="custom-tree-list-item${active}" data-custom-node="${node.id}">
+            <strong>${escapeHtml(String(node.label))}</strong>
+            <span>${parent ? `parent: ${escapeHtml(String(parent.label))}` : "root"}</span>
+          </button>`;
+        })
+        .join("")
+    : "<p>尚未建立節點。</p>";
+  $$("#custom-tree-list [data-custom-node]").forEach((button) => {
+    button.addEventListener("click", () => {
+      customTreeState.selectedId = Number(button.dataset.customNode);
+      renderCustomTree();
+    });
+  });
+}
+
+function escapeOptionLabel(node) {
+  return `${escapeHtml(String(node.label))}${node.parentId === null ? " (root)" : ""}`;
+}
+
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, (char) => {
+    const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+    return entities[char];
+  });
+}
+
+function setCustomTreeStatus(message) {
+  $("#custom-tree-status").textContent = message;
+}
+
 const graphNodes = [
   { id: "A", x: 110, y: 90 },
   { id: "B", x: 320, y: 70 },
@@ -1276,6 +1596,418 @@ function renderGraphRepresentation() {
   output.textContent = Array.from(adjacency.entries())
     .map(([id, neighbors]) => `${id}: ${neighbors.map((edge) => `${edge.to}(${edge.w})`).join(", ")}`)
     .join("\n");
+}
+
+const customGraphState = {
+  vertices: [],
+  edges: [],
+  selectedVertexId: null,
+  selectedEdgeId: null,
+  nextVertexId: 1,
+  nextEdgeId: 1,
+  kind: "undirected",
+};
+
+function initCustomGraphBuilder() {
+  $("#custom-graph-type").addEventListener("change", (event) => {
+    customGraphState.kind = event.target.value;
+    customGraphState.edges.forEach((edge) => {
+      edge.directed = customGraphState.kind === "directed";
+    });
+    renderCustomGraph();
+    setCustomGraphStatus(customGraphState.kind === "directed" ? "已切換為有向圖，edge 會以箭頭表示。" : "已切換為無向圖，edge 會以無箭頭線段表示。");
+  });
+  $("#custom-graph-add-node").addEventListener("click", addCustomGraphVertex);
+  $("#custom-graph-add-edge").addEventListener("click", addCustomGraphEdge);
+  $("#custom-graph-delete").addEventListener("click", deleteSelectedCustomGraphItem);
+  $("#custom-graph-sample").addEventListener("click", loadCustomGraphSample);
+  $("#custom-graph-clear").addEventListener("click", clearCustomGraph);
+  $("#custom-graph-label").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") addCustomGraphVertex();
+  });
+  $("#custom-graph-canvas").addEventListener("click", selectCustomGraphItemFromCanvas);
+  window.addEventListener("resize", renderCustomGraph);
+  loadCustomGraphSample();
+}
+
+function loadCustomGraphSample() {
+  customGraphState.vertices = [
+    { id: 1, label: "A" },
+    { id: 2, label: "B" },
+    { id: 3, label: "C" },
+    { id: 4, label: "D" },
+    { id: 5, label: "E" },
+  ];
+  customGraphState.edges = [
+    { id: 1, from: 1, to: 2, weight: 4, directed: false },
+    { id: 2, from: 1, to: 3, weight: 2, directed: false },
+    { id: 3, from: 2, to: 3, weight: 1, directed: false },
+    { id: 4, from: 2, to: 4, weight: 5, directed: false },
+    { id: 5, from: 4, to: 5, weight: 3, directed: false },
+  ];
+  customGraphState.kind = "undirected";
+  customGraphState.selectedVertexId = 1;
+  customGraphState.selectedEdgeId = null;
+  customGraphState.nextVertexId = 6;
+  customGraphState.nextEdgeId = 6;
+  $("#custom-graph-type").value = "undirected";
+  $("#custom-graph-label").value = "F";
+  $("#custom-graph-weight").value = "1";
+  renderCustomGraph();
+  setCustomGraphStatus("已載入無向圖範例。可切換圖類型或新增頂點與邊。");
+}
+
+function clearCustomGraph() {
+  customGraphState.vertices = [];
+  customGraphState.edges = [];
+  customGraphState.selectedVertexId = null;
+  customGraphState.selectedEdgeId = null;
+  customGraphState.nextVertexId = 1;
+  customGraphState.nextEdgeId = 1;
+  $("#custom-graph-label").value = "A";
+  renderCustomGraph();
+  setCustomGraphStatus("畫布已清空。請先加入頂點。");
+}
+
+function addCustomGraphVertex() {
+  const input = $("#custom-graph-label");
+  const label = input.value.trim();
+  if (!label) {
+    setCustomGraphStatus("請先輸入頂點名稱。");
+    input.focus();
+    return;
+  }
+  if (customGraphState.vertices.some((vertex) => vertex.label === label)) {
+    setCustomGraphStatus(`頂點 ${label} 已存在，請使用不同名稱。`);
+    return;
+  }
+  const vertex = { id: customGraphState.nextVertexId, label };
+  customGraphState.nextVertexId += 1;
+  customGraphState.vertices.push(vertex);
+  customGraphState.selectedVertexId = vertex.id;
+  customGraphState.selectedEdgeId = null;
+  input.value = nextCustomGraphLabel(label);
+  renderCustomGraph();
+  setCustomGraphStatus(`已加入頂點 ${label}。`);
+}
+
+function nextCustomGraphLabel(label) {
+  if (/^[A-Z]$/.test(label) && label !== "Z") return String.fromCharCode(label.charCodeAt(0) + 1);
+  if (/^V\d+$/.test(label)) return `V${Number(label.slice(1)) + 1}`;
+  return "";
+}
+
+function addCustomGraphEdge() {
+  const from = Number($("#custom-graph-from").value);
+  const to = Number($("#custom-graph-to").value);
+  if (!from || !to) {
+    setCustomGraphStatus("請先建立至少兩個頂點，並選擇起點與終點。");
+    return;
+  }
+  if (from === to) {
+    setCustomGraphStatus("目前介面不建立 self-loop，請選擇不同頂點。");
+    return;
+  }
+  const directed = customGraphState.kind === "directed";
+  const duplicate = customGraphState.edges.some((edge) => {
+    if (directed) return edge.from === from && edge.to === to;
+    return (edge.from === from && edge.to === to) || (edge.from === to && edge.to === from);
+  });
+  if (duplicate) {
+    setCustomGraphStatus("這條 edge 已存在。");
+    return;
+  }
+  const rawWeight = $("#custom-graph-weight").value.trim();
+  const numericWeight = Number(rawWeight);
+  const weight = rawWeight && Number.isFinite(numericWeight) ? numericWeight : 1;
+  const edge = { id: customGraphState.nextEdgeId, from, to, weight, directed };
+  customGraphState.nextEdgeId += 1;
+  customGraphState.edges.push(edge);
+  customGraphState.selectedEdgeId = edge.id;
+  customGraphState.selectedVertexId = null;
+  renderCustomGraph();
+  setCustomGraphStatus(`已加入 edge ${customGraphVertexLabel(from)} ${directed ? "→" : "-"} ${customGraphVertexLabel(to)}。`);
+}
+
+function deleteSelectedCustomGraphItem() {
+  if (customGraphState.selectedEdgeId !== null) {
+    const edge = getCustomGraphEdge(customGraphState.selectedEdgeId);
+    customGraphState.edges = customGraphState.edges.filter((item) => item.id !== customGraphState.selectedEdgeId);
+    customGraphState.selectedEdgeId = null;
+    renderCustomGraph();
+    setCustomGraphStatus(edge ? `已刪除 edge ${customGraphVertexLabel(edge.from)}-${customGraphVertexLabel(edge.to)}。` : "已刪除 edge。");
+    return;
+  }
+  if (customGraphState.selectedVertexId !== null) {
+    const vertex = getCustomGraphVertex(customGraphState.selectedVertexId);
+    customGraphState.vertices = customGraphState.vertices.filter((item) => item.id !== customGraphState.selectedVertexId);
+    customGraphState.edges = customGraphState.edges.filter((edge) => edge.from !== customGraphState.selectedVertexId && edge.to !== customGraphState.selectedVertexId);
+    customGraphState.selectedVertexId = customGraphState.vertices[0]?.id ?? null;
+    renderCustomGraph();
+    setCustomGraphStatus(vertex ? `已刪除頂點 ${vertex.label} 與 incident edges。` : "已刪除頂點。");
+    return;
+  }
+  setCustomGraphStatus("請先選取要刪除的頂點或 edge。");
+}
+
+function getCustomGraphVertex(id) {
+  return customGraphState.vertices.find((vertex) => vertex.id === id) || null;
+}
+
+function getCustomGraphEdge(id) {
+  return customGraphState.edges.find((edge) => edge.id === id) || null;
+}
+
+function customGraphVertexLabel(id) {
+  return getCustomGraphVertex(id)?.label ?? "?";
+}
+
+function layoutCustomGraph() {
+  const canvas = $("#custom-graph-canvas");
+  const width = Number(canvas.dataset.logicalWidth) || canvas.width;
+  const height = Number(canvas.dataset.logicalHeight) || canvas.height;
+  const count = customGraphState.vertices.length;
+  if (!count) return;
+  const centerX = width / 2;
+  const centerY = height / 2 + 10;
+  const radius = Math.max(92, Math.min(width, height) * 0.34);
+  customGraphState.vertices.forEach((vertex, index) => {
+    const angle = count === 1 ? -Math.PI / 2 : -Math.PI / 2 + (Math.PI * 2 * index) / count;
+    vertex.x = centerX + Math.cos(angle) * radius;
+    vertex.y = centerY + Math.sin(angle) * radius;
+    vertex.radius = Math.max(24, Math.min(34, 18 + String(vertex.label).length * 3.1));
+  });
+}
+
+function renderCustomGraph() {
+  const canvas = $("#custom-graph-canvas");
+  const wrapper = canvas.parentElement;
+  const cssWidth = Math.max(320, Math.round(wrapper.getBoundingClientRect().width - 2));
+  const cssHeight = Math.max(420, Math.round(cssWidth * 0.48));
+  const ratio = window.devicePixelRatio || 1;
+  canvas.dataset.logicalWidth = String(cssWidth);
+  canvas.dataset.logicalHeight = String(cssHeight);
+  canvas.style.width = "100%";
+  canvas.style.height = `${cssHeight}px`;
+  canvas.width = Math.round(cssWidth * ratio);
+  canvas.height = Math.round(cssHeight * ratio);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  drawCustomGraphBackground(ctx, cssWidth, cssHeight);
+  layoutCustomGraph();
+  drawCustomGraphEdges(ctx);
+  drawCustomGraphVertices(ctx);
+  updateCustomGraphControls();
+}
+
+function drawCustomGraphBackground(ctx, width, height) {
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "#fbfcff";
+  ctx.fillRect(0, 0, width, height);
+  ctx.strokeStyle = "#edf1f6";
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= width; x += 28) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= height; y += 28) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+  if (!customGraphState.vertices.length) {
+    ctx.fillStyle = "#66717e";
+    ctx.font = "700 18px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("加入頂點後，再選擇起點與終點建立 edge。", width / 2, height / 2);
+  }
+}
+
+function drawCustomGraphEdges(ctx) {
+  customGraphState.edges.forEach((edge) => {
+    const from = getCustomGraphVertex(edge.from);
+    const to = getCustomGraphVertex(edge.to);
+    if (!from || !to) return;
+    const selected = edge.id === customGraphState.selectedEdgeId;
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const length = Math.max(1, Math.hypot(dx, dy));
+    const ux = dx / length;
+    const uy = dy / length;
+    const startX = from.x + ux * from.radius;
+    const startY = from.y + uy * from.radius;
+    const endX = to.x - ux * to.radius;
+    const endY = to.y - uy * to.radius;
+
+    ctx.strokeStyle = selected ? "#2f9f75" : "#9aa7b8";
+    ctx.lineWidth = selected ? 5 : 3;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(endX, endY);
+    ctx.stroke();
+
+    if (edge.directed) drawCustomGraphArrow(ctx, endX, endY, Math.atan2(dy, dx), selected);
+
+    const labelX = (startX + endX) / 2;
+    const labelY = (startY + endY) / 2;
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "#d5dbe5";
+    ctx.lineWidth = 1;
+    customCanvasRoundedRect(ctx, labelX - 16, labelY - 13, 32, 22, 6);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#566173";
+    ctx.font = "800 12px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(edge.weight), labelX, labelY - 1);
+  });
+}
+
+function customCanvasRoundedRect(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  ctx.lineTo(x + r, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function drawCustomGraphArrow(ctx, x, y, angle, selected) {
+  const size = selected ? 13 : 11;
+  ctx.fillStyle = selected ? "#2f9f75" : "#9aa7b8";
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - Math.cos(angle - Math.PI / 6) * size, y - Math.sin(angle - Math.PI / 6) * size);
+  ctx.lineTo(x - Math.cos(angle + Math.PI / 6) * size, y - Math.sin(angle + Math.PI / 6) * size);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawCustomGraphVertices(ctx) {
+  customGraphState.vertices.forEach((vertex) => {
+    const selected = vertex.id === customGraphState.selectedVertexId;
+    ctx.beginPath();
+    ctx.arc(vertex.x, vertex.y, vertex.radius, 0, Math.PI * 2);
+    ctx.fillStyle = selected ? "#e46053" : "#4472c4";
+    ctx.fill();
+    ctx.lineWidth = selected ? 5 : 3;
+    ctx.strokeStyle = "#ffffff";
+    ctx.stroke();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "800 16px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(vertex.label), vertex.x, vertex.y);
+  });
+}
+
+function selectCustomGraphItemFromCanvas(event) {
+  const canvas = $("#custom-graph-canvas");
+  const rect = canvas.getBoundingClientRect();
+  const logicalWidth = Number(canvas.dataset.logicalWidth) || rect.width;
+  const logicalHeight = Number(canvas.dataset.logicalHeight) || rect.height;
+  const x = ((event.clientX - rect.left) / rect.width) * logicalWidth;
+  const y = ((event.clientY - rect.top) / rect.height) * logicalHeight;
+  const vertex = customGraphState.vertices.find((item) => Math.hypot(item.x - x, item.y - y) <= item.radius + 4);
+  if (vertex) {
+    customGraphState.selectedVertexId = vertex.id;
+    customGraphState.selectedEdgeId = null;
+    renderCustomGraph();
+    setCustomGraphStatus(`已選取頂點 ${vertex.label}。`);
+    return;
+  }
+  const edge = customGraphState.edges.find((item) => {
+    const from = getCustomGraphVertex(item.from);
+    const to = getCustomGraphVertex(item.to);
+    if (!from || !to) return false;
+    return pointToSegmentDistance(x, y, from.x, from.y, to.x, to.y) <= 10;
+  });
+  if (edge) {
+    customGraphState.selectedVertexId = null;
+    customGraphState.selectedEdgeId = edge.id;
+    renderCustomGraph();
+    setCustomGraphStatus(`已選取 edge ${customGraphVertexLabel(edge.from)}-${customGraphVertexLabel(edge.to)}。`);
+  }
+}
+
+function pointToSegmentDistance(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lengthSq = dx * dx + dy * dy;
+  if (!lengthSq) return Math.hypot(px - x1, py - y1);
+  const t = clamp(((px - x1) * dx + (py - y1) * dy) / lengthSq, 0, 1);
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+function updateCustomGraphControls() {
+  const options = customGraphState.vertices
+    .map((vertex) => `<option value="${vertex.id}">${escapeHtml(String(vertex.label))}</option>`)
+    .join("");
+  $("#custom-graph-from").innerHTML = options || '<option value="">起點</option>';
+  $("#custom-graph-to").innerHTML = options || '<option value="">終點</option>';
+  if (customGraphState.selectedVertexId) $("#custom-graph-from").value = String(customGraphState.selectedVertexId);
+  const selectedIndex = customGraphState.vertices.findIndex((vertex) => vertex.id === customGraphState.selectedVertexId);
+  const nextVertex = customGraphState.vertices[(selectedIndex + 1 + customGraphState.vertices.length) % customGraphState.vertices.length];
+  if (nextVertex) $("#custom-graph-to").value = String(nextVertex.id);
+  $("#custom-graph-delete").disabled = !customGraphState.selectedVertexId && !customGraphState.selectedEdgeId;
+  $("#custom-graph-vertex-count").textContent = customGraphState.vertices.length;
+  $("#custom-graph-edge-count").textContent = customGraphState.edges.length;
+  $("#custom-graph-kind").textContent = customGraphState.kind === "directed" ? "有向" : "無向";
+  $("#custom-graph-selected").textContent =
+    getCustomGraphVertex(customGraphState.selectedVertexId)?.label ||
+    formatCustomGraphEdge(getCustomGraphEdge(customGraphState.selectedEdgeId)) ||
+    "-";
+  $("#custom-graph-adjacency").textContent = formatCustomGraphAdjacency();
+  $("#custom-graph-edge-list").innerHTML = customGraphState.edges.length
+    ? customGraphState.edges
+        .map((edge) => {
+          const active = edge.id === customGraphState.selectedEdgeId ? " active" : "";
+          return `<button type="button" class="custom-graph-edge-item${active}" data-custom-edge="${edge.id}">
+            <strong>${formatCustomGraphEdge(edge)}</strong>
+            <span>w=${edge.weight}</span>
+          </button>`;
+        })
+        .join("")
+    : "<p>尚未建立 edge。</p>";
+  $$("#custom-graph-edge-list [data-custom-edge]").forEach((button) => {
+    button.addEventListener("click", () => {
+      customGraphState.selectedVertexId = null;
+      customGraphState.selectedEdgeId = Number(button.dataset.customEdge);
+      renderCustomGraph();
+    });
+  });
+}
+
+function formatCustomGraphEdge(edge) {
+  if (!edge) return "";
+  return `${customGraphVertexLabel(edge.from)} ${edge.directed ? "→" : "-"} ${customGraphVertexLabel(edge.to)}`;
+}
+
+function formatCustomGraphAdjacency() {
+  if (!customGraphState.vertices.length) return "尚未建立頂點。";
+  const rows = new Map(customGraphState.vertices.map((vertex) => [vertex.id, []]));
+  customGraphState.edges.forEach((edge) => {
+    rows.get(edge.from)?.push(`${customGraphVertexLabel(edge.to)}(${edge.weight})`);
+    if (!edge.directed) rows.get(edge.to)?.push(`${customGraphVertexLabel(edge.from)}(${edge.weight})`);
+  });
+  return customGraphState.vertices
+    .map((vertex) => `${vertex.label}: ${(rows.get(vertex.id) || []).join(", ") || "∅"}`)
+    .join("\n");
+}
+
+function setCustomGraphStatus(message) {
+  $("#custom-graph-status").textContent = message;
 }
 
 const heapDemoPositions = [

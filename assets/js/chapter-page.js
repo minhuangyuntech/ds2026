@@ -178,8 +178,8 @@ const chapterData = {
       "追蹤 BFS 佇列內容，建立 BFS tree。",
       "比較 shortest path tree 與 minimum spanning tree 的不同目標。",
     ],
-    labLabel: "跳到本章圖實驗室",
-    labHref: "#graphs",
+    labLabel: "建立自定義圖",
+    labHref: "#custom-graph-builder",
     prev: ["05-trees.html", "Trees"],
     next: ["07-sorting.html", "Sorting"],
   },
@@ -2449,6 +2449,66 @@ function treeLabTemplate() {
   `;
 }
 
+function customTreeCanvasTemplate() {
+  return `
+    <section id="custom-tree-builder" class="section lab-section" aria-labelledby="custom-tree-title">
+      <div class="section-heading">
+        <p class="eyebrow">Canvas Tree Builder</p>
+        <h2 id="custom-tree-title">自定義樹建構器</h2>
+        <p>輸入節點內容並選擇父節點，就能在線上建立任意形狀的一般樹。畫布會自動排版節點與邊，適合練習 root、parent、children、leaf 與 subtree 的概念。</p>
+      </div>
+
+      <div class="custom-tree-lab">
+        <div class="visual-panel custom-tree-workspace">
+          <div class="toolbar custom-tree-toolbar" aria-label="自定義樹控制">
+            <label class="field">
+              <span>節點內容</span>
+              <input id="custom-tree-label" type="text" value="F" maxlength="18" autocomplete="off">
+            </label>
+            <label class="field">
+              <span>父節點</span>
+              <select id="custom-tree-parent"></select>
+            </label>
+            <button type="button" class="icon-btn primary" id="custom-tree-add" title="加入節點" aria-label="加入節點">
+              <i data-lucide="circle-plus"></i>
+              <span>加入</span>
+            </button>
+            <button type="button" class="icon-btn" id="custom-tree-delete" title="刪除選取節點與子樹" aria-label="刪除選取節點與子樹">
+              <i data-lucide="trash-2"></i>
+              <span>刪除子樹</span>
+            </button>
+            <button type="button" class="icon-btn" id="custom-tree-sample" title="載入範例" aria-label="載入範例">
+              <i data-lucide="sparkles"></i>
+              <span>範例</span>
+            </button>
+            <button type="button" class="icon-btn" id="custom-tree-clear" title="清空畫布" aria-label="清空畫布">
+              <i data-lucide="eraser"></i>
+              <span>清空</span>
+            </button>
+          </div>
+          <canvas id="custom-tree-canvas" class="custom-tree-canvas" width="1100" height="560" aria-label="自定義樹 canvas"></canvas>
+          <div id="custom-tree-status" class="insight-box" aria-live="polite">選取一個父節點後加入新節點；點擊畫布上的節點可切換選取。</div>
+        </div>
+
+        <div class="analysis-panel custom-tree-side">
+          <h3>目前樹資訊</h3>
+          <div class="metric-row custom-tree-metrics" aria-label="自定義樹指標">
+            <div><strong id="custom-tree-node-count">0</strong><span>節點</span></div>
+            <div><strong id="custom-tree-height">0</strong><span>高度</span></div>
+            <div><strong id="custom-tree-leaf-count">0</strong><span>葉節點</span></div>
+            <div><strong id="custom-tree-selected">-</strong><span>選取</span></div>
+          </div>
+          <h3>節點清單</h3>
+          <div id="custom-tree-list" class="custom-tree-list" aria-label="自定義樹節點清單"></div>
+          <div class="insight-box">
+            <strong>操作提示：</strong>第一個節點會成為 root。之後每次選一個父節點，就會在它的 children 尾端加入新節點。
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
 const graphTerms = [
   [
     "Vertex / Node",
@@ -3139,6 +3199,7 @@ function graphLabTemplate() {
         <p class="eyebrow">Graph Lab</p>
         <h2 id="graphs-title">圖：表示法、走訪與路徑</h2>
         <p>圖的核心不是畫出節點，而是選擇表示法，並理解佇列、堆疊、權重與候選邊如何推動演算法。</p>
+        <p><a class="text-link primary" href="#custom-graph-builder">前往自定義圖建構器</a></p>
       </div>
 
       <div class="lab-grid graph-grid">
@@ -3195,6 +3256,84 @@ function graphLabTemplate() {
           </div>
           <div id="graph-representation" class="representation-output"></div>
           <div class="insight-box" id="graph-note">BFS 使用佇列，適合無權圖最短邊數；Dijkstra 處理非負權重。</div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function customGraphCanvasTemplate() {
+  return `
+    <section id="custom-graph-builder" class="section lab-section" aria-labelledby="custom-graph-title">
+      <div class="section-heading">
+        <p class="eyebrow">Canvas Graph Builder</p>
+        <h2 id="custom-graph-title">自定義圖建構器</h2>
+        <p>輸入頂點名稱並建立 edge，可自由切換有向圖或無向圖。畫布會依目前頂點自動排版，並同步輸出 adjacency list，協助觀察圖的表示法。</p>
+      </div>
+
+      <div class="custom-graph-lab">
+        <div class="visual-panel custom-graph-workspace">
+          <div class="toolbar custom-graph-toolbar" aria-label="自定義圖控制">
+            <label class="field">
+              <span>圖類型</span>
+              <select id="custom-graph-type">
+                <option value="undirected">無向圖</option>
+                <option value="directed">有向圖</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>頂點名稱</span>
+              <input id="custom-graph-label" type="text" value="F" maxlength="12" autocomplete="off">
+            </label>
+            <button type="button" class="icon-btn primary" id="custom-graph-add-node" title="加入頂點" aria-label="加入頂點">
+              <i data-lucide="circle-plus"></i>
+              <span>加頂點</span>
+            </button>
+            <label class="field">
+              <span>起點</span>
+              <select id="custom-graph-from"></select>
+            </label>
+            <label class="field">
+              <span>終點</span>
+              <select id="custom-graph-to"></select>
+            </label>
+            <label class="field compact-field">
+              <span>權重</span>
+              <input id="custom-graph-weight" type="text" value="1" maxlength="6" autocomplete="off">
+            </label>
+            <button type="button" class="icon-btn primary" id="custom-graph-add-edge" title="加入邊" aria-label="加入邊">
+              <i data-lucide="route"></i>
+              <span>加邊</span>
+            </button>
+            <button type="button" class="icon-btn" id="custom-graph-delete" title="刪除選取項目" aria-label="刪除選取項目">
+              <i data-lucide="trash-2"></i>
+              <span>刪除</span>
+            </button>
+            <button type="button" class="icon-btn" id="custom-graph-sample" title="載入範例" aria-label="載入範例">
+              <i data-lucide="sparkles"></i>
+              <span>範例</span>
+            </button>
+            <button type="button" class="icon-btn" id="custom-graph-clear" title="清空畫布" aria-label="清空畫布">
+              <i data-lucide="eraser"></i>
+              <span>清空</span>
+            </button>
+          </div>
+          <canvas id="custom-graph-canvas" class="custom-graph-canvas" width="1100" height="560" aria-label="自定義圖 canvas"></canvas>
+          <div id="custom-graph-status" class="insight-box" aria-live="polite">輸入頂點名稱後加入頂點，再選擇起點與終點建立 edge。</div>
+        </div>
+
+        <div class="analysis-panel custom-graph-side">
+          <h3>目前圖資訊</h3>
+          <div class="metric-row custom-graph-metrics" aria-label="自定義圖指標">
+            <div><strong id="custom-graph-vertex-count">0</strong><span>頂點</span></div>
+            <div><strong id="custom-graph-edge-count">0</strong><span>邊</span></div>
+            <div><strong id="custom-graph-kind">無向</strong><span>類型</span></div>
+            <div><strong id="custom-graph-selected">-</strong><span>選取</span></div>
+          </div>
+          <h3>Adjacency List</h3>
+          <div id="custom-graph-adjacency" class="representation-output custom-graph-adjacency"></div>
+          <h3>Edges</h3>
+          <div id="custom-graph-edge-list" class="custom-graph-edge-list" aria-label="自定義圖邊清單"></div>
         </div>
       </div>
     </section>
@@ -5255,8 +5394,8 @@ function chapterLabTemplate(unit) {
   if (unit === "02") return `${arraysStructuresMaterialsTemplate()}${arraysStructuresSupplementTemplate()}`;
   if (unit === "03") return stacksQueuesMaterialsTemplate();
   if (unit === "04") return linkedListsMaterialsTemplate();
-  if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}`;
-  if (unit === "06") return `${graphMaterialsTemplate()}${graphAdvancedTemplate()}${graphLectureSupplementTemplate()}${graphLabTemplate()}`;
+  if (unit === "05") return `${treeMaterialsTemplate()}${treeLabTemplate()}${customTreeCanvasTemplate()}`;
+  if (unit === "06") return `${customGraphCanvasTemplate()}${graphMaterialsTemplate()}${graphAdvancedTemplate()}${graphLectureSupplementTemplate()}${graphLabTemplate()}`;
   if (unit === "07") return `${sortingAlgorithmSectionsTemplate()}${sortingSupplementTemplate()}${radixInteractiveLabTemplate()}${sortingLabTemplate()}`;
   if (unit === "08") return hashingMaterialsTemplate();
   if (unit === "09") return priorityQueuesMaterialsTemplate();
